@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import useWebSocket from 'react-use-websocket';
 
-const WS_URL = 'ws://192.168.0.5:8080/topic/messages';
+const WS_URL = 'ws://localhost:8080/websocket';
 
 function WebSocketClient() {
   const { sendJsonMessage } = useWebSocket(WS_URL, {
