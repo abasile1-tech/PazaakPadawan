@@ -1,17 +1,31 @@
 import { useEffect } from 'react';
-import useWebSocket from 'react-use-websocket';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
 
-const WS_URL = 'ws://localhost:8080/websocket';
+const WS_URL = 'http://localhost:8080/websocket';
 
 function WebSocketClient() {
-  const { sendJsonMessage } = useWebSocket(WS_URL, {
-    onOpen: () => console.log('WebSocket connection established.'),
-    shouldReconnect: () => true,
-  });
+  const socket = new SockJS(WS_URL);
+  const stompClient = Stomp.over(socket);
 
   useEffect(() => {
-    sendJsonMessage({ type: 'ping' });
-  }, [sendJsonMessage]);
+    stompClient.connect({}, function (frame) {
+      console.log('Connected: ' + frame);
+
+      stompClient.subscribe('/topic/messages', function (message) {
+        const body = JSON.parse(message.body);
+        if (body.from === 'Alice') {
+          console.log('Received message from Alice: ' + body.text);
+        }
+      });
+
+      stompClient.send(
+        '/app/chat',
+        {},
+        JSON.stringify({ from: 'Alice', text: 'Hello, world!' })
+      );
+    });
+  }, [stompClient]);
 
   return <div>Hello WebSockets!</div>;
 }
