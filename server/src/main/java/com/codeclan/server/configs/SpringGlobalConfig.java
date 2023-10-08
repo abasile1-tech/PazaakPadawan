@@ -7,8 +7,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class SpringGlobalConfig implements WebMvcConfigurer {
 
     private static final String CORS_BASE_PATTERN = "/**";
-//    private static final String ALLOWED_ORIGINS = "*";
-    private static final String ALLOWED_ORIGINS = "http://localhost:5173";
+    private static final String ALLOWED_ORIGINS = "*";
 
     private static final String ALLOWED_HEADERS = "*";
     private static final String ALLOWED_METHODS = "*";
