@@ -11,14 +11,6 @@ function WebSocketClient() {
   useEffect(() => {
     stompClient.connect({}, function (frame) {
       console.log('Connected: ' + frame);
-
-      stompClient.subscribe('/topic/messages', function (message) {
-        const body = JSON.parse(message.body);
-        console.log(message.body);
-        console.log('Received message from Alice: ' + body.text);
-      });
-
-      stompClient.send('/app/chat', {}, JSON.stringify('from the client'));
     });
   }, [stompClient]);
 

@@ -1,10 +1,11 @@
 import './App.css';
-import WebSocketClient from './services/WebSocketService';
+// import WebSocketClient from './services/WebSocketService';
 
 function App() {
   return (
     <>
-      <WebSocketClient />
+      <h1>Hello World!</h1>
+      {/* <WebSocketClient /> */}
     </>
   );
 }
