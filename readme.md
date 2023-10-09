@@ -1,4 +1,4 @@
-![Main page screenshot](images/Main.png)
+![Main page screenshot](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Main.png?raw=true)
 
 Pazaak Card Game!
 
@@ -9,8 +9,7 @@ Table of Contents:
 - [Installation](#installation)
 - [Usage](#usage)
 
-
-![Main page screenshot](images/ACkb.gif)
+![Main page screenshot](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/ACkb.gif?raw=true)
 # Introduction 
 
 The project aims to develop a digital implementation of the popular card game "Pazaak" using both Java and TypeScript. Pazaak is a two-player card game set in the Star Wars universe, known for its combination of strategy and luck. The goal of this project is to create a playable and enjoyable gaming experience. This project aims to faithfully adhere to the official Pazaak rules while offering user-friendly interfaces for both desktop and web-based versions.
