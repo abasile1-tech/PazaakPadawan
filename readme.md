@@ -21,12 +21,14 @@ Project_Objectives:
 * Include optional features like a graphical user interface (UI) for a desktop version and web-based UI for the TypeScript version.
 * Test the game thoroughly to ensure functionality and correctness.
 * Provide clear documentation on how to play the game and any additional features.
+  
 Key Features:
 * Two-player turn-based gameplay.
 * Deck of cards with numerical values and special attributes.
 * Player actions for drawing cards, playing cards, and scoring.
 * Random card shuffling and drawing.
 * Optional user interface for ease of play.
+  
 Target Platforms:
 * Java(frontend): Desktop application for Windows, macOS, and Linux.
 * TypeScript (backend): Web-based game accessible through modern web browsers.
@@ -35,11 +37,13 @@ Project Timeline:
 * Java and TypeScript Development: 09/10/2023 - 13/10/2023
 * Testing and Debugging: 14/10/2023 - 17/10/2023
 * Final Review and Optimization: 18/10/2023 - [20/10/2023
+  
 Resources Required:
 * Development environment (Java IDE for the Java version, code editor for TypeScript).
 * Graphics design tools.
 * Testing devices and browsers.
 * Web hosting.
+  
 Project_Team:
 * John Basile 
 * Paul Dennehy
@@ -48,6 +52,7 @@ Project_Team:
 * Technical challenges in implementing game rules and card interactions.
 * Compatibility issues with different platforms and browsers.
 * User interface design and usability challenges.
+  
 Deliverables:
 * Functional Java backend.
 * Functional TypeScript frontend.
@@ -76,8 +81,8 @@ Deliverables:
 * Communication Engagement: Encourage communication engagement by providing a platform for players to share their experiences, strategies, and feedback.
 
 
-![Board](images/Board.png)
-![Board2](images/Board2.png)
+![Board](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Board.png?raw=true)
+![Board2](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Board2.png?raw=true)
 
 ### Demo 
 
@@ -92,7 +97,7 @@ Java (Desktop Version)
 
 1. Clone this repository:
    ￼
-![Clone](images/Clone.png)
+![Clone](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Clone.png?raw=true)
 
 * git clone https://github.com/abasile1-tech/PazaakPadawan.git
 
@@ -100,13 +105,13 @@ Java (Desktop Version)
 * Copy code cd PazaakPadawan/java
 * Compile and run the Java program
 ￼
-![InstallationJava](images/InstallationJava.png)
+![InstallationJava](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/InstallationJava.png?raw=true)
 
 * TypeScript (Web Version)
 
 1. Clone this repository:
 ￼
-![Clone](images/Clone.png)
+![Clone](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Clone.png?raw=true)
 
 * git clone https://github.com/abasile1-tech/PazaakPadawan.git
 
@@ -114,34 +119,28 @@ Java (Desktop Version)
 * Copy code cd PazaakPadawan/typescript
 * Open index.html in your web browser.
 
-￼![InstallationTypeScript](images/InstallationTypeScript.png)
+￼![InstallationTypeScript](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/InstallationTypeScript.png?raw=true)
 
 ##### Usage 
 Playing the Pazaak Card Game is an exciting and strategic experience set in the Star Wars universe. Whether you're a seasoned player or new to the game, this section will guide you through the steps to enjoy the digital implementation of Pazaak.
 
-Starting a Game
+Starting a Game:
 
 Click on "Start New Game" to begin a match. You can choose to play against the computer or a friend (in the two-player mode).
 
-Playing Pazaak
+*Playing Pazaak:
+Pazaak is a turn-based card game. Each player takes turns playing cards from their hand to build a winning hand with a total value close to 20 without going over.Cards in the deck have numerical values, including positive and negative numbers. Face cards and special cards can also impact the game.
 
-Pazaak is a turn-based card game. Each player takes turns playing cards from their hand to build a winning hand with a total value close to 20 without going over.
-
-
-Cards in the deck have numerical values, including positive and negative numbers. Face cards and special cards can also impact the game.
-
-Strategy and Luck:
+*Strategy and Luck:
 Balance strategy and luck as you draw cards from your deck, deciding when to stay, end your turn, or play special cards to gain an advantage.
 
-
-Scoring:
+*Scoring:
 Keep an eye on the score, displayed on the screen, to see who's in the lead. The player with the highest score when the match ends wins.
 
-
-Tutorial:
+*Tutorial:
 If you're new to Pazaak, don't worry. The game provides instruction to guide you through the rules and strategies.
 
-Stay Engaged:
+*Stay Engaged:
 Stay tuned for game updates and maintenance to keep the experience fresh. Join the Pazaak community to share your experiences, strategies, and feedback with other players.
 
 Now that you know how to play Pazaak, dive into the Star Wars universe, challenge your friends, and enjoy this unique card game that combines strategy and luck! May the cards be in your favor.
