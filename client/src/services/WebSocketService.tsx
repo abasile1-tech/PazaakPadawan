@@ -1,54 +1,28 @@
-import Stomp from 'stompjs';
+import { useEffect } from 'react';
 import SockJS from 'sockjs-client';
-import { useEffect, useState } from 'react';
+import Stomp from 'stompjs';
+
+const WS_URL = 'http://localhost:8080/websocket';
 
 function WebSocketClient() {
-  const [severStatus, setServerStatus] = useState(false);
-  const [attemptReconnect, setAttemptReconnect] = useState(0);
-  const [serverMessageLog, serverSetMessageLog] = useState('No data');
+  const socket = new SockJS(WS_URL);
+  const stompClient = Stomp.over(socket);
 
   useEffect(() => {
-    const port = 8080;
-    const socket = new SockJS(`http://localhost:${port}/websocket`);
-    const stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+      console.log('Connected: ' + frame);
 
-    stompClient.connect({}, () => {
-      console.log('Connected to server');
-      stompClient.subscribe('/topic/connect', (message: any) => {
-        serverSetMessageLog(message.body.slice(12, -2));
+      stompClient.subscribe('/topic/messages', function (message) {
+        const body = JSON.parse(message.body);
+        console.log(message.body);
+        console.log('Received message from Alice: ' + body.text);
       });
 
-      stompClient.subscribe('/topic/chat', (message: any) => {});
-
-      stompClient.send(
-        '/app/hello',
-        {},
-        JSON.stringify(`Client Connected on ${port}`)
-      );
-      setServerStatus(true);
-
-      stompClient.ws.onclose = () => {
-        console.log('Connection terminated');
-        setServerStatus(false);
-      };
+      stompClient.send('/app/chat', {}, JSON.stringify('from the client'));
     });
-  }, [attemptReconnect]);
+  }, [stompClient]);
 
-  return (
-    <>
-      {severStatus == true ? (
-        <h1>Connected to server</h1>
-      ) : (
-        <div>
-          <h1>Not connected to server</h1>{' '}
-          <button onClick={() => setAttemptReconnect(attemptReconnect + 1)}>
-            Reconnect
-          </button>
-        </div>
-      )}
-      <h1>{serverMessageLog}</h1>
-    </>
-  );
+  return <div>Hello WebSockets!</div>;
 }
 
 export default WebSocketClient;
