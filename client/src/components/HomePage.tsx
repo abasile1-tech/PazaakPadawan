@@ -1,32 +1,14 @@
 import BackgroundMusic from './BackgroundMusic';
+import Header from './Header';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function HomePage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   let musicChoice: string = 'homePage';
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   return (
     <div className="home-page">
-      <button className="menu-button" onClick={toggleMenu}>
-        ☰
-      </button>
-
-      {isMenuOpen && (
-        <div className="hamburger">
-          <ul>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
-            <li>
-              <Link to="/instructions">Instructions</Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <Header />
 
       <div className="main-content">
         <h1>Welcome to Pazaak</h1>

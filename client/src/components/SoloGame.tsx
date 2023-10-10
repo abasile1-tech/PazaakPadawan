@@ -1,4 +1,5 @@
 import BackgroundMusic from './BackgroundMusic';
+import Header from './Header';
 import ScoreLights from './ScoreLights';
 
 function SoloGame() {
@@ -7,6 +8,7 @@ function SoloGame() {
   let numGamesWonOpponent = 2;
   return (
     <>
+      <Header />
       <h1>Solo Game!</h1>
       <BackgroundMusic musicChoice={musicChoice} />
       <ScoreLights numGamesWon={numGamesWonPlayer} />
