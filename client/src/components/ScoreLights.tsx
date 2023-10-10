@@ -1,30 +1,30 @@
 function ScoreLights(props: { numGamesWon: number }) {
   const numGamesWon = props.numGamesWon;
+  let lightsvar;
   switch (numGamesWon) {
     case 0:
-      return (
-        <img src="src/assets/images/lights/lights000.png" alt="no lights" />
-      );
+      lightsvar = '000';
+      break;
     case 1:
-      return (
-        <img src="src/assets/images/lights/lights100.png" alt="top light" />
-      );
+      lightsvar = '100';
+      break;
     case 2:
-      return (
-        <img src="src/assets/images/lights/lights110.png" alt="top 2 lights" />
-      );
+      lightsvar = '110';
+      break;
     case 3:
-      return (
-        <img src="src/assets/images/lights/lights111.png" alt="all lights" />
-      );
+      lightsvar = '111';
+      break;
     default:
       console.log(`score lights error, numGamesWon: ${numGamesWon}.`);
-      return (
-        <>
-          <h1>Score Lights Error</h1>
-        </>
-      );
   }
+  return (
+    <>
+      <img
+        src={`src/assets/images/lights/lights${lightsvar}.png`}
+        alt="score lights"
+      />
+    </>
+  );
 }
 
 export default ScoreLights;
