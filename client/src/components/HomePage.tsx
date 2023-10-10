@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './HomePage.css';
+// import './HomePage.css';
 import Chat from './Chat';
 
 function HomePage() {
