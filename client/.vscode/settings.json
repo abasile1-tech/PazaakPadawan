@@ -17,5 +17,8 @@
   },
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
-  "git.autofetch": true
+  "git.autofetch": true,
+  "cSpell.words": [
+    "Pazaak"
+  ]
 }
