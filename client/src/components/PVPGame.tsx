@@ -1,3 +1,5 @@
+import BackgroundMusic from './BackgroundMusic';
+
 function PVPGame() {
   return (
     <>

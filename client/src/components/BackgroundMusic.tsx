@@ -1,7 +1,19 @@
 import React, { useState, useRef } from 'react';
-import backgroundMusic from '../assets/music/8bitopeningtheme.mp3';
+import openingTheme from '../assets/music/8bitopeningtheme.mp3';
+import cantina from '../assets/music/8bitcantina.mp3';
 
-const BackgroundMusic = () => {
+interface backgroundMusicProps {
+  musicChoice: string;
+}
+
+const BackgroundMusic: React.FC<backgroundMusicProps> = ({ musicChoice }) => {
+  const MUSIC_LOOKUP: Record<string, string> = {
+    homePage: openingTheme,
+    soloGame: cantina,
+  };
+
+  const backgroundMusic = MUSIC_LOOKUP[musicChoice];
+
   const [isPlaying, setIsPlaying] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
 
