@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import './HomePage.css';
 import Chat from './Chat';
 
 function HomePage() {
@@ -17,19 +16,13 @@ function HomePage() {
       </button>
 
       {isMenuOpen && (
-        <div className="homepage">
+        <div className="hamburger">
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/settings">Settings</Link>
             </li>
             <li>
-              <Link to="/solo">Solo Game</Link>
-            </li>
-            <li>
-              <Link to="/pvp">PVP Game</Link>
-            </li>
-            <li>
-              <Link to="/deck">Deck Builder</Link>
+              <Link to="/instructions">Instructions</Link>
             </li>
           </ul>
         </div>
@@ -37,11 +30,25 @@ function HomePage() {
 
       <div className="main-content">
         <h1>Welcome to Pazaak</h1>
+
         <p>
           Pazaak, a game dating back to Old Republic times, was a popular card
           game in which the goal was to come closest to 20 without going over.
         </p>
       </div>
+
+      <div className="buttons">
+        <Link to="/solo">
+          <button className="solo-button">Solo</button>
+        </Link>
+        <Link to="/pvp">
+          <button className="pvp-button">PVP</button>
+        </Link>
+        <Link to="/deck">
+          <button className="deck-button">Deck Builder</button>
+        </Link>
+      </div>
+
       {<Chat />}
     </div>
   );
