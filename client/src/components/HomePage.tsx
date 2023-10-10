@@ -1,11 +1,11 @@
+import BackgroundMusic from './BackgroundMusic';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-// import './HomePage.css';
 import Chat from './Chat';
 
 function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  let musicChoice: string = 'homePage';
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -42,6 +42,7 @@ function HomePage() {
           game in which the goal was to come closest to 20 without going over.
         </p>
       </div>
+      <BackgroundMusic musicChoice={musicChoice} />
       {<Chat />}
     </div>
   );
