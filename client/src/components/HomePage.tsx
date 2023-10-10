@@ -1,39 +1,13 @@
 import BackgroundMusic from './BackgroundMusic';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import Chat from './Chat';
+import Header from './Header';
 
 function HomePage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   let musicChoice: string = 'homePage';
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
 
   return (
     <div className="home-page">
-      <button className="menu-button" onClick={toggleMenu}>
-        ☰
-      </button>
-
-      {isMenuOpen && (
-        <div className="homepage">
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/solo">Solo Game</Link>
-            </li>
-            <li>
-              <Link to="/pvp">PVP Game</Link>
-            </li>
-            <li>
-              <Link to="/deck">Deck Builder</Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <Header />
 
       <div className="main-content">
         <h1>Welcome to Pazaak</h1>
