@@ -1,4 +1,5 @@
 import BackgroundMusic from './BackgroundMusic';
+import Header from './Header';
 import Chat from './Chat';
 import ScoreLights from './ScoreLights';
 
@@ -8,6 +9,7 @@ function PVPGame() {
   let numGamesWonOpponent = 2;
   return (
     <>
+      <Header />
       <h1>PVP Game!</h1>
       <BackgroundMusic musicChoice={musicChoice} />
       <ScoreLights numGamesWon={numGamesWonPlayer} />
