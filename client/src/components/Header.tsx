@@ -9,21 +9,26 @@ function Header() {
     <>
       <div className="headerdiv">
         <h1 className="headerh1">Pazaak!</h1>
-        <button className="menu-button" onClick={toggleMenu}>
-          ☰
-        </button>
-        {isMenuOpen && (
-          <div className="hamburger">
-            <ul>
-              <li>
-                <Link to="/settings">Settings</Link>
-              </li>
-              <li>
-                <Link to="/instructions">Instructions</Link>
-              </li>
-            </ul>
-          </div>
-        )}
+
+        <div>
+          <button className="menu-button" onClick={toggleMenu}>
+            ☰
+            <div>
+              {isMenuOpen && (
+                <div className="hamburger">
+                  <ul>
+                    <li>
+                      <Link to="/settings">Settings</Link>
+                    </li>
+                    <li>
+                      <Link to="/instructions">Instructions</Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          </button>
+        </div>
       </div>
     </>
   );
