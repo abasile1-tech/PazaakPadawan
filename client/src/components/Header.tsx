@@ -12,19 +12,19 @@ function Header() {
         <button className="menu-button" onClick={toggleMenu}>
           ☰
         </button>
+        {isMenuOpen && (
+          <div className="hamburger">
+            <ul>
+              <li>
+                <Link to="/settings">Settings</Link>
+              </li>
+              <li>
+                <Link to="/instructions">Instructions</Link>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
-      {isMenuOpen && (
-        <div className="hamburger">
-          <ul>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
-            <li>
-              <Link to="/instructions">Instructions</Link>
-            </li>
-          </ul>
-        </div>
-      )}
     </>
   );
 }
