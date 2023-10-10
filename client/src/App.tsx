@@ -5,6 +5,8 @@ import HomePage from './components/HomePage';
 import SoloGame from './components/SoloGame';
 import PVPGame from './components/PVPGame';
 import DeckBuilder from './components/DeckBuilder';
+import Settings from './components/Settings';
+import Instructions from './components/Instructions';
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/instructions" element={<Instructions />} />
           <Route path="/chat" element={<Chat />} />
           <Route path="/solo" element={<SoloGame />} />
           <Route path="/pvp" element={<PVPGame />} />
