@@ -1,7 +1,6 @@
 import BackgroundMusic from './BackgroundMusic';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Chat from './Chat';
 
 function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -43,7 +42,6 @@ function HomePage() {
         </p>
       </div>
       <BackgroundMusic musicChoice={musicChoice} />
-      {<Chat />}
     </div>
   );
 }
