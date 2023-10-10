@@ -14,19 +14,13 @@ function Header() {
         </button>
       </div>
       {isMenuOpen && (
-        <div className="homepage">
+        <div className="hamburger">
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/settings">Settings</Link>
             </li>
             <li>
-              <Link to="/solo">Solo Game</Link>
-            </li>
-            <li>
-              <Link to="/pvp">PVP Game</Link>
-            </li>
-            <li>
-              <Link to="/deck">Deck Builder</Link>
+              <Link to="/instructions">Instructions</Link>
             </li>
           </ul>
         </div>
