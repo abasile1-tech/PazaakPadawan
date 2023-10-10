@@ -1,13 +1,11 @@
 import './App.css';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import HomePage from './HomePage';
 // import WebSocketClient from './services/WebSocketService';
 
 function App() {
-  return (
-    <>
-      <h1>Hello World!</h1>
-      {/* <WebSocketClient /> */}
-    </>
-  );
+  return <>{/* <WebSocketClient /> */}</>;
 }
 
 export default App;
