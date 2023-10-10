@@ -1,5 +1,6 @@
 import BackgroundMusic from './BackgroundMusic';
 import ScoreLights from './ScoreLights';
+import Card from './Card';
 
 function SoloGame() {
   let musicChoice: string = 'soloGame';
@@ -11,6 +12,8 @@ function SoloGame() {
       <BackgroundMusic musicChoice={musicChoice} />
       <ScoreLights numGamesWon={numGamesWonPlayer} />
       <ScoreLights numGamesWon={numGamesWonOpponent} />
+      <Card value={-1} color="red" cardType="normal_card" />
+      <Card value={+1} color="blue" cardType="normal_card" />
     </>
   );
 }
