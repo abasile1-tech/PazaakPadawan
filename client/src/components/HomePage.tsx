@@ -1,10 +1,10 @@
+import BackgroundMusic from './BackgroundMusic';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Chat from './Chat';
 
 function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  let musicChoice: string = 'homePage';
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -49,7 +49,7 @@ function HomePage() {
         </Link>
       </div>
 
-      {<Chat />}
+      <BackgroundMusic musicChoice={musicChoice} />
     </div>
   );
 }
