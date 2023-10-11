@@ -58,13 +58,13 @@
 
 .card_image {
   width:100px;
+  padding: 3px;
 }
 
 .cards_container {
 }
 
 .red_card .blue_card{
-  padding:1px;
 }
 
 .playerBoard {
