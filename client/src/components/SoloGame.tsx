@@ -14,8 +14,10 @@ function SoloGame() {
       <BackgroundMusic musicChoice={musicChoice} />
       <ScoreLights numGamesWon={numGamesWonPlayer} />
       <ScoreLights numGamesWon={numGamesWonOpponent} />
-      <Card value={-1} color="red" cardType="normal_card" />
-      <Card value={+1} color="blue" cardType="normal_card" />
+      <div className="cardsContainer">
+        <Card value={-1} color="red" cardType="normal_card" />
+        <Card value={+1} color="blue" cardType="normal_card" />
+      </div>
     </>
   );
 }
