@@ -25,7 +25,7 @@ function SoloGame() {
             <Card value={+4} color="blue" cardType="normal_card" />
             <Card value={-2} color="red" cardType="normal_card" />
           </div>
-          <div>
+          <div className="turnOptions">
             <button>Stand</button>
             <button>End Turn</button>
           </div>
