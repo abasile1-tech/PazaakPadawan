@@ -22,7 +22,7 @@ function SoloGame() {
             style={{ display: 'flex', flexWrap: 'wrap' }}
           >
             <Card value={-1} color="red" cardType="normal_card" />
-            <Card value={+4} color="blue" cardType="normal_card" />
+            <Card value={-4} color="blue" cardType="normal_card" />
             <Card value={-2} color="red" cardType="normal_card" />
           </div>
           <div className="turnOptions">

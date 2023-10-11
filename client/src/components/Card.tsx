@@ -9,6 +9,15 @@ interface CardProps {
 class Card extends Component<CardProps> {
   render() {
     const { value, color, cardType } = this.props;
+    if (color == 'blue' && value <= 0) {
+      console.warn(
+        'blue card has a negative value. blue card values should be positive'
+      );
+    } else if (color == 'red' && value >= 0) {
+      console.warn(
+        'red card has a positive value. red card values should be negative.'
+      );
+    }
 
     return (
       <div className={`card ${color}_card`}>
