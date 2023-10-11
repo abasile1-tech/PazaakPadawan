@@ -2,6 +2,7 @@ import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 import ScoreLights from './ScoreLights';
 import Card from './Card';
+import TurnIndicator from './TurnIndicator';
 
 function SoloGame() {
   let musicChoice: string = 'soloGame';
@@ -12,6 +13,7 @@ function SoloGame() {
       <Header />
       <h1>Solo Game!</h1>
       <BackgroundMusic musicChoice={musicChoice} />
+      <TurnIndicator playerName="Pin-Gun Jinn" />
       <div className="playerBoard">
         <div className="player1">
           <ScoreLights numGamesWon={numGamesWonPlayer} />
