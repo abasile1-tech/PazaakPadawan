@@ -4,7 +4,7 @@ const characters = [
   {
     id: 1,
     name: 'Chillbacca',
-    image: 'src/assets/images/penguins/chillbacca1.jpeg',
+    image: 'src/assets/images/penguins/chillbacca1.png',
   },
   {
     id: 2,
