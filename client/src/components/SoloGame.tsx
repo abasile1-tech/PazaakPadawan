@@ -17,16 +17,24 @@ function SoloGame() {
       <div className="playerBoard">
         <div className="player1">
           <ScoreLights numGamesWon={numGamesWonPlayer} />
-          <div className="cardsContainer">
+          <div
+            className="cardsContainer"
+            style={{ display: 'flex', flexWrap: 'wrap' }}
+          >
             <Card value={-1} color="red" cardType="normal_card" />
-            <Card value={+1} color="blue" cardType="normal_card" />
+            <Card value={+4} color="blue" cardType="normal_card" />
+            <Card value={-2} color="red" cardType="normal_card" />
           </div>
         </div>
         <div className="player2">
           <ScoreLights numGamesWon={numGamesWonOpponent} />
-          <div className="cardsContainer">
-            <Card value={-1} color="red" cardType="normal_card" />
-            <Card value={+1} color="blue" cardType="normal_card" />
+          <div
+            className="cardsContainer"
+            style={{ display: 'flex', flexWrap: 'wrap' }}
+          >
+            <Card value={+3} color="blue" cardType="normal_card" />
+            <Card value={-6} color="red" cardType="normal_card" />
+            <Card value={+5} color="blue" cardType="normal_card" />
           </div>
         </div>
       </div>
