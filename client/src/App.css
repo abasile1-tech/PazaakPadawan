@@ -46,7 +46,7 @@
 
 .card_number {
   position: absolute;
-  font-size: 40px;
+  font-size: 25px;
   max-width: 55px;
   max-height: 55px;
   margin: 0px;
@@ -57,6 +57,7 @@
 }
 
 .card_image {
+  width:100px;
 }
 
 .cards_container {

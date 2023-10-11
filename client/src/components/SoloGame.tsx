@@ -26,9 +26,12 @@ function SoloGame() {
             className="cardsContainer"
             style={{ display: 'flex', flexWrap: 'wrap' }}
           >
+            <Card value={5} color="blue" cardType="normal_card" />
+            <Card value={4} color="blue" cardType="normal_card" />
+            <Card value={1} color="blue" cardType="normal_card" />
+            <Card value={3} color="blue" cardType="normal_card" />
+            <Card value={8} color="blue" cardType="normal_card" />
             <Card value={-1} color="red" cardType="normal_card" />
-            <Card value={-4} color="blue" cardType="normal_card" />
-            <Card value={-2} color="red" cardType="normal_card" />
           </div>
           <div className="turnOptions">
             <button>Stand</button>
@@ -40,9 +43,11 @@ function SoloGame() {
             className="cardsContainer"
             style={{ display: 'flex', flexWrap: 'wrap' }}
           >
-            <Card value={+3} color="blue" cardType="normal_card" />
-            <Card value={-6} color="red" cardType="normal_card" />
-            <Card value={+5} color="blue" cardType="normal_card" />
+            <Card value={6} color="blue" cardType="normal_card" />
+            <Card value={5} color="blue" cardType="normal_card" />
+            <Card value={6} color="blue" cardType="normal_card" />
+            <Card value={5} color="blue" cardType="normal_card" />
+            <Card value={-3} color="red" cardType="normal_card" />
           </div>
         </div>
       </div>
