@@ -13,6 +13,7 @@ function SoloGame() {
       <Header />
       <h1>Solo Game!</h1>
       <BackgroundMusic musicChoice={musicChoice} />
+      <TurnIndicator playerName="Pin-Gun Jinn" />
       <div className="playerBoard">
         <div className="player1">
           <ScoreLights numGamesWon={numGamesWonPlayer} />
@@ -29,7 +30,6 @@ function SoloGame() {
           </div>
         </div>
       </div>
-      <TurnIndicator playerName="Pin-Gun Jinn" />
     </>
   );
 }

@@ -61,3 +61,31 @@
 .player1 {
   flex: 1;
 }
+
+/* #player-name {
+  border-radius: 20px;
+background: #1C2C3B;
+width: 300px;
+height: 60px;
+color: #FFF;
+font-size: 25px;
+font-style: normal;
+font-weight: 300;
+line-height: normal;
+position: center;
+} */
+
+
+.turn-indicator {
+  background-color: #1C2C3B;
+  color: #fff;
+  text-align: center;
+  border-radius: 20px; 
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 auto; 
+  min-width: 60px; 
+  max-width: 35%; 
+}
