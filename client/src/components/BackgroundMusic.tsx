@@ -12,6 +12,7 @@ const BackgroundMusic: React.FC<backgroundMusicProps> = ({ musicChoice }) => {
     soloGame: cantina,
     pvpGame: cantina,
     deckBuilder: openingTheme,
+    settingsPage: openingTheme,
   };
 
   const backgroundMusic = MUSIC_LOOKUP[musicChoice];

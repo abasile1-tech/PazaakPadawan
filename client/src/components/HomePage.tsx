@@ -1,6 +1,8 @@
 import BackgroundMusic from './BackgroundMusic';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import User from './User';
+import Character from './Character';
 
 function HomePage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -30,7 +32,8 @@ function HomePage() {
 
       <div className="main-content">
         <h1>Welcome to Pazaak</h1>
-
+        <User />
+        <Character />
         <p>
           Pazaak, a game dating back to Old Republic times, was a popular card
           game in which the goal was to come closest to 20 without going over.
