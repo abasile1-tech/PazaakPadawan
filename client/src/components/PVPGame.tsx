@@ -11,7 +11,6 @@ function PVPGame() {
     <>
       <Header />
       <h1>PVP Game!</h1>
-      <BackgroundMusic musicChoice={musicChoice} />
       <ScoreLights numGamesWon={numGamesWonPlayer} />
       <ScoreLights numGamesWon={numGamesWonOpponent} />
       <Chat />

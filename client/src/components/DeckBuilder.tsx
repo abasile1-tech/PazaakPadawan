@@ -7,7 +7,6 @@ function DeckBuilder() {
     <>
       <Header />
       <h1>Deck Builder!</h1>
-      <BackgroundMusic musicChoice={musicChoice} />
     </>
   );
 }

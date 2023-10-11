@@ -44,8 +44,6 @@ function HomePage() {
           <button className="character-button">Choose your character</button>
         </Link>
       </div>
-
-      <BackgroundMusic musicChoice={musicChoice} />
     </div>
   );
 }

@@ -12,7 +12,6 @@ function SoloGame() {
     <>
       <Header />
       <h1>Solo Game!</h1>
-      <BackgroundMusic musicChoice={musicChoice} />
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
         <h1>player 1</h1>
