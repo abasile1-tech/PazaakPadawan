@@ -34,7 +34,16 @@ function Character() {
   );
 
   const handleCharacterSelect = (characterId: number) => {
-    setSelectedCharacter(characterId);
+    const selectedCharacterData = characters.find(
+      (character) => character.id === characterId
+    );
+    if (selectedCharacterData) {
+      setSelectedCharacter(selectedCharacterData);
+      localStorage.setItem(
+        'selectedCharacter',
+        JSON.stringify(selectedCharacterData)
+      );
+    }
   };
 
   return (
@@ -56,11 +65,8 @@ function Character() {
       {selectedCharacter !== null && (
         <div>
           <h3>You chose to be:</h3>
-          <img
-            src={characters[selectedCharacter - 1].image}
-            alt={characters[selectedCharacter - 1].name}
-          />
-          <p> {characters[selectedCharacter - 1].name}</p>
+          <img src={selectedCharacter.image} alt={selectedCharacter.name} />
+          <p> {selectedCharacter.name}</p>
         </div>
       )}
     </div>
