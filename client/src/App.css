@@ -3,6 +3,21 @@
   justify-content: space-between;
 }
 
+.main-content {
+  display:flex;
+  justify-content: space-around;
+}
+
+#image-three-cards {
+  max-width: 500px;
+  max-height: 500px;
+}
+
+#home-page-text {
+  max-width: 500px;
+  max-height: 500px;
+}
+
 .menu-button {
 
 }

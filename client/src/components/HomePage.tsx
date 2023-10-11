@@ -1,22 +1,30 @@
 import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
-import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 function HomePage() {
-  let musicChoice: string = 'homePage';
+  const musicChoice: string = 'homePage';
 
   return (
     <div className="home-page">
       <Header />
+      <h2>User Bar Home Component</h2>
 
       <div className="main-content">
-        <h1>Welcome to Pazaak</h1>
-
-        <p>
-          Pazaak, a game dating back to Old Republic times, was a popular card
-          game in which the goal was to come closest to 20 without going over.
-        </p>
+        <div id="home-page-text">
+          <h1>Pazaak</h1>
+          <h2>
+            Pazaak, a game dating back to Old Republic times, was a popular card
+            game in which the goal was to come closest to 20 without going over.
+          </h2>
+        </div>
+        <div>
+          <img
+            id="image-three-cards"
+            src="src\assets\images\cards\HomepageCard.png"
+            alt="three cards"
+          />
+        </div>
       </div>
 
       <div className="buttons">
