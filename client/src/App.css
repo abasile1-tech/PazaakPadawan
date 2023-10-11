@@ -18,6 +18,34 @@
   max-height: 500px;
 }
 
+.card_content {
+  position: relative;
+  text-align: center;
+  height:fit-content;
+  width: fit-content;
+}
+
+.card_number {
+  position: absolute;
+  font-size: 40px;
+  max-width: 55px;
+  max-height: 55px;
+  margin: 0px;
+  padding: 0px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%)
+}
+
+.cards_container {
+  display: flex;
+  justify-content: space-around;
+}
+
+.red_card .blue_card {
+
+}
+
 .menu-button {
 
 }
