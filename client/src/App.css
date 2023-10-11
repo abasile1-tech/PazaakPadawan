@@ -1,8 +1,18 @@
+/* header */
 .headerdiv {
   display: flex;
   justify-content: space-between;
 }
 
+.menu-button {
+
+}
+
+.hamburger {
+  
+}
+
+/* home page */
 .main-content {
   display:flex;
   justify-content: space-around;
@@ -17,6 +27,8 @@
   max-width: 500px;
   max-height: 500px;
 }
+
+/* player page */
 
 .card_content {
   position: relative;
@@ -37,27 +49,37 @@
   transform: translate(-50%, -50%)
 }
 
+.card_image {
+  /* object-fit: contain; */
+}
+
 .cards_container {
-  display: flex;
-
+  display: flex !important;
 }
 
-.red_card .blue_card {
-  
+.red_card {
+  /* object-fit: contain; */
+  /* background-color: red; */
+  display:flex;
+  padding:1px;
 }
 
-.menu-button {
-
-}
-
-.hamburger {
-  
+.blue_card {
+  /* background-color: blue; */
+  display:flex;
+  padding:1px;
 }
 
 .playerBoard {
   display: flex;
+  justify-content: space-between;
 }
 
 .player1 {
-  flex: 1;
+  /* flex: 1; */
+  width:50%;
+}
+
+.player2 {
+  width: 50%;
 }
