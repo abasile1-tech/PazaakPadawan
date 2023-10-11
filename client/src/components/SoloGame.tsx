@@ -13,10 +13,15 @@ function SoloGame() {
       <Header />
       <h1>Solo Game!</h1>
       <BackgroundMusic musicChoice={musicChoice} />
-      <TurnIndicator playerName="Pin-Gun Jinn" />
+      <div className="scoreBoard">
+        <ScoreLights numGamesWon={numGamesWonPlayer} />
+        <h1>player 1</h1>
+        <TurnIndicator playerName="Pin-Gun Jinn" />
+        <h1>player 2</h1>
+        <ScoreLights numGamesWon={numGamesWonOpponent} />
+      </div>
       <div className="playerBoard">
         <div className="player1">
-          <ScoreLights numGamesWon={numGamesWonPlayer} />
           <div
             className="cardsContainer"
             style={{ display: 'flex', flexWrap: 'wrap' }}
@@ -31,7 +36,6 @@ function SoloGame() {
           </div>
         </div>
         <div className="player2">
-          <ScoreLights numGamesWon={numGamesWonOpponent} />
           <div
             className="cardsContainer"
             style={{ display: 'flex', flexWrap: 'wrap' }}
