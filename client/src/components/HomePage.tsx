@@ -1,43 +1,34 @@
 import BackgroundMusic from './BackgroundMusic';
-import React, { useState } from 'react';
+import Header from './Header';
 import { Link } from 'react-router-dom';
 import User from './User';
 import Character from './Character';
 
 function HomePage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  let musicChoice: string = 'homePage';
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  const musicChoice: string = 'homePage';
 
   return (
     <div className="home-page">
-      <button className="menu-button" onClick={toggleMenu}>
-        ☰
-      </button>
-
-      {isMenuOpen && (
-        <div className="hamburger">
-          <ul>
-            <li>
-              <Link to="/settings">Settings</Link>
-            </li>
-            <li>
-              <Link to="/instructions">Instructions</Link>
-            </li>
-          </ul>
-        </div>
-      )}
+      <Header />
+      <h2>User Bar Home Component</h2>
 
       <div className="main-content">
-        <h1>Welcome to Pazaak</h1>
-        <User />
-        <Character />
-        <p>
-          Pazaak, a game dating back to Old Republic times, was a popular card
-          game in which the goal was to come closest to 20 without going over.
-        </p>
+        <div id="home-page-text">
+          <h1>Pazaak</h1>
+          <User />
+          <Character />
+          <h2>
+            Pazaak, a game dating back to Old Republic times, was a popular card
+            game in which the goal was to come closest to 20 without going over.
+          </h2>
+        </div>
+        <div>
+          <img
+            id="image-three-cards"
+            src="src\assets\images\cards\HomepageCard.png"
+            alt="three cards"
+          />
+        </div>
       </div>
 
       <div className="buttons">
