@@ -39,11 +39,11 @@
 
 .cards_container {
   display: flex;
-  justify-content: space-around;
+
 }
 
 .red_card .blue_card {
-
+  
 }
 
 .menu-button {
@@ -54,3 +54,10 @@
   
 }
 
+.playerBoard {
+  display: flex;
+}
+
+.player1 {
+  flex: 1;
+}
