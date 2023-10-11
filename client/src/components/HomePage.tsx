@@ -1,6 +1,8 @@
 import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 import { Link } from 'react-router-dom';
+import User from './User';
+import Character from './Character';
 
 function HomePage() {
   const musicChoice: string = 'homePage';
@@ -13,6 +15,8 @@ function HomePage() {
       <div className="main-content">
         <div id="home-page-text">
           <h1>Pazaak</h1>
+          <User />
+          <Character />
           <h2>
             Pazaak, a game dating back to Old Republic times, was a popular card
             game in which the goal was to come closest to 20 without going over.
