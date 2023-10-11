@@ -2,7 +2,6 @@ import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 import { Link } from 'react-router-dom';
 // import User from './User';
-import Character from './Character';
 
 function HomePage() {
   const musicChoice: string = 'homePage';
