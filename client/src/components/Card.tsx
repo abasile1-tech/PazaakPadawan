@@ -4,11 +4,12 @@ interface CardProps {
   value: number;
   color: string;
   cardType: string;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 class Card extends Component<CardProps> {
   render() {
-    const { value, color, cardType } = this.props;
+    const { value, color, cardType, onClick } = this.props;
     if (color == 'blue' && value <= 0) {
       console.warn(
         'blue card has a negative value. blue card values should be positive'
@@ -20,7 +21,7 @@ class Card extends Component<CardProps> {
     }
 
     return (
-      <div className={`card ${color}_card`}>
+      <div className={`card ${color}_card`} onClick={onClick}>
         <div className="card_content">
           <img
             src={`src/assets/images/cards/${color}_card.png`}

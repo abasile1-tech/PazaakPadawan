@@ -244,3 +244,26 @@
  
   
 }
+
+/* popup message */
+.popup-message{
+  background-color: #1C2C3B;
+  border:3px solid #865DFF;
+  border-radius: 20px;
+  margin: auto;
+  text-align: center;
+  min-width: 60px; 
+  max-width: 300px; 
+  
+} 
+
+.pop-message-button{
+  border-radius: 30px;
+  border: 3px solid #FFF;
+  background: #0E1820;
+
+}
+/* .user-bar {
+  display: flex;
+  justify-content: space-between;
+} */

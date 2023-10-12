@@ -4,8 +4,7 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
-import ScoreKeeper from './ScoreKeeper';
-import UserBarComponent from './userBarComponent';
+import PlayBar from './PlayBar';
 
 interface SoloGameProps {}
 
@@ -16,54 +15,56 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={2} color="blue" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
-  const [playerTable, setPlayerTable] = useState([
-    <Card value={5} color="blue" cardType="normal_card" />,
-    <Card value={4} color="blue" cardType="normal_card" />,
-    <Card value={2} color="blue" cardType="normal_card" />,
-    <Card value={4} color="blue" cardType="normal_card" />,
-  ]);
+  const [playerTable, setPlayerTable] = useState([]);
   const [opponentHand, setOpponentHand] = useState([
     <Card value={-1} color="red" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
-  const [opponentTable, setOpponentTable] = useState([
-    <Card value={3} color="blue" cardType="normal_card" />,
-    <Card value={5} color="blue" cardType="normal_card" />,
-    <Card value={2} color="blue" cardType="normal_card" />,
-    <Card value={4} color="blue" cardType="normal_card" />,
-  ]);
+  const [opponentTable, setOpponentTable] = useState([]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
-  const [playerTally, setplayerTally] = useState(15);
-  const [opponentTally, setOpponentTally] = useState(14);
+  const [playerTally, setPlayerTally] = useState(0);
+  const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice, setMusicChoice] = useState('soloGame');
   const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
   const [opponentName, setOpponentName] = useState('Darth Molt');
+  const [turnTracker, setTurnTracker] = useState(true);
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
   }
 
-  function addCardToOpponentTable() {
+  function addCardToTable(turn: boolean) {
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
-    setOpponentTally(opponentTally + randomNumber);
-    setOpponentTable([...opponentTable, newCard]);
+    if (turn) {
+      setPlayerTally(playerTally + randomNumber);
+      setPlayerTable([...playerTable, newCard]);
+    } else if (!turn) {
+      setOpponentTally(opponentTally + randomNumber);
+      setOpponentTable([...opponentTable, newCard]);
+    }
+  }
+
+  function handleEndTurnButtonClick() {
+    addCardToTable(turnTracker);
+    setTurnTracker(!turnTracker);
+  }
+
+  function moveCard() {
+    console.log('card should be moving');
   }
 
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <UserBarComponent />
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
-        <h3>{playerName}</h3>
-        <ScoreKeeper cardTally={playerTally} />
+        <PlayBar playerTally={playerTally} identity="player" />
         <TurnIndicator playerName={playerName} />
-        <h3>{opponentName}</h3>
-        <ScoreKeeper cardTally={opponentTally} />
+        <PlayBar playerTally={opponentTally} identity="opponent" />
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
@@ -71,16 +72,16 @@ function SoloGame(props: SoloGameProps): JSX.Element {
         <div className="player1">
           <Hand hand={playerTable} />
           <hr />
-          <Hand hand={playerHand} />
+          <Hand hand={playerHand} moveCard={moveCard} />
           <div className="turnOptions">
             <button>Stand</button>
-            <button onClick={addCardToOpponentTable}>End Turn</button>
+            <button onClick={handleEndTurnButtonClick}>End Turn</button>
           </div>
         </div>
         <div className="player2">
           <Hand hand={opponentTable} />
           <hr />
-          <Hand hand={opponentHand} />
+          <Hand hand={opponentHand} moveCard={moveCard} />
         </div>
       </div>
     </>
