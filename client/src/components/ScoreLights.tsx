@@ -20,6 +20,7 @@ function ScoreLights(props: { numGamesWon: number }) {
   return (
     <>
       <img
+        style={{ alignSelf: 'center' }}
         id="image_score_lights"
         src={`src/assets/images/lights/lights${lightsvar}.png`}
         alt="score lights"
