@@ -39,7 +39,6 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <h1>Solo Game!</h1>
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
         <h3>{playerName}</h3>
