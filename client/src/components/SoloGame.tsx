@@ -48,7 +48,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
-    setOpponentTally(10);
+    setOpponentTally(opponentTally + randomNumber);
     setOpponentTable([...opponentTable, newCard]);
   }
 

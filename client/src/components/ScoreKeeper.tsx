@@ -1,7 +1,8 @@
-import { useState } from 'react';
+interface ScoreKeeperProps {
+  cardTally: number;
+}
 
-function ScoreKeeper(props: { cardTally: number }) {
-  const [cardTally, setCardTally] = useState(props.cardTally);
+function ScoreKeeper({ cardTally }: ScoreKeeperProps) {
   return (
     <>
       <h3>({cardTally})</h3>
