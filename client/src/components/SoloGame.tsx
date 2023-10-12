@@ -1,10 +1,24 @@
-import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 import ScoreLights from './ScoreLights';
+import React, { useState } from 'react';
+import ReactDOM from 'react-dom';
+import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
 
-function SoloGame() {
+interface SoloGameProps {}
+
+function SoloGame(props: SoloGameProps): JSX.Element {
+  const [playerHand, setPlayerHand] = useState([
+    <Card value={-3} color="red" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
+    <Card value={2} color="blue" cardType="normal_card" />,
+    <Card value={-2} color="red" cardType="normal_card" />,
+  ]);
+  const [opponentHand, setOpponentHand] = useState([
+    <Card value={-1} color="red" cardType="normal_card" />,
+    <Card value={-2} color="red" cardType="normal_card" />,
+  ]);
   const musicChoice = 'soloGame';
   let numGamesWonPlayer = 1;
   let numGamesWonOpponent = 2;
@@ -32,15 +46,7 @@ function SoloGame() {
             <Card value={4} color="blue" cardType="normal_card" />
           </div>
           <hr />
-          <div
-            className="handContainer"
-            style={{ display: 'flex', flexWrap: 'wrap' }}
-          >
-            <Card value={-3} color="red" cardType="normal_card" />
-            <Card value={4} color="blue" cardType="normal_card" />
-            <Card value={2} color="blue" cardType="normal_card" />
-            <Card value={-2} color="red" cardType="normal_card" />
-          </div>
+          <Hand hand={playerHand} />
           <div className="turnOptions">
             <button>Stand</button>
             <button>End Turn</button>
@@ -57,17 +63,11 @@ function SoloGame() {
             <Card value={5} color="blue" cardType="normal_card" />
           </div>
           <hr />
-          <div
-            className="handContainer"
-            style={{ display: 'flex', flexWrap: 'wrap' }}
-          >
-            <Card value={-1} color="red" cardType="normal_card" />
-            <Card value={-2} color="red" cardType="normal_card" />
-          </div>
+          <Hand hand={opponentHand} />
         </div>
       </div>
     </>
   );
 }
-
+ReactDOM.render(<SoloGame />, document.getElementById('root'));
 export default SoloGame;
