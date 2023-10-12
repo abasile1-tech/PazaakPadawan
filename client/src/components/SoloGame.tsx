@@ -5,7 +5,11 @@ import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
 import ScoreKeeper from './ScoreKeeper';
+<<<<<<< HEAD
 import PlayBar from './PlayBar';
+=======
+import UserBarComponent from './userBarComponent';
+>>>>>>> main
 
 interface SoloGameProps {}
 
@@ -56,7 +60,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <PlayBar />
+      <UserBarComponent />
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
         <h3>{playerName}</h3>
