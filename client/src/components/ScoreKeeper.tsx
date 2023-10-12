@@ -5,7 +5,7 @@ interface ScoreKeeperProps {
 function ScoreKeeper({ cardTally }: ScoreKeeperProps) {
   return (
     <>
-      <h3>({cardTally})</h3>
+      <h3>{cardTally}</h3>
     </>
   );
 }
