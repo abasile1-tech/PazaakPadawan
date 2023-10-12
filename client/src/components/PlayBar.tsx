@@ -8,14 +8,12 @@ interface PlayBarProps {
 const PlayBar = ({ playerTally, identity }: PlayBarProps) => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  if (identity == 'player') {
-    useEffect(() => {
-      const storedCharacter = localStorage.getItem('selectedCharacter');
-      if (storedCharacter) {
-        setSelectedCharacter(JSON.parse(storedCharacter));
-      }
-    }, []);
-  }
+  useEffect(() => {
+    const storedCharacter = localStorage.getItem('selectedCharacter');
+    if (storedCharacter) {
+      setSelectedCharacter(JSON.parse(storedCharacter));
+    }
+  }, []);
 
   return (
     <>

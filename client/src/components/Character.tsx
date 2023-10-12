@@ -24,11 +24,11 @@ const characters = [
     name: 'Pen-Guin Jinn',
     image: 'src/assets/images/penguins/pen-giunjinn1.jpeg',
   },
-  {
-    id: 5,
-    name: 'Darth Molt',
-    image: 'src/assets/images/penguins/penguinmaul1.jpeg',
-  },
+  // {
+  //   id: 5,
+  //   name: 'Darth Molt',
+  //   image: 'src/assets/images/penguins/penguinmaul1.jpeg',
+  // },
 ];
 
 function Character() {
