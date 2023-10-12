@@ -37,6 +37,11 @@
 
 /* player page */
 
+#image_score_lights {
+  width: 50px;
+  height: 75px;
+}
+
 .card_content {
   position: relative;
   text-align: center;
