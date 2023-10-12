@@ -3,10 +3,31 @@ import ScoreLights from './ScoreLights';
 import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
-import TurnIndicator from './TurnIndicator';
 import PlayBar from './PlayBar';
 
 interface SoloGameProps {}
+
+interface Player {
+  name: string;
+  action: PlayerState;
+  wonGame: boolean;
+  isTurn: boolean;
+  hand: typeof Hand;
+  tally: number;
+  table: typeof Hand;
+}
+
+enum GameState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+  STAND = 'stand',
+}
+
+enum PlayerState {
+  STAND = 'stand',
+  ENDTURN = 'endturn',
+}
 
 function SoloGame(props: SoloGameProps): JSX.Element {
   const [playerHand, setPlayerHand] = useState([
@@ -26,9 +47,8 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   const [playerTally, setPlayerTally] = useState(0);
   const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice, setMusicChoice] = useState('soloGame');
-  const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
-  const [opponentName, setOpponentName] = useState('Darth Molt');
   const [turnTracker, setTurnTracker] = useState(true);
+  const [gameState, setGameState] = useState(GameState.INITIAL);
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
@@ -49,8 +69,19 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   }
 
   function handleEndTurnButtonClick() {
-    addCardToTable(turnTracker);
+    const tmpTracker = !turnTracker;
+    setTurnTracker(tmpTracker);
+    addCardToTable(tmpTracker);
+  }
+
+  function handleStandButtonClick() {
     setTurnTracker(!turnTracker);
+    setGameState(GameState.STAND);
+  }
+
+  function handleStartButtonClick() {
+    addCardToTable(turnTracker);
+    setGameState(GameState.STARTED);
   }
 
   function moveCard() {
@@ -62,9 +93,11 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <Header musicChoice={musicChoice} />
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
-        <PlayBar playerTally={playerTally} identity="player" />
-        <TurnIndicator playerName={playerName} />
-        <PlayBar playerTally={opponentTally} identity="opponent" />
+        <PlayBar
+          playerTally={playerTally}
+          opponentTally={opponentTally}
+          turnTracker={turnTracker}
+        />
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
@@ -74,8 +107,30 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <hr />
           <Hand hand={playerHand} moveCard={moveCard} />
           <div className="turnOptions">
-            <button>Stand</button>
-            <button onClick={handleEndTurnButtonClick}>End Turn</button>
+            <button
+              onClick={handleStandButtonClick}
+              disabled={
+                gameState == GameState.INITIAL || gameState == GameState.STAND
+              }
+            >
+              Stand
+            </button>
+            <button
+              onClick={handleEndTurnButtonClick}
+              disabled={
+                gameState == GameState.INITIAL || gameState == GameState.STAND
+              }
+            >
+              End Turn
+            </button>
+            <button
+              onClick={handleStartButtonClick}
+              disabled={
+                gameState == GameState.STARTED || gameState == GameState.STAND
+              }
+            >
+              Start Game
+            </button>
           </div>
         </div>
         <div className="player2">

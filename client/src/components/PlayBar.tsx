@@ -1,27 +1,31 @@
 import { useEffect, useState } from 'react';
 import ScoreKeeper from './ScoreKeeper';
+import TurnIndicator from './TurnIndicator';
 interface PlayBarProps {
   playerTally: number;
-  identity: string;
+  opponentTally: number;
+  turnTracker: boolean;
 }
 
-const PlayBar = ({ playerTally, identity }: PlayBarProps) => {
+const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [opponentName, setOpponentName] = useState('Darth Molt');
 
-  if (identity == 'player') {
-    useEffect(() => {
-      const storedCharacter = localStorage.getItem('selectedCharacter');
-      if (storedCharacter) {
-        setSelectedCharacter(JSON.parse(storedCharacter));
-      }
-    }, []);
-  }
+  useEffect(() => {
+    const storedCharacter = localStorage.getItem('selectedCharacter');
+    if (storedCharacter) {
+      setSelectedCharacter(JSON.parse(storedCharacter));
+    }
+  }, []);
 
   return (
     <>
-      <h2>
-        {identity === 'player' ? (
-          selectedCharacter ? (
+      <div
+        className="play_bar"
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
+        <h2>
+          {selectedCharacter ? (
             <div className="user-bar">
               <img src={selectedCharacter.image} alt={selectedCharacter.name} />
               <h3>{selectedCharacter.name}!</h3>
@@ -29,18 +33,30 @@ const PlayBar = ({ playerTally, identity }: PlayBarProps) => {
             </div>
           ) : (
             <p>Character is not chosen</p>
-          )
-        ) : (
+          )}
+        </h2>
+        <div className="turn_indicator">
+          {turnTracker ? (
+            selectedCharacter ? (
+              <TurnIndicator playerName={selectedCharacter.name} />
+            ) : (
+              <TurnIndicator playerName="player" />
+            )
+          ) : (
+            <TurnIndicator playerName={opponentName} />
+          )}
+        </div>
+        <h2>
           <div className="user-bar">
             <img
               src={'src/assets/images/penguins/penguinmaul1.jpeg'}
-              alt="Darth Molt"
+              alt={opponentName}
             />
-            <h3>Darth Molt</h3>
-            <ScoreKeeper cardTally={playerTally} />
+            <h3>{opponentName}</h3>
+            <ScoreKeeper cardTally={opponentTally} />
           </div>
-        )}
-      </h2>
+        </h2>
+      </div>
     </>
   );
 };
