@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
+import ScoreKeeper from './ScoreKeeper';
 
 interface SoloGameProps {}
 
@@ -25,10 +26,10 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
   const [opponentTable, setOpponentTable] = useState([
-    <Card value={6} color="blue" cardType="normal_card" />,
+    <Card value={3} color="blue" cardType="normal_card" />,
     <Card value={5} color="blue" cardType="normal_card" />,
-    <Card value={6} color="blue" cardType="normal_card" />,
-    <Card value={5} color="blue" cardType="normal_card" />,
+    <Card value={2} color="blue" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
   ]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
@@ -53,8 +54,10 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
         <h3>{playerName}</h3>
+        <ScoreKeeper cardTally={15} />
         <TurnIndicator playerName={playerName} />
         <h3>{opponentName}</h3>
+        <ScoreKeeper cardTally={14} />
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
