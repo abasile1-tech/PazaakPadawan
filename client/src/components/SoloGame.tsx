@@ -1,7 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
@@ -31,19 +30,31 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={6} color="blue" cardType="normal_card" />,
     <Card value={5} color="blue" cardType="normal_card" />,
   ]);
+  const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
+  const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
+  const [musicChoice, setMusicChoice] = useState('soloGame');
+  const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
+  const [opponentName, setOpponentName] = useState('Darth Molt');
 
-  const musicChoice = 'soloGame';
-  let numGamesWonPlayer = 1;
-  let numGamesWonOpponent = 2;
+  function getRandomNumber(): number {
+    return Math.floor(Math.random() * 10) + 1;
+  }
+
+  function addCardToOpponentTable() {
+    const newCard = (
+      <Card value={getRandomNumber()} color="blue" cardType="normal_card" />
+    );
+    setOpponentTable([...opponentTable, newCard]);
+  }
+
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <h1>Solo Game!</h1>
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
-        <h1>player 1</h1>
-        <TurnIndicator playerName="Pin-Gun Jinn" />
-        <h1>player 2</h1>
+        <h3>{playerName}</h3>
+        <TurnIndicator playerName={playerName} />
+        <h3>{opponentName}</h3>
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
@@ -54,7 +65,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <Hand hand={playerHand} />
           <div className="turnOptions">
             <button>Stand</button>
-            <button>End Turn</button>
+            <button onClick={addCardToOpponentTable}>End Turn</button>
           </div>
         </div>
         <div className="player2">

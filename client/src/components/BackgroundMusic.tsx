@@ -35,7 +35,11 @@ const BackgroundMusic: React.FC<backgroundMusicProps> = ({ musicChoice }) => {
   return (
     <div>
       <audio ref={audioRef} src={backgroundMusic} loop />
-      <img onClick={togglePlay} src={isPlaying ? mute : voice} />
+      <img
+        id="image_music_toggle"
+        onClick={togglePlay}
+        src={isPlaying ? mute : voice}
+      />
     </div>
   );
 };
