@@ -33,6 +33,8 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   ]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
+  const [playerTally, setplayerTally] = useState(15);
+  const [opponentTally, setOpponentTally] = useState(14);
   const [musicChoice, setMusicChoice] = useState('soloGame');
   const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
   const [opponentName, setOpponentName] = useState('Darth Molt');
@@ -54,10 +56,10 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
         <h3>{playerName}</h3>
-        <ScoreKeeper cardTally={15} />
+        <ScoreKeeper cardTally={playerTally} />
         <TurnIndicator playerName={playerName} />
         <h3>{opponentName}</h3>
-        <ScoreKeeper cardTally={14} />
+        <ScoreKeeper cardTally={opponentTally} />
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
