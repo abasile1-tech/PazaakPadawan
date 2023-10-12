@@ -36,6 +36,17 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
   const [opponentName, setOpponentName] = useState('Darth Molt');
 
+  function getRandomNumber(): number {
+    return Math.floor(Math.random() * 10) + 1;
+  }
+
+  function addCardToOpponentTable() {
+    const newCard = (
+      <Card value={getRandomNumber()} color="blue" cardType="normal_card" />
+    );
+    setOpponentTable([...opponentTable, newCard]);
+  }
+
   return (
     <>
       <Header musicChoice={musicChoice} />
@@ -54,7 +65,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <Hand hand={playerHand} />
           <div className="turnOptions">
             <button>Stand</button>
-            <button>End Turn</button>
+            <button onClick={addCardToOpponentTable}>End Turn</button>
           </div>
         </div>
         <div className="player2">
