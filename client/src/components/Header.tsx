@@ -21,12 +21,24 @@ function Header({ musicChoice }: MusicChoiceProps) {
             <div>
               {isMenuOpen && (
                 <div className="hamburger">
-                  <ul>
+                  <ul className="ul">
                     <li>
-                      <Link to="/settings">Settings</Link>
+                      <Link to="/">Home</Link>
                     </li>
                     <li>
                       <Link to="/instructions">Instructions</Link>
+                    </li>
+                    <li>
+                      <Link to="/solo">Solo</Link>
+                    </li>
+                    <li>
+                      <Link to="/pvp">PvP</Link>
+                    </li>
+                    <li>
+                      <Link to="/deck">Deck Builder</Link>
+                    </li>
+                    <li>
+                      <Link to="/character">Choose Character</Link>
                     </li>
                   </ul>
                 </div>
