@@ -3,15 +3,30 @@ import ScoreLights from './ScoreLights';
 import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
-import TurnIndicator from './TurnIndicator';
 import PlayBar from './PlayBar';
 
 interface SoloGameProps {}
+
+interface Player {
+  name: string;
+  action: PlayerState;
+  wonGame: boolean;
+  isTurn: boolean;
+  hand: typeof Hand;
+  tally: number;
+  table: typeof Hand;
+}
 
 enum GameState {
   INITIAL = 'initial',
   STARTED = 'started',
   ENDED = 'ended',
+  STAND = 'stand',
+}
+
+enum PlayerState {
+  STAND = 'stand',
+  ENDTURN = 'endturn',
 }
 
 function SoloGame(props: SoloGameProps): JSX.Element {
@@ -60,8 +75,8 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   }
 
   function handleStandButtonClick() {
-    // need to add code to stop this person's turn until the end of the round
     setTurnTracker(!turnTracker);
+    setGameState(GameState.STAND);
   }
 
   function handleStartButtonClick() {
@@ -94,19 +109,25 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <div className="turnOptions">
             <button
               onClick={handleStandButtonClick}
-              disabled={gameState == GameState.INITIAL}
+              disabled={
+                gameState == GameState.INITIAL || gameState == GameState.STAND
+              }
             >
               Stand
             </button>
             <button
               onClick={handleEndTurnButtonClick}
-              disabled={gameState == GameState.INITIAL}
+              disabled={
+                gameState == GameState.INITIAL || gameState == GameState.STAND
+              }
             >
               End Turn
             </button>
             <button
               onClick={handleStartButtonClick}
-              disabled={gameState == GameState.STARTED}
+              disabled={
+                gameState == GameState.STARTED || gameState == GameState.STAND
+              }
             >
               Start Game
             </button>
