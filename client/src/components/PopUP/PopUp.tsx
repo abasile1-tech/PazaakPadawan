@@ -1,7 +1,5 @@
 //popup message on play page
 //welcome message(game turn = 0), tutorial message, result message(game ends)
-import Title from './Title';
-import Message from './Message';
 
 interface PopUpProps {
   title?: string;
@@ -11,14 +9,15 @@ interface PopUpProps {
 }
 
 function PopUp({ title, onClick, message, buttonText = 'OK' }: PopUpProps) {
-  // const popupTexts = copyForTutorial(popupType);
   return (
-    <div className="popup-message">
-      {title && <Title>{title}</Title>}
-      <Message>{message}</Message>
-      <button onClick={onClick} className="pop-message-button">
-        {buttonText}
-      </button>
+    <div className="popup-box">
+      <div className="popup-content">
+        <h2 className="popup-title">{title}</h2>
+        <p className="popup-message">{message}</p>
+        <button onClick={onClick} className="popup-button">
+          {buttonText}
+        </button>
+      </div>
     </div>
   );
 }
