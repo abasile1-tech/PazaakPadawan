@@ -62,9 +62,9 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <Header musicChoice={musicChoice} />
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
-        <PlayBar playerTally={playerTally} />
+        <PlayBar playerTally={playerTally} identity="player" />
         <TurnIndicator playerName={playerName} />
-        <PlayBar playerTally={opponentTally} />
+        <PlayBar playerTally={opponentTally} identity="opponent" />
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
