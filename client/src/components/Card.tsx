@@ -21,13 +21,12 @@ class Card extends Component<CardProps> {
     }
 
     return (
-      <div className={`card ${color}_card`}>
+      <div className={`card ${color}_card`} onClick={onClick}>
         <div className="card_content">
           <img
             src={`src/assets/images/cards/${color}_card.png`}
             alt="Card Image"
             className="card_image"
-            onClick={onClick}
           />
 
           <p className="card_number"> {value}</p>

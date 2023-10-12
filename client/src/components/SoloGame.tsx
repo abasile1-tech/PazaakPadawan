@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
-import ScoreKeeper from './ScoreKeeper';
 import PlayBar from './PlayBar';
 
 interface SoloGameProps {}
@@ -34,23 +33,34 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   ]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
-  const [playerTally, setplayerTally] = useState(15);
+  const [playerTally, setPlayerTally] = useState(15);
   const [opponentTally, setOpponentTally] = useState(14);
   const [musicChoice, setMusicChoice] = useState('soloGame');
   const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
   const [opponentName, setOpponentName] = useState('Darth Molt');
+  const [turnTracker, setTurnTracker] = useState(true);
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
   }
 
-  function addCardToOpponentTable() {
+  function addCardToTable(table: boolean) {
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
-    setOpponentTally(opponentTally + randomNumber);
-    setOpponentTable([...opponentTable, newCard]);
+    if (!table) {
+      setOpponentTally(opponentTally + randomNumber);
+      setOpponentTable([...opponentTable, newCard]);
+    } else if (table) {
+      setPlayerTally(playerTally + randomNumber);
+      setPlayerTable([...playerTable, newCard]);
+    }
+  }
+
+  function handleEndTurnButtonClick() {
+    addCardToTable(turnTracker);
+    setTurnTracker(!turnTracker);
   }
 
   function moveCard() {
@@ -75,13 +85,13 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <Hand hand={playerHand} moveCard={moveCard} />
           <div className="turnOptions">
             <button>Stand</button>
-            <button onClick={addCardToOpponentTable}>End Turn</button>
+            <button onClick={handleEndTurnButtonClick}>End Turn</button>
           </div>
         </div>
         <div className="player2">
           <Hand hand={opponentTable} />
           <hr />
-          <Hand hand={opponentHand} />
+          <Hand hand={opponentHand} moveCard={moveCard} />
         </div>
       </div>
     </>
