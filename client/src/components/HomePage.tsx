@@ -18,12 +18,14 @@ function HomePage() {
     <div className="home-page">
       <Header />
       <h2>
-        {selectedCharacter && (
+        {selectedCharacter ? (
           <div className="user-bar">
             <h3>You chose to be:</h3>
             <img src={selectedCharacter.image} alt={selectedCharacter.name} />
             <p>{selectedCharacter.name}</p>
           </div>
+        ) : (
+          <p>Character is not chosen</p>
         )}
       </h2>
 
