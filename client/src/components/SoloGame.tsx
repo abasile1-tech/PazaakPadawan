@@ -53,6 +53,11 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     setTurnTracker(!turnTracker);
   }
 
+  function handleStandButtonClick() {
+    // need to add code to stop this person's turn until the end of the round
+    setTurnTracker(!turnTracker);
+  }
+
   function moveCard() {
     console.log('card should be moving');
   }
@@ -74,7 +79,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <hr />
           <Hand hand={playerHand} moveCard={moveCard} />
           <div className="turnOptions">
-            <button>Stand</button>
+            <button onClick={handleStandButtonClick}>Stand</button>
             <button onClick={handleEndTurnButtonClick}>End Turn</button>
           </div>
         </div>

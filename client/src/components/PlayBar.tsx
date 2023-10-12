@@ -20,7 +20,7 @@ const PlayBar = ({ playerTally }: PlayBarProps) => {
         {selectedCharacter ? (
           <div className="user-bar">
             <img src={selectedCharacter.image} />
-            <h3>{selectedCharacter.name}!</h3>
+            <h3>{selectedCharacter.name}</h3>
             <ScoreKeeper cardTally={playerTally} />
           </div>
         ) : (
