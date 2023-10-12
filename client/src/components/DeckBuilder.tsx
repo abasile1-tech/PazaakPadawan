@@ -10,7 +10,11 @@ function DeckBuilder() {
       <Header musicChoice={musicChoice} />
       <h1>Deck Builder!</h1>
       {/* <PopUp popupType="welcome" /> */}
-      <PopUp onClick={handleClick} message="THE OPPONENT WINS THE SET." />
+      <PopUp
+        onClick={handleClick}
+        title="test title"
+        message="THE OPPONENT WINS THE SET."
+      />
     </>
   );
 }
