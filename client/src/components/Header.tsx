@@ -14,10 +14,8 @@ function Header({ musicChoice }: MusicChoiceProps) {
     <>
       <div className="headerdiv">
         <h1 className="headerh1">Pazaak!</h1>
-        <div>
-          <div>
-            <BackgroundMusic musicChoice={musicChoice} />
-          </div>
+        <div className="grouping_hamburger_music">
+          <BackgroundMusic musicChoice={musicChoice} />
           <button className="menu-button" onClick={toggleMenu}>
             ☰
             <div>

@@ -1,31 +1,14 @@
 import Header from './Header';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import UserBarComponent from './userBarComponent';
 
 function HomePage() {
   const musicChoice = 'homePage';
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
 
-  useEffect(() => {
-    const storedCharacter = localStorage.getItem('selectedCharacter');
-    if (storedCharacter) {
-      setSelectedCharacter(JSON.parse(storedCharacter));
-    }
-  }, []);
   return (
     <div className="home-page">
       <Header musicChoice={musicChoice} />
-      <h2>
-        {selectedCharacter ? (
-          <div className="user-bar">
-            <h3>You chose to be:</h3>
-            <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-            <p>{selectedCharacter.name}</p>
-          </div>
-        ) : (
-          <p>Character is not chosen</p>
-        )}
-      </h2>
+      <UserBarComponent />
 
       <div className="main-content">
         <div id="home-page-text">
@@ -37,7 +20,6 @@ function HomePage() {
             game in which the goal was to come closest to 20 without going over.
           </h2>
         </div>
-
         <div>
           <img
             id="image-three-cards"
