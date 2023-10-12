@@ -119,6 +119,11 @@
   max-width: 35%; 
 }
 
+.turn_indicator {
+  width: 750px;
+  align-self: center;
+}
+
 
 .player2 {
   width: 50%;

@@ -70,12 +70,6 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           opponentTally={opponentTally}
           turnTracker={turnTracker}
         />
-        {/* {turnTracker ? (
-          <TurnIndicator playerName="player" />
-        ) : (
-          <TurnIndicator playerName="opponent" />
-        )} */}
-        {/* <PlayBar playerTally={opponentTally} identity="opponent" /> */}
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />

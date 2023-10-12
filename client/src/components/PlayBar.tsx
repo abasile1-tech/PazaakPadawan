@@ -20,36 +20,43 @@ const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
 
   return (
     <>
-      <h2>
-        {selectedCharacter ? (
-          <div className="user-bar">
-            <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-            <h3>{selectedCharacter.name}!</h3>
-            <ScoreKeeper cardTally={playerTally} />
-          </div>
-        ) : (
-          <p>Character is not chosen</p>
-        )}
-
-        {turnTracker ? (
-          selectedCharacter ? (
-            <TurnIndicator playerName={selectedCharacter.name} />
+      <div
+        className="play_bar"
+        style={{ display: 'flex', justifyContent: 'space-between' }}
+      >
+        <h2>
+          {selectedCharacter ? (
+            <div className="user-bar">
+              <img src={selectedCharacter.image} alt={selectedCharacter.name} />
+              <h3>{selectedCharacter.name}!</h3>
+              <ScoreKeeper cardTally={playerTally} />
+            </div>
           ) : (
-            <TurnIndicator playerName="player" />
-          )
-        ) : (
-          <TurnIndicator playerName={opponentName} />
-        )}
-
-        <div className="user-bar">
-          <img
-            src={'src/assets/images/penguins/penguinmaul1.jpeg'}
-            alt={opponentName}
-          />
-          <h3>{opponentName}</h3>
-          <ScoreKeeper cardTally={opponentTally} />
+            <p>Character is not chosen</p>
+          )}
+        </h2>
+        <div className="turn_indicator">
+          {turnTracker ? (
+            selectedCharacter ? (
+              <TurnIndicator playerName={selectedCharacter.name} />
+            ) : (
+              <TurnIndicator playerName="player" />
+            )
+          ) : (
+            <TurnIndicator playerName={opponentName} />
+          )}
         </div>
-      </h2>
+        <h2>
+          <div className="user-bar">
+            <img
+              src={'src/assets/images/penguins/penguinmaul1.jpeg'}
+              alt={opponentName}
+            />
+            <h3>{opponentName}</h3>
+            <ScoreKeeper cardTally={opponentTally} />
+          </div>
+        </h2>
+      </div>
     </>
   );
 };
