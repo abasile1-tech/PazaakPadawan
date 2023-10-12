@@ -12,6 +12,13 @@
   
 }
 
+/* score board */
+
+.scoreBoard {
+  display:flex;
+  justify-content: space-around;
+}
+
 /* home page */
 .main-content {
   display:flex;
@@ -39,7 +46,7 @@
 
 .card_number {
   position: absolute;
-  font-size: 40px;
+  font-size: 25px;
   max-width: 55px;
   max-height: 55px;
   margin: 0px;
@@ -50,34 +57,22 @@
 }
 
 .card_image {
-  /* object-fit: contain; */
+  width:100px;
+  padding: 3px;
 }
 
 .cards_container {
-  display: flex !important;
 }
 
-.red_card {
-  /* object-fit: contain; */
-  /* background-color: red; */
-  display:flex;
-  padding:1px;
-}
-
-.blue_card {
-  /* background-color: blue; */
-  display:flex;
-  padding:1px;
+.red_card .blue_card{
 }
 
 .playerBoard {
   display: flex;
-  justify-content: space-between;
 }
 
 .player1 {
-    /* flex: 1; */
-    width:50%;
+  width:50%;
 }
 
 .turn-indicator {
