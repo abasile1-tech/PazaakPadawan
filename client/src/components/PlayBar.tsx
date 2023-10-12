@@ -1,6 +1,7 @@
 import Header from './Header';
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+
 function PlayBar() {
   const [selectedCharacter, setSelectedCharacter] = useState();
 
