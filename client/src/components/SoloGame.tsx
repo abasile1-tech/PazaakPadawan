@@ -15,10 +15,23 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={2} color="blue" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
+  const [playerTable, setPlayerTable] = useState([
+    <Card value={5} color="blue" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
+    <Card value={2} color="blue" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
+  ]);
   const [opponentHand, setOpponentHand] = useState([
     <Card value={-1} color="red" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
+  const [opponentTable, setOpponentTable] = useState([
+    <Card value={6} color="blue" cardType="normal_card" />,
+    <Card value={5} color="blue" cardType="normal_card" />,
+    <Card value={6} color="blue" cardType="normal_card" />,
+    <Card value={5} color="blue" cardType="normal_card" />,
+  ]);
+
   const musicChoice = 'soloGame';
   let numGamesWonPlayer = 1;
   let numGamesWonOpponent = 2;
@@ -36,15 +49,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <hr />
       <div className="playerBoard">
         <div className="player1">
-          <div
-            className="cardsContainer"
-            style={{ display: 'flex', flexWrap: 'wrap' }}
-          >
-            <Card value={5} color="blue" cardType="normal_card" />
-            <Card value={4} color="blue" cardType="normal_card" />
-            <Card value={2} color="blue" cardType="normal_card" />
-            <Card value={4} color="blue" cardType="normal_card" />
-          </div>
+          <Hand hand={playerTable} />
           <hr />
           <Hand hand={playerHand} />
           <div className="turnOptions">
@@ -53,15 +58,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           </div>
         </div>
         <div className="player2">
-          <div
-            className="cardsContainer"
-            style={{ display: 'flex', flexWrap: 'wrap' }}
-          >
-            <Card value={6} color="blue" cardType="normal_card" />
-            <Card value={5} color="blue" cardType="normal_card" />
-            <Card value={6} color="blue" cardType="normal_card" />
-            <Card value={5} color="blue" cardType="normal_card" />
-          </div>
+          <Hand hand={opponentTable} />
           <hr />
           <Hand hand={opponentHand} />
         </div>
@@ -69,5 +66,4 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     </>
   );
 }
-ReactDOM.render(<SoloGame />, document.getElementById('root'));
 export default SoloGame;
