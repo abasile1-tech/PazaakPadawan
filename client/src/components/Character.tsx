@@ -51,14 +51,18 @@ function Character() {
 
   return (
     <div>
-      <h2>Please choose your character</h2>
+      <p className="main-text">Please choose your character!</p>
       <div className="character-list">
         {characters.map((character) => (
-          <div key={character.id} className="character-item">
+          <div
+            key={character.id}
+            className="character-item"
+            onClick={() => handleCharacterSelect(character.id)}
+          >
             <img
+              className="centered-image"
               src={character.image}
               alt={character.name}
-              onClick={() => handleCharacterSelect(character.id)}
             />
             <p>{character.name}</p>
           </div>
