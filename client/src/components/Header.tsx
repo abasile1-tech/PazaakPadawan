@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BackgroundMusic from './BackgroundMusic';
 
@@ -14,8 +14,10 @@ function Header({ musicChoice }: MusicChoiceProps) {
     <>
       <div className="headerdiv">
         <h1 className="headerh1">Pazaak!</h1>
-        <BackgroundMusic musicChoice={musicChoice} />
         <div>
+          <div>
+            <BackgroundMusic musicChoice={musicChoice} />
+          </div>
           <button className="menu-button" onClick={toggleMenu}>
             ☰
             <div>
