@@ -1,12 +1,18 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
 import PlayBar from './PlayBar';
 
 interface SoloGameProps {}
+
+enum GameState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+}
 
 function SoloGame(props: SoloGameProps): JSX.Element {
   const [playerHand, setPlayerHand] = useState([
@@ -27,6 +33,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice, setMusicChoice] = useState('soloGame');
   const [turnTracker, setTurnTracker] = useState(true);
+  const [gameState, setGameState] = useState(GameState.INITIAL);
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
@@ -47,13 +54,19 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   }
 
   function handleEndTurnButtonClick() {
-    addCardToTable(turnTracker);
-    setTurnTracker(!turnTracker);
+    const tmpTracker = !turnTracker;
+    setTurnTracker(tmpTracker);
+    addCardToTable(tmpTracker);
   }
 
   function handleStandButtonClick() {
     // need to add code to stop this person's turn until the end of the round
     setTurnTracker(!turnTracker);
+  }
+
+  function handleStartButtonClick() {
+    addCardToTable(turnTracker);
+    setGameState(GameState.STARTED);
   }
 
   function moveCard() {
@@ -79,8 +92,24 @@ function SoloGame(props: SoloGameProps): JSX.Element {
           <hr />
           <Hand hand={playerHand} moveCard={moveCard} />
           <div className="turnOptions">
-            <button onClick={handleStandButtonClick}>Stand</button>
-            <button onClick={handleEndTurnButtonClick}>End Turn</button>
+            <button
+              onClick={handleStandButtonClick}
+              disabled={gameState == GameState.INITIAL}
+            >
+              Stand
+            </button>
+            <button
+              onClick={handleEndTurnButtonClick}
+              disabled={gameState == GameState.INITIAL}
+            >
+              End Turn
+            </button>
+            <button
+              onClick={handleStartButtonClick}
+              disabled={gameState == GameState.STARTED}
+            >
+              Start Game
+            </button>
           </div>
         </div>
         <div className="player2">
