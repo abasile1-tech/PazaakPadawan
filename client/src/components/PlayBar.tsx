@@ -31,7 +31,14 @@ const PlayBar = ({ playerTally, identity }: PlayBarProps) => {
             <p>Character is not chosen</p>
           )
         ) : (
-          <h1>jarjar</h1>
+          <div className="user-bar">
+            <img
+              src={'src/assets/images/penguins/penguinmaul1.jpeg'}
+              alt="Darth Molt"
+            />
+            <h3>Darth Molt</h3>
+            <ScoreKeeper cardTally={playerTally} />
+          </div>
         )}
       </h2>
     </>
