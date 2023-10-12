@@ -1,11 +1,10 @@
-import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 
 function DeckBuilder() {
-  let musicChoice: string = 'deckBuilder';
+  const musicChoice = 'deckBuilder';
   return (
     <>
-      <Header />
+      <Header musicChoice={musicChoice} />
       <h1>Deck Builder!</h1>
     </>
   );

@@ -5,12 +5,12 @@ import Card from './Card';
 import TurnIndicator from './TurnIndicator';
 
 function SoloGame() {
-  let musicChoice: string = 'soloGame';
+  const musicChoice = 'soloGame';
   let numGamesWonPlayer = 1;
   let numGamesWonOpponent = 2;
   return (
     <>
-      <Header />
+      <Header musicChoice={musicChoice} />
       <h1>Solo Game!</h1>
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
