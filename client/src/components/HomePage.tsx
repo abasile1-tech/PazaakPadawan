@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 // import User from './User';
 
 function HomePage() {
-  const musicChoice: string = 'homePage';
+  const musicChoice = 'homePage';
 
   return (
     <div className="home-page">
-      <Header />
+      <Header musicChoice={musicChoice} />
       <h2>User Bar Home Component</h2>
 
       <div className="main-content">
