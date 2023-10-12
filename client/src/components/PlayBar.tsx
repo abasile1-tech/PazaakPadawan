@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
 import ScoreKeeper from './ScoreKeeper';
+import TurnIndicator from './TurnIndicator';
 interface PlayBarProps {
   playerTally: number;
-  identity: string;
+  opponentTally: number;
+  turnTracker: boolean;
 }
 
-const PlayBar = ({ playerTally, identity }: PlayBarProps) => {
+const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [opponentName, setOpponentName] = useState('Darth Molt');
 
   useEffect(() => {
     const storedCharacter = localStorage.getItem('selectedCharacter');
@@ -18,26 +21,34 @@ const PlayBar = ({ playerTally, identity }: PlayBarProps) => {
   return (
     <>
       <h2>
-        {identity === 'player' ? (
-          selectedCharacter ? (
-            <div className="user-bar">
-              <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-              <h3>{selectedCharacter.name}!</h3>
-              <ScoreKeeper cardTally={playerTally} />
-            </div>
-          ) : (
-            <p>Character is not chosen</p>
-          )
-        ) : (
+        {selectedCharacter ? (
           <div className="user-bar">
-            <img
-              src={'src/assets/images/penguins/penguinmaul1.jpeg'}
-              alt="Darth Molt"
-            />
-            <h3>Darth Molt</h3>
+            <img src={selectedCharacter.image} alt={selectedCharacter.name} />
+            <h3>{selectedCharacter.name}!</h3>
             <ScoreKeeper cardTally={playerTally} />
           </div>
+        ) : (
+          <p>Character is not chosen</p>
         )}
+
+        {turnTracker ? (
+          selectedCharacter ? (
+            <TurnIndicator playerName={selectedCharacter.name} />
+          ) : (
+            <TurnIndicator playerName="player" />
+          )
+        ) : (
+          <TurnIndicator playerName={opponentName} />
+        )}
+
+        <div className="user-bar">
+          <img
+            src={'src/assets/images/penguins/penguinmaul1.jpeg'}
+            alt={opponentName}
+          />
+          <h3>{opponentName}</h3>
+          <ScoreKeeper cardTally={opponentTally} />
+        </div>
       </h2>
     </>
   );

@@ -1,6 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
@@ -26,8 +26,6 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   const [playerTally, setPlayerTally] = useState(0);
   const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice, setMusicChoice] = useState('soloGame');
-  const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
-  const [opponentName, setOpponentName] = useState('Darth Molt');
   const [turnTracker, setTurnTracker] = useState(true);
 
   function getRandomNumber(): number {
@@ -67,13 +65,17 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <Header musicChoice={musicChoice} />
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
-        <PlayBar playerTally={playerTally} identity="player" />
-        {turnTracker ? (
-          <TurnIndicator playerName={playerName} />
+        <PlayBar
+          playerTally={playerTally}
+          opponentTally={opponentTally}
+          turnTracker={turnTracker}
+        />
+        {/* {turnTracker ? (
+          <TurnIndicator playerName="player" />
         ) : (
-          <TurnIndicator playerName={opponentName} />
-        )}
-        <PlayBar playerTally={opponentTally} identity="opponent" />
+          <TurnIndicator playerName="opponent" />
+        )} */}
+        {/* <PlayBar playerTally={opponentTally} identity="opponent" /> */}
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
