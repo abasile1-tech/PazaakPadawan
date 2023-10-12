@@ -1,11 +1,9 @@
-import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 import { Link } from 'react-router-dom';
-// import User from './User';
 import { useEffect, useState } from 'react';
 
 function HomePage() {
-  const musicChoice: string = 'homePage';
+  const musicChoice = 'homePage';
   const [selectedCharacter, setSelectedCharacter] = useState(null);
 
   useEffect(() => {
@@ -16,7 +14,7 @@ function HomePage() {
   }, []);
   return (
     <div className="home-page">
-      <Header />
+      <Header musicChoice={musicChoice} />
       <h2>
         {selectedCharacter && (
           <div className="user-bar">
