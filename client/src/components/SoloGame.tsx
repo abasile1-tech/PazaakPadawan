@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
+import ScoreKeeper from './ScoreKeeper';
 
 interface SoloGameProps {}
 
@@ -25,13 +26,15 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
   const [opponentTable, setOpponentTable] = useState([
-    <Card value={6} color="blue" cardType="normal_card" />,
+    <Card value={3} color="blue" cardType="normal_card" />,
     <Card value={5} color="blue" cardType="normal_card" />,
-    <Card value={6} color="blue" cardType="normal_card" />,
-    <Card value={5} color="blue" cardType="normal_card" />,
+    <Card value={2} color="blue" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
   ]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
+  const [playerTally, setplayerTally] = useState(15);
+  const [opponentTally, setOpponentTally] = useState(14);
   const [musicChoice, setMusicChoice] = useState('soloGame');
   const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
   const [opponentName, setOpponentName] = useState('Darth Molt');
@@ -41,9 +44,11 @@ function SoloGame(props: SoloGameProps): JSX.Element {
   }
 
   function addCardToOpponentTable() {
+    const randomNumber = getRandomNumber();
     const newCard = (
-      <Card value={getRandomNumber()} color="blue" cardType="normal_card" />
+      <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
+    setOpponentTally(opponentTally + randomNumber);
     setOpponentTable([...opponentTable, newCard]);
   }
 
@@ -53,8 +58,10 @@ function SoloGame(props: SoloGameProps): JSX.Element {
       <div className="scoreBoard">
         <ScoreLights numGamesWon={numGamesWonPlayer} />
         <h3>{playerName}</h3>
+        <ScoreKeeper cardTally={playerTally} />
         <TurnIndicator playerName={playerName} />
         <h3>{opponentName}</h3>
+        <ScoreKeeper cardTally={opponentTally} />
         <ScoreLights numGamesWon={numGamesWonOpponent} />
       </div>
       <hr />
