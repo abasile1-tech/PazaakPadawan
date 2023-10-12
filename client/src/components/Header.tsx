@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
-function Header() {
+import BackgroundMusic from './BackgroundMusic';
+
+interface MusicChoiceProps {
+  musicChoice: string;
+}
+function Header({ musicChoice }: MusicChoiceProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -9,8 +14,10 @@ function Header() {
     <>
       <div className="headerdiv">
         <h1 className="headerh1">Pazaak!</h1>
-
         <div>
+          <div>
+            <BackgroundMusic musicChoice={musicChoice} />
+          </div>
           <button className="menu-button" onClick={toggleMenu}>
             ☰
             <div>

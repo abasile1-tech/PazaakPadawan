@@ -4,14 +4,13 @@ import Chat from './Chat';
 import ScoreLights from './ScoreLights';
 
 function PVPGame() {
-  let musicChoice: string = 'pvpGame';
+  const musicChoice = 'pvpGame';
   let numGamesWonPlayer = 0;
   let numGamesWonOpponent = 2;
   return (
     <>
-      <Header />
+      <Header musicChoice={musicChoice} />
       <h1>PVP Game!</h1>
-      <BackgroundMusic musicChoice={musicChoice} />
       <ScoreLights numGamesWon={numGamesWonPlayer} />
       <ScoreLights numGamesWon={numGamesWonOpponent} />
       <Chat />

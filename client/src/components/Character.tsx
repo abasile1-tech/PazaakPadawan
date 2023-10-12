@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const characters = [
   {
@@ -32,9 +33,20 @@ function Character() {
   const [selectedCharacter, setSelectedCharacter] = useState<number | null>(
     null
   );
+  const navigate = useNavigate();
 
   const handleCharacterSelect = (characterId: number) => {
-    setSelectedCharacter(characterId);
+    const selectedCharacterData = characters.find(
+      (character) => character.id === characterId
+    );
+    if (selectedCharacterData) {
+      setSelectedCharacter(selectedCharacterData);
+      localStorage.setItem(
+        'selectedCharacter',
+        JSON.stringify(selectedCharacterData)
+      );
+      navigate('/');
+    }
   };
 
   return (
@@ -52,17 +64,14 @@ function Character() {
           </div>
         ))}
       </div>
-
+      {/* 
       {selectedCharacter !== null && (
         <div>
           <h3>You chose to be:</h3>
-          <img
-            src={characters[selectedCharacter - 1].image}
-            alt={characters[selectedCharacter - 1].name}
-          />
-          <p> {characters[selectedCharacter - 1].name}</p>
+          <img src={selectedCharacter.image} alt={selectedCharacter.name} />
+          <p> {selectedCharacter.name}</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
