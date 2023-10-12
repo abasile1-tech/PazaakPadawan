@@ -27,7 +27,6 @@ function HomePage() {
             alt="three cards"
           />
         </div>
-        U
       </div>
 
       <div className="buttons">

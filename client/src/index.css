@@ -68,7 +68,7 @@ button:focus-visible {
   }
 }
 
-.user-bar {
+/* .user-bar {
   display: flex;
   align-items: center;
   background-color: #213547;
@@ -142,4 +142,4 @@ button:focus-visible {
   font-size: 40px; 
   margin-top: 20px; 
 }
-
+ */
