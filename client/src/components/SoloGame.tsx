@@ -44,17 +44,17 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     return Math.floor(Math.random() * 10) + 1;
   }
 
-  function addCardToTable(table: boolean) {
+  function addCardToTable(turn: boolean) {
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
-    if (!table) {
-      setOpponentTally(opponentTally + randomNumber);
-      setOpponentTable([...opponentTable, newCard]);
-    } else if (table) {
+    if (turn) {
       setPlayerTally(playerTally + randomNumber);
       setPlayerTable([...playerTable, newCard]);
+    } else if (!turn) {
+      setOpponentTally(opponentTally + randomNumber);
+      setOpponentTable([...opponentTable, newCard]);
     }
   }
 
