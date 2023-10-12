@@ -1,7 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import React, { useState } from 'react';
-import ReactDOM from 'react-dom';
+import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import TurnIndicator from './TurnIndicator';
@@ -31,10 +30,10 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={6} color="blue" cardType="normal_card" />,
     <Card value={5} color="blue" cardType="normal_card" />,
   ]);
+  const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
+  const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
+  const [musicChoice, setMusicChoice] = useState('soloGame');
 
-  const musicChoice = 'soloGame';
-  let numGamesWonPlayer = 1;
-  let numGamesWonOpponent = 2;
   return (
     <>
       <Header musicChoice={musicChoice} />
