@@ -12,15 +12,15 @@ function HomePage() {
       setSelectedCharacter(JSON.parse(storedCharacter));
     }
   }, []);
+
   return (
     <div className="home-page">
       <Header musicChoice={musicChoice} />
       <h2>
         {selectedCharacter ? (
           <div className="user-bar">
-            <h3>You chose to be:</h3>
-            <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-            <p>{selectedCharacter.name}</p>
+            <img src={selectedCharacter.image} />
+            <h3>Good day, {selectedCharacter.name}!</h3>
           </div>
         ) : (
           <p>Character is not chosen</p>

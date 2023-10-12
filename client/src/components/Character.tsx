@@ -64,14 +64,6 @@ function Character() {
           </div>
         ))}
       </div>
-      {/* 
-      {selectedCharacter !== null && (
-        <div>
-          <h3>You chose to be:</h3>
-          <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-          <p> {selectedCharacter.name}</p>
-        </div>
-      )} */}
     </div>
   );
 }
