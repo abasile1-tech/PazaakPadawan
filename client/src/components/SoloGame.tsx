@@ -53,6 +53,10 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     setOpponentTable([...opponentTable, newCard]);
   }
 
+  function moveCard() {
+    console.log('card should be moving');
+  }
+
   return (
     <>
       <Header musicChoice={musicChoice} />
@@ -68,7 +72,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
         <div className="player1">
           <Hand hand={playerTable} />
           <hr />
-          <Hand hand={playerHand} />
+          <Hand hand={playerHand} moveCard={moveCard} />
           <div className="turnOptions">
             <button>Stand</button>
             <button onClick={addCardToOpponentTable}>End Turn</button>
