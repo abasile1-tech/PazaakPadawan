@@ -15,26 +15,16 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     <Card value={2} color="blue" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
-  const [playerTable, setPlayerTable] = useState([
-    <Card value={5} color="blue" cardType="normal_card" />,
-    <Card value={4} color="blue" cardType="normal_card" />,
-    <Card value={2} color="blue" cardType="normal_card" />,
-    <Card value={4} color="blue" cardType="normal_card" />,
-  ]);
+  const [playerTable, setPlayerTable] = useState([]);
   const [opponentHand, setOpponentHand] = useState([
     <Card value={-1} color="red" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
-  const [opponentTable, setOpponentTable] = useState([
-    <Card value={3} color="blue" cardType="normal_card" />,
-    <Card value={5} color="blue" cardType="normal_card" />,
-    <Card value={2} color="blue" cardType="normal_card" />,
-    <Card value={4} color="blue" cardType="normal_card" />,
-  ]);
+  const [opponentTable, setOpponentTable] = useState([]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
-  const [playerTally, setPlayerTally] = useState(15);
-  const [opponentTally, setOpponentTally] = useState(14);
+  const [playerTally, setPlayerTally] = useState(0);
+  const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice, setMusicChoice] = useState('soloGame');
   const [playerName, setPlayerName] = useState('Peng-Wan Kenobi');
   const [opponentName, setOpponentName] = useState('Darth Molt');
