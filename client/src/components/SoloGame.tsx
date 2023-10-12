@@ -12,17 +12,33 @@ function SoloGame() {
     <>
       <Header />
       <h1>Solo Game!</h1>
-      <BackgroundMusic musicChoice={musicChoice} />
-      <TurnIndicator playerName="Pin-Gun Jinn" />
+      <div className="scoreBoard">
+        <ScoreLights numGamesWon={numGamesWonPlayer} />
+        <h1>player 1</h1>
+        <TurnIndicator playerName="Pin-Gun Jinn" />
+        <h1>player 2</h1>
+        <ScoreLights numGamesWon={numGamesWonOpponent} />
+      </div>
+      <hr />
       <div className="playerBoard">
         <div className="player1">
-          <ScoreLights numGamesWon={numGamesWonPlayer} />
           <div
             className="cardsContainer"
             style={{ display: 'flex', flexWrap: 'wrap' }}
           >
-            <Card value={-1} color="red" cardType="normal_card" />
-            <Card value={+4} color="blue" cardType="normal_card" />
+            <Card value={5} color="blue" cardType="normal_card" />
+            <Card value={4} color="blue" cardType="normal_card" />
+            <Card value={2} color="blue" cardType="normal_card" />
+            <Card value={4} color="blue" cardType="normal_card" />
+          </div>
+          <hr />
+          <div
+            className="handContainer"
+            style={{ display: 'flex', flexWrap: 'wrap' }}
+          >
+            <Card value={-3} color="red" cardType="normal_card" />
+            <Card value={4} color="blue" cardType="normal_card" />
+            <Card value={2} color="blue" cardType="normal_card" />
             <Card value={-2} color="red" cardType="normal_card" />
           </div>
           <div className="turnOptions">
@@ -31,14 +47,22 @@ function SoloGame() {
           </div>
         </div>
         <div className="player2">
-          <ScoreLights numGamesWon={numGamesWonOpponent} />
           <div
             className="cardsContainer"
             style={{ display: 'flex', flexWrap: 'wrap' }}
           >
-            <Card value={+3} color="blue" cardType="normal_card" />
-            <Card value={-6} color="red" cardType="normal_card" />
-            <Card value={+5} color="blue" cardType="normal_card" />
+            <Card value={6} color="blue" cardType="normal_card" />
+            <Card value={5} color="blue" cardType="normal_card" />
+            <Card value={6} color="blue" cardType="normal_card" />
+            <Card value={5} color="blue" cardType="normal_card" />
+          </div>
+          <hr />
+          <div
+            className="handContainer"
+            style={{ display: 'flex', flexWrap: 'wrap' }}
+          >
+            <Card value={-1} color="red" cardType="normal_card" />
+            <Card value={-2} color="red" cardType="normal_card" />
           </div>
         </div>
       </div>
