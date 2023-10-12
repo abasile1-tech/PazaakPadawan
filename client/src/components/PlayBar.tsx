@@ -1,10 +1,11 @@
-import Header from './Header';
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import Character from './Character';
+import { useEffect, useState } from 'react';
+import ScoreKeeper from './ScoreKeeper';
+interface PlayBarProps {
+  playerTally: number;
+}
 
-function PlayBar() {
-  const [selectedCharacter, setSelectedCharacter] = useState();
+const PlayBar = ({ playerTally }: PlayBarProps) => {
+  const [selectedCharacter, setSelectedCharacter] = useState(null);
 
   useEffect(() => {
     const storedCharacter = localStorage.getItem('selectedCharacter');
@@ -15,23 +16,19 @@ function PlayBar() {
 
   return (
     <>
-      <div className="playBar">
-        <div className="playerOne">
-          {selectedCharacter} ?
-          <img src={selectedCharacter.image} />
-          <h3>{selectedCharacter.name}, </h3>
-        </div>
-        <div className="turnIndicator">
-          <p id="player-name">{`${playerName}'s Turn`}</p>
-        </div>
-        <div className="playerTwo">
-          {selectedCharacter} ?
-          <img src={selectedCharacter.image} />
-          <h3>{selectedCharacter.name}, </h3>
-        </div>
-      </div>
+      <h2>
+        {selectedCharacter ? (
+          <div className="user-bar">
+            <img src={selectedCharacter.image} />
+            <h3>{selectedCharacter.name}!</h3>
+            <ScoreKeeper cardTally={playerTally} />
+          </div>
+        ) : (
+          <p>Character is not chosen</p>
+        )}
+      </h2>
     </>
   );
-}
+};
 
 export default PlayBar;

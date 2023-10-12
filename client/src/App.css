@@ -107,3 +107,8 @@
 .player2 {
   width: 50%;
 }
+
+.user-bar {
+  display: flex;
+  justify-content: space-between;
+}
