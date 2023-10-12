@@ -2,12 +2,20 @@ import Card from './Card';
 
 interface HandProps {
   hand: Array<Card>;
+  moveCard?: (values: any) => void;
 }
 
-const Hand = ({ hand }: HandProps): JSX.Element => {
+const Hand = ({ hand, moveCard }: HandProps): JSX.Element => {
   const listItems = hand.map((card) => {
     const { value, color, cardType } = card.props;
-    return <Card value={value} color={color} cardType={cardType} />;
+    return (
+      <Card
+        value={value}
+        color={color}
+        cardType={cardType}
+        onClick={moveCard}
+      />
+    );
   });
 
   return (
