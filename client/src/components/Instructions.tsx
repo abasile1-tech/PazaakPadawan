@@ -1,13 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 
-interface InstructionsProps {
-  musicChoice: string;
-}
-
-function Instructions({ musicChoice }: InstructionsProps) {
+function Instructions() {
+  const musicChoice = 'instructionsPage';
   return (
     <div>
       <Header musicChoice={musicChoice} />
