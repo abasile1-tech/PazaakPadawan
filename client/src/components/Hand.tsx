@@ -14,7 +14,11 @@ const Hand = ({ hand, moveCard }: HandProps): JSX.Element => {
         value={value}
         color={color}
         cardType={cardType}
-        onClick={() => moveCard(card, index)}
+        onClick={() => {
+          if (moveCard) {
+            moveCard(card, index);
+          }
+        }}
       />
     );
   });

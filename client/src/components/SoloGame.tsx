@@ -151,7 +151,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
         <div className="player2">
           <Hand hand={opponentTable} />
           <hr />
-          <Hand hand={opponentHand} moveCard={moveCard} />
+          <Hand hand={opponentHand} />
         </div>
       </div>
     </>
