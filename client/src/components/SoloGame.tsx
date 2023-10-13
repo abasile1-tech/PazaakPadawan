@@ -97,7 +97,33 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     addCardToTable(tmpTracker);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
+    if (playerTally > 20 && opponentTally > 20) {
+      console.log('you both went bust');
+    } else if (playerTally > 20 && opponentTally <= 20) {
+      setNumGamesWonOpponent(numGamesWonOpponent + 1);
+      console.log('opponent won');
+    } else if (opponentTally > 20 && playerTally <= 20) {
+      setNumGamesWonPlayer(numGamesWonPlayer + 1);
+      console.log('you won');
+    } else if (playerTally == opponentTally) {
+      console.log('you tied');
+    } else if (playerTally < opponentTally) {
+      setNumGamesWonOpponent(numGamesWonOpponent + 1);
+      console.log('opponent won');
+    } else if (opponentTally < playerTally) {
+      setNumGamesWonPlayer(numGamesWonPlayer + 1);
+      console.log('you won');
+    } else {
+      console.log('something unexpected happened with the scoring');
+    }
     console.log('the round is over');
+    setPlayerTable([]);
+    setOpponentTable([]);
+    setGameState(GameState.INITIAL);
+    setPlayerTally(0);
+    setOpponentTally(0);
+    const newTmpTracker = turnTracker;
+    setTurnTracker(newTmpTracker);
   }
 
   function handleStartButtonClick() {
