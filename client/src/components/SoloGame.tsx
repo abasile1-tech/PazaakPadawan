@@ -80,15 +80,24 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     }
   }
 
-  function handleEndTurnButtonClick() {
+  async function handleEndTurnButtonClick() {
     const tmpTracker = !turnTracker;
     setTurnTracker(tmpTracker);
     addCardToTable(tmpTracker);
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(3000); // wait for 3 seconds while the AI "decides..."
+    setTurnTracker(!tmpTracker);
+    addCardToTable(!tmpTracker);
   }
 
-  function handleStandButtonClick() {
-    setTurnTracker(!turnTracker);
+  async function handleStandButtonClick() {
     setGameState(GameState.STAND);
+    const tmpTracker = !turnTracker;
+    setTurnTracker(tmpTracker);
+    addCardToTable(tmpTracker);
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(3000); // wait for 3 seconds while the AI "decides...";
+    console.log('the round is over');
   }
 
   function handleStartButtonClick() {
