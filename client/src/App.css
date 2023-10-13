@@ -296,3 +296,53 @@
   display: flex;
   justify-content: space-between;
 } */
+/* DeckBuilder.css */
+
+.deck-builder-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+/* DeckBuilder.css */
+
+.left-cards-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); 
+  grid-template-rows: repeat(4, 1fr);
+  grid-gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.right-cards-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(4, 1fr); 
+  grid-gap: 10px;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+
+.card {
+  width: 100px;
+  height: 150px;
+  border: 1px solid #ccc;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.card img {
+  max-width: 80px;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+.selected {
+  background-color: lightgreen;
+  border-color: green;
+}
