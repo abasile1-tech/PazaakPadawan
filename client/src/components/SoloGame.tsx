@@ -24,7 +24,19 @@ enum GameState {
   STAND = 'stand',
 }
 
+enum RoundState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+  STAND = 'stand',
+}
+
 enum PlayerState {
+  STAND = 'stand',
+  ENDTURN = 'endturn',
+}
+
+enum OpponentState {
   STAND = 'stand',
   ENDTURN = 'endturn',
 }
@@ -84,8 +96,21 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     setGameState(GameState.STARTED);
   }
 
-  function moveCard() {
+  function moveCard(index: number) {
     console.log('card should be moving');
+    console.log('index', index);
+    const listOfCardAtIndex = playerHand.splice(index, 1);
+    const cardAtIndex = listOfCardAtIndex[0].props;
+    const newCard = (
+      <Card
+        value={cardAtIndex.value}
+        color={cardAtIndex.color}
+        cardType={cardAtIndex.cardType}
+      />
+    );
+
+    setPlayerHand([...playerHand]);
+    setPlayerTable([...playerTable, newCard]);
   }
 
   return (
