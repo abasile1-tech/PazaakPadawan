@@ -111,6 +111,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
 
     setPlayerHand([...playerHand]);
     setPlayerTable([...playerTable, newCard]);
+    setPlayerTally(playerTally + cardAtIndex.value);
   }
 
   return (
