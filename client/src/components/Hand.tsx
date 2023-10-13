@@ -2,7 +2,7 @@ import Card from './Card';
 
 interface HandProps {
   hand: Array<Card>;
-  moveCard?: (index: number) => void;
+  moveCard?: (card: Card, index: number) => void;
 }
 
 const Hand = ({ hand, moveCard }: HandProps): JSX.Element => {
@@ -14,7 +14,7 @@ const Hand = ({ hand, moveCard }: HandProps): JSX.Element => {
         value={value}
         color={color}
         cardType={cardType}
-        onClick={() => moveCard(index)}
+        onClick={() => moveCard(card, index)}
       />
     );
   });

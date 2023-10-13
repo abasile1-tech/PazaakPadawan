@@ -96,22 +96,11 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     setGameState(GameState.STARTED);
   }
 
-  function moveCard(index: number) {
-    console.log('card should be moving');
-    console.log('index', index);
-    const listOfCardAtIndex = playerHand.splice(index, 1);
-    const cardAtIndex = listOfCardAtIndex[0].props;
-    const newCard = (
-      <Card
-        value={cardAtIndex.value}
-        color={cardAtIndex.color}
-        cardType={cardAtIndex.cardType}
-      />
-    );
-
+  function moveCard(card: Card, index: number) {
+    playerHand.splice(index, 1);
     setPlayerHand([...playerHand]);
-    setPlayerTable([...playerTable, newCard]);
-    setPlayerTally(playerTally + cardAtIndex.value);
+    setPlayerTable([...playerTable, card]);
+    setPlayerTally(playerTally + card.props.value);
   }
 
   return (
