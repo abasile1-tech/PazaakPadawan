@@ -97,6 +97,17 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     addCardToTable(tmpTracker);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
+    if (playerTally <= 20 && playerTally > opponentTally) {
+      setNumGamesWonPlayer(numGamesWonPlayer + 1);
+      console.log('player won');
+    } else if (opponentTally <= 20 && opponentTally > playerTally) {
+      setNumGamesWonOpponent(numGamesWonOpponent + 1);
+      console.log('opponent won');
+    } else if (playerTally <= 20 && playerTally == opponentTally) {
+      console.log('the round tied');
+    } else {
+      console.log('you both went bust');
+    }
     console.log('the round is over');
   }
 
