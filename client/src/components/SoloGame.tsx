@@ -24,7 +24,19 @@ enum GameState {
   STAND = 'stand',
 }
 
+enum RoundState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+  STAND = 'stand',
+}
+
 enum PlayerState {
+  STAND = 'stand',
+  ENDTURN = 'endturn',
+}
+
+enum OpponentState {
   STAND = 'stand',
   ENDTURN = 'endturn',
 }
@@ -68,15 +80,50 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     }
   }
 
-  function handleEndTurnButtonClick() {
+  async function handleEndTurnButtonClick() {
     const tmpTracker = !turnTracker;
     setTurnTracker(tmpTracker);
     addCardToTable(tmpTracker);
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(3000); // wait for 3 seconds while the AI "decides..."
+    setTurnTracker(!tmpTracker);
+    addCardToTable(!tmpTracker);
   }
 
-  function handleStandButtonClick() {
-    setTurnTracker(!turnTracker);
+  async function handleStandButtonClick() {
     setGameState(GameState.STAND);
+    const tmpTracker = !turnTracker;
+    setTurnTracker(tmpTracker);
+    addCardToTable(tmpTracker);
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(3000); // wait for 3 seconds while the AI "decides...";
+    if (playerTally > 20 && opponentTally > 20) {
+      console.log('you both went bust');
+    } else if (playerTally > 20 && opponentTally <= 20) {
+      setNumGamesWonOpponent(numGamesWonOpponent + 1);
+      console.log('opponent won');
+    } else if (opponentTally > 20 && playerTally <= 20) {
+      setNumGamesWonPlayer(numGamesWonPlayer + 1);
+      console.log('you won');
+    } else if (playerTally == opponentTally) {
+      console.log('you tied');
+    } else if (playerTally < opponentTally) {
+      setNumGamesWonOpponent(numGamesWonOpponent + 1);
+      console.log('opponent won');
+    } else if (opponentTally < playerTally) {
+      setNumGamesWonPlayer(numGamesWonPlayer + 1);
+      console.log('you won');
+    } else {
+      console.log('something unexpected happened with the scoring');
+    }
+    console.log('the round is over');
+    setPlayerTable([]);
+    setOpponentTable([]);
+    setGameState(GameState.INITIAL);
+    setPlayerTally(0);
+    setOpponentTally(0);
+    const newTmpTracker = turnTracker;
+    setTurnTracker(newTmpTracker);
   }
 
   function handleStartButtonClick() {
@@ -84,8 +131,11 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     setGameState(GameState.STARTED);
   }
 
-  function moveCard() {
-    console.log('card should be moving');
+  function moveCard(card: Card, index: number) {
+    playerHand.splice(index, 1);
+    setPlayerHand([...playerHand]);
+    setPlayerTable([...playerTable, card]);
+    setPlayerTally(playerTally + card.props.value);
   }
 
   return (
@@ -136,7 +186,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
         <div className="player2">
           <Hand hand={opponentTable} />
           <hr />
-          <Hand hand={opponentHand} moveCard={moveCard} />
+          <Hand hand={opponentHand} />
         </div>
       </div>
     </>

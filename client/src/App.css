@@ -296,7 +296,74 @@
   color: #D8AB0B;
 
 }
-/* .user-bar {
+
+/* DeckBuilder.css */
+
+.deck-builder-container {
   display: flex;
   justify-content: space-between;
-} */
+  align-items: flex-start;
+  gap: 5px; 
+}
+
+.left-box,
+.right-box {
+  flex: 1;
+}
+
+.left-cards-container,
+.right-cards-container {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+  cursor: pointer;
+  background-color: #213547;
+  border-radius: 10px;
+  
+}
+
+.right-box {
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.left-text-container,
+.right-text-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #213547;
+  border: 2px solid #1a2b32;
+  border-radius: 10px;
+  padding: 10px 20px; 
+  color: white;
+  text-align: center;
+  font-size: 16px;
+  width: 200px; 
+  height: 30px; 
+  margin: 10px;
+
+}
+
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.action-button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color:  #213547;
+  border: 2px solid #1a2b32;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 16px;
+  width: 250px; 
+  height: 55px; 
+  margin: 10px;
+}
+
+

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
-import BackgroundMusic from './BackgroundMusic';
 
 const characters = [
   {
@@ -32,6 +31,7 @@ const characters = [
 ];
 
 function Character() {
+  const musicChoice = 'characterPage';
   const [selectedCharacter, setSelectedCharacter] = useState<number | null>(
     null
   );
@@ -53,7 +53,7 @@ function Character() {
 
   return (
     <div>
-      <Header />
+      <Header musicChoice={musicChoice} />
       <p className="main-text">Please choose your character!</p>
       <div className="character-list">
         {characters.map((character) => (
