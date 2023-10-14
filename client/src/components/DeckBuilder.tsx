@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';
   const navigate = useNavigate();
+  const [selectedHand, setSelectedHand] = useState([]);
   const allCards = [
     {
       value: 1,
@@ -138,8 +139,12 @@ function DeckBuilder() {
   };
   const startGame = useCallback(() => {
     if (rightCards.length === 10) {
+      const shuffledRightCards = shuffleArray(rightCards);
+      const selectedHandCards = shuffledRightCards.slice(0, 4);
+      setSelectedHand(selectedHandCards);
       alert('Game will start with the chosen cards!');
-      navigate('/');
+      console.log('4 cards here', selectedHandCards);
+      // navigate('/');
     } else {
       alert('Please select 10 cards to start the game!');
     }
@@ -159,6 +164,17 @@ function DeckBuilder() {
       setRightCards(updatedRightCards);
     }
   };
+  function shuffleArray(array) {
+    const shuffledArray = [...array];
+    for (let i = shuffledArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffledArray[i], shuffledArray[j]] = [
+        shuffledArray[j],
+        shuffledArray[i],
+      ];
+    }
+    return shuffledArray;
+  }
 
   return (
     <>
