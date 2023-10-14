@@ -5,9 +5,7 @@ import HomePage from './components/HomePage';
 import SoloGame from './components/SoloGame';
 import PVPGame from './components/PVPGame';
 import DeckBuilder from './components/DeckBuilder';
-// import Settings from './components/Settings';
 import Instructions from './components/Instructions';
-// import User from './components/User';
 import Character from './components/Character';
 
 function App() {

@@ -5,17 +5,17 @@ import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
 
-interface SoloGameProps {}
+// interface SoloGameProps {}
 
-interface Player {
-  name: string;
-  action: PlayerState;
-  wonGame: boolean;
-  isTurn: boolean;
-  hand: typeof Hand;
-  tally: number;
-  table: typeof Hand;
-}
+// interface Player {
+//   name: string;
+//   action: PlayerState;
+//   wonGame: boolean;
+//   isTurn: boolean;
+//   hand: typeof Hand;
+//   tally: number;
+//   table: typeof Hand;
+// }
 
 enum GameState {
   INITIAL = 'initial',
@@ -24,41 +24,41 @@ enum GameState {
   STAND = 'stand',
 }
 
-enum RoundState {
-  INITIAL = 'initial',
-  STARTED = 'started',
-  ENDED = 'ended',
-  STAND = 'stand',
-}
+// enum RoundState {
+//   INITIAL = 'initial',
+//   STARTED = 'started',
+//   ENDED = 'ended',
+//   STAND = 'stand',
+// }
 
-enum PlayerState {
-  STAND = 'stand',
-  ENDTURN = 'endturn',
-}
+// enum PlayerState {
+//   STAND = 'stand',
+//   ENDTURN = 'endturn',
+// }
 
-enum OpponentState {
-  STAND = 'stand',
-  ENDTURN = 'endturn',
-}
+// enum OpponentState {
+//   STAND = 'stand',
+//   ENDTURN = 'endturn',
+// }
 
-function SoloGame(props: SoloGameProps): JSX.Element {
+function SoloGame(): JSX.Element {
   const [playerHand, setPlayerHand] = useState([
     <Card value={-3} color="red" cardType="normal_card" />,
     <Card value={4} color="blue" cardType="normal_card" />,
     <Card value={2} color="blue" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
-  const [playerTable, setPlayerTable] = useState([]);
-  const [opponentHand, setOpponentHand] = useState([
+  const [playerTable, setPlayerTable] = useState<JSX.Element[]>([]);
+  const [opponentHand] = useState([
     <Card value={-1} color="red" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
-  const [opponentTable, setOpponentTable] = useState([]);
+  const [opponentTable, setOpponentTable] = useState<JSX.Element[]>([]);
   const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
   const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
   const [playerTally, setPlayerTally] = useState(0);
   const [opponentTally, setOpponentTally] = useState(0);
-  const [musicChoice, setMusicChoice] = useState('soloGame');
+  const [musicChoice] = useState('soloGame');
   const [turnTracker, setTurnTracker] = useState(true);
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
@@ -131,7 +131,7 @@ function SoloGame(props: SoloGameProps): JSX.Element {
     setGameState(GameState.STARTED);
   }
 
-  function moveCard(card: Card, index: number) {
+  function moveCard(card: JSX.Element, index: number) {
     playerHand.splice(index, 1);
     setPlayerHand([...playerHand]);
     setPlayerTable([...playerTable, card]);
