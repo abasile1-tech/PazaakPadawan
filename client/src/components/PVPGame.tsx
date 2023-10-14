@@ -6,11 +6,11 @@ import { useState } from 'react';
 
 function PVPGame() {
   const musicChoice = 'pvpGame';
-  const [playerTally, setPlayerTally] = useState(0);
-  const [opponentTally, setOpponentTally] = useState(0);
-  const [turnTracker, setTurnTracker] = useState(true);
-  let numGamesWonPlayer = 0;
-  let numGamesWonOpponent = 2;
+  const numGamesWonPlayer = 0;
+  const numGamesWonOpponent = 2;
+  const [playerTally] = useState(0);
+  const [opponentTally] = useState(0);
+  const [turnTracker] = useState(true);
   return (
     <>
       <Header musicChoice={musicChoice} />

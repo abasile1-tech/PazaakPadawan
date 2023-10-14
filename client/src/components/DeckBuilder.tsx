@@ -1,7 +1,16 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Card from './Card';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+import redcard from '../assets/images/cards/red_card.png';
+import bluecard from '../assets/images/cards/blue_card.png';
+
+interface DeckCard {
+  value: number;
+  color: string;
+  selected: boolean;
+  imagePath: string;
+}
 
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';
@@ -12,126 +21,126 @@ function DeckBuilder() {
       value: 1,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 2,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 3,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 4,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 5,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 6,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 7,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 8,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 9,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 10,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: -1,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -2,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -3,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -4,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -5,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -6,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -7,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -8,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -9,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -10,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
   ];
 
   const [leftCards, setLeftCards] = useState(allCards);
-  const [rightCards, setRightCards] = useState([]);
+  const [rightCards, setRightCards] = useState<DeckCard[]>([]);
 
   const clearChosenCards = () => {
     setLeftCards(allCards);
@@ -150,7 +159,7 @@ function DeckBuilder() {
     }
   }, [rightCards, navigate]);
 
-  const handleCardClick = (card) => {
+  const handleCardClick = (card: DeckCard) => {
     if (rightCards.length < 10 || card.selected) {
       const updatedLeftCards = leftCards.map((c) =>
         c === card ? { ...c, selected: !c.selected } : c
@@ -186,7 +195,7 @@ function DeckBuilder() {
             <p>Available Cards</p>
           </div>
 
-          <div className="left-cards-container">
+          <div className="left-cards-container centered-card">
             {leftCards.map((card, index) => (
               <Card
                 key={index}
@@ -195,7 +204,7 @@ function DeckBuilder() {
                 onClick={() => handleCardClick(card)}
                 selected={card.selected}
                 image={card.imagePath}
-                className="centered-card"
+                cardType=""
               />
             ))}
           </div>
@@ -207,7 +216,7 @@ function DeckBuilder() {
           <div className="right-text-container">
             <p>Chosen Cards</p>
           </div>
-          <div className="right-cards-container">
+          <div className="right-cards-container centered-card">
             {rightCards.map((card, index) => (
               <Card
                 key={index}
@@ -216,7 +225,7 @@ function DeckBuilder() {
                 onClick={() => handleCardClick(card)}
                 selected={true}
                 image={card.imagePath}
-                className="centered-card"
+                cardType=""
               />
             ))}
           </div>
