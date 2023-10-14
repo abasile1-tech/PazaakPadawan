@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import Card from './Card';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import redcard from '../assets/images/cards/red_card.png';
 import bluecard from '../assets/images/cards/blue_card.png';
 
@@ -15,7 +17,7 @@ interface DeckCard {
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';
   const navigate = useNavigate();
-  const [selectedHand, setSelectedHand] = useState([]);
+  const [, setSelectedHand] = useState<DeckCard[]>([]);
   const allCards = [
     {
       value: 1,
@@ -155,7 +157,9 @@ function DeckBuilder() {
       console.log('4 cards here', selectedHandCards);
       // navigate('/');
     } else {
-      alert('Please select 10 cards to start the game!');
+      toast.error('Please select 10 cards to start the game!', {
+        position: 'top-right',
+      });
     }
   }, [rightCards, navigate]);
 
@@ -173,7 +177,7 @@ function DeckBuilder() {
       setRightCards(updatedRightCards);
     }
   };
-  function shuffleArray(array) {
+  function shuffleArray(array: DeckCard[]) {
     const shuffledArray = [...array];
     for (let i = shuffledArray.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -231,18 +235,27 @@ function DeckBuilder() {
           </div>
 
           <div className="button-container">
-            {/* Clear Chosen Cards Button */}
             <button onClick={clearChosenCards} className="action-button">
               Clear Chosen Cards
             </button>
-
-            {/* Start Game Button */}
             <button onClick={startGame} className="action-button">
               Start Game
             </button>
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
   );
 }
