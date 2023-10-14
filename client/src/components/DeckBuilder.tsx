@@ -2,6 +2,8 @@ import { useCallback, useState } from 'react';
 import Card from './Card';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+import redcard from '../assets/images/cards/red_card.png';
+import bluecard from '../assets/images/cards/blue_card.png';
 
 interface DeckCard {
   value: number;
@@ -18,121 +20,121 @@ function DeckBuilder() {
       value: 1,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 2,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 3,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 4,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 5,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 6,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 7,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 8,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 9,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: 10,
       color: 'blue',
       selected: false,
-      imagePath: 'src/assets/images/cards/blue_card.png',
+      imagePath: bluecard,
     },
     {
       value: -1,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -2,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -3,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -4,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -5,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -6,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -7,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -8,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -9,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
     {
       value: -10,
       color: 'red',
       selected: false,
-      imagePath: 'src/assets/images/cards/red_card.png',
+      imagePath: redcard,
     },
   ];
 

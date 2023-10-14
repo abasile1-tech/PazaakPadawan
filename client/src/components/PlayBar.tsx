@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import ScoreKeeper from './ScoreKeeper';
 import TurnIndicator from './TurnIndicator';
+import penguinmall from '../assets/images/penguins/penguinmaul1.jpeg';
+
 interface PlayBarProps {
   playerTally: number;
   opponentTally: number;
@@ -56,10 +58,7 @@ const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
         </div>
         <h2>
           <div className="user-bar">
-            <img
-              src={'src/assets/images/penguins/penguinmaul1.jpeg'}
-              alt={opponentName}
-            />
+            <img src={penguinmall} alt={opponentName} />
             <h3>{opponentName}</h3>
             <ScoreKeeper cardTally={opponentTally} />
           </div>
