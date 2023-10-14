@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
+import { Link } from 'react-router-dom';
 
 // interface SoloGameProps {}
 
@@ -137,6 +138,31 @@ function SoloGame(): JSX.Element {
     setPlayerTable([...playerTable, card]);
     setPlayerTally(playerTally + card.props.value);
   }
+  //game over
+  function isGameOver() {
+    if (numGamesWonPlayer === 3) {
+      return (
+        <>
+          <div className="win-message">
+            Thanks for playing Pazaak Online. Click close to return to the main
+            menu.
+          </div>
+          <Link to="/">
+            <button>CLOSE</button>
+          </Link>
+        </>
+      );
+    } else if (numGamesWonOpponent === 3) {
+      return (
+        <>
+          <div className="lose-message">You lose the round.</div>
+          <Link to="/">
+            <button>CLOSE</button>
+          </Link>
+        </>
+      );
+    }
+  }
 
   return (
     <>
@@ -188,6 +214,7 @@ function SoloGame(): JSX.Element {
           <hr />
           <Hand hand={opponentHand} />
         </div>
+        <div className="center-message">{isGameOver()}</div>
       </div>
     </>
   );
