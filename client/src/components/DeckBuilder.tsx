@@ -2,6 +2,8 @@ import React, { useCallback, useState } from 'react';
 import Card from './Card';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';
@@ -138,10 +140,11 @@ function DeckBuilder() {
   };
   const startGame = useCallback(() => {
     if (rightCards.length === 10) {
-      alert('Game will start with the chosen cards!');
       navigate('/');
     } else {
-      alert('Please select 10 cards to start the game!');
+      toast.error('Please select 10 cards to start the game!', {
+        position: 'top-right',
+      });
     }
   }, [rightCards, navigate]);
 
@@ -206,18 +209,27 @@ function DeckBuilder() {
           </div>
 
           <div className="button-container">
-            {/* Clear Chosen Cards Button */}
             <button onClick={clearChosenCards} className="action-button">
               Clear Chosen Cards
             </button>
-
-            {/* Start Game Button */}
             <button onClick={startGame} className="action-button">
               Start Game
             </button>
           </div>
         </div>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
   );
 }
