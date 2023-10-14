@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { over, Client } from 'stompjs';
+import { useState } from 'react';
+import { over, Client, Frame } from 'stompjs';
 import SockJS from 'sockjs-client';
 
 let stompClient: Client | null = null;
+
+interface PublicChat {
+  senderName: string;
+  message: string;
+  status: string;
+}
+
 const Chat = () => {
-  const [publicChats, setPublicChats] = useState([]);
-  const [privateChats, setPrivateChats] = useState(new Map());
+  const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
   const [userData, setUserData] = useState({
     username: '',
     receiverName: '',
@@ -13,7 +19,7 @@ const Chat = () => {
     message: '',
   });
 
-  const handleUserName = (event: Event) => {
+  const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
       console.warn('event is null');
       return;
@@ -21,7 +27,7 @@ const Chat = () => {
     const { value } = event.target;
     setUserData({ ...userData, username: value });
   };
-  const handleMessage = (event: Event) => {
+  const handleMessage = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
       console.warn('event is null');
       return;
@@ -31,41 +37,44 @@ const Chat = () => {
   };
   const registerUser = () => {
     const Sock = new SockJS('http://localhost:8080/ws');
+    // const Sock = new SockJS('https://pazaak-3533536a7b01.herokuapp.com/ws');
     stompClient = over(Sock);
-    stompClient.connect({}, onConnected, onError);
+    stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
   };
 
   const onConnected = () => {
     setUserData({ ...userData, connected: true });
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to subcribe to events.');
+      return;
+    }
     stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
-    stompClient.subscribe(
-      '/user/' + userData.username + '/private',
-      onPrivateMessageReceived
-    );
     userJoin();
   };
 
   const userJoin = () => {
-    let chatMessage = {
+    const chatMessage = {
       senderName: userData.username,
       status: 'JOIN',
     };
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
     stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
   };
 
-  const onError = (err) => {
+  const onError = (err: string | Frame) => {
     console.log(err);
   };
 
-  const onPublicMessageReceived = (payload) => {
-    let payloadData = JSON.parse(payload.body);
+  interface Payload {
+    body: string;
+  }
+
+  const onPublicMessageReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
     switch (payloadData.status) {
-      case 'JOIN':
-        if (!privateChats.get(payloadData.senderName)) {
-          privateChats.set(payloadData.senderName, []);
-          setPrivateChats(new Map(privateChats));
-        }
-        break;
       case 'MESSAGE':
         publicChats.push(payloadData);
         setPublicChats([...publicChats]);
@@ -73,22 +82,9 @@ const Chat = () => {
     }
   };
 
-  const onPrivateMessageReceived = (payload) => {
-    let payloadData = JSON.parse(payload);
-    if (privateChats.get(payloadData.senderName)) {
-      privateChats.get(payloadData.senderName).push(payloadData);
-      setPrivateChats(new Map(privateChats));
-    } else {
-      let list = [];
-      list.push(payload);
-      privateChats.set(payloadData.senderName, list);
-      setPrivateChats(new Map(privateChats));
-    }
-  };
-
   const sendPublicMessage = () => {
     if (stompClient) {
-      let chatMessage = {
+      const chatMessage = {
         senderName: userData.username,
         message: userData.message,
         status: 'MESSAGE',

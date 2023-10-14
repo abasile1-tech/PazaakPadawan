@@ -1,7 +1,14 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import Card from './Card';
 import Header from './Header';
 import { useNavigate } from 'react-router-dom';
+
+interface DeckCard {
+  value: number;
+  color: string;
+  selected: boolean;
+  imagePath: string;
+}
 
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';
@@ -130,7 +137,7 @@ function DeckBuilder() {
   ];
 
   const [leftCards, setLeftCards] = useState(allCards);
-  const [rightCards, setRightCards] = useState([]);
+  const [rightCards, setRightCards] = useState<DeckCard[]>([]);
 
   const clearChosenCards = () => {
     setLeftCards(allCards);
@@ -145,7 +152,7 @@ function DeckBuilder() {
     }
   }, [rightCards, navigate]);
 
-  const handleCardClick = (card) => {
+  const handleCardClick = (card: DeckCard) => {
     if (rightCards.length < 10 || card.selected) {
       const updatedLeftCards = leftCards.map((c) =>
         c === card ? { ...c, selected: !c.selected } : c
@@ -170,7 +177,7 @@ function DeckBuilder() {
             <p>Available Cards</p>
           </div>
 
-          <div className="left-cards-container">
+          <div className="left-cards-container centered-card">
             {leftCards.map((card, index) => (
               <Card
                 key={index}
@@ -179,7 +186,7 @@ function DeckBuilder() {
                 onClick={() => handleCardClick(card)}
                 selected={card.selected}
                 image={card.imagePath}
-                className="centered-card"
+                cardType=""
               />
             ))}
           </div>
@@ -191,7 +198,7 @@ function DeckBuilder() {
           <div className="right-text-container">
             <p>Chosen Cards</p>
           </div>
-          <div className="right-cards-container">
+          <div className="right-cards-container centered-card">
             {rightCards.map((card, index) => (
               <Card
                 key={index}
@@ -200,7 +207,7 @@ function DeckBuilder() {
                 onClick={() => handleCardClick(card)}
                 selected={true}
                 image={card.imagePath}
-                className="centered-card"
+                cardType=""
               />
             ))}
           </div>

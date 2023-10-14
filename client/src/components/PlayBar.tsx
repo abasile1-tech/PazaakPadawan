@@ -7,9 +7,17 @@ interface PlayBarProps {
   turnTracker: boolean;
 }
 
+interface Character {
+  id: number;
+  name: string;
+  image: string;
+}
+
 const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
-  const [opponentName, setOpponentName] = useState('Darth Molt');
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
+    null
+  );
+  const [opponentName] = useState('Darth Molt');
 
   useEffect(() => {
     const storedCharacter = localStorage.getItem('selectedCharacter');

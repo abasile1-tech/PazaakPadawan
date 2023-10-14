@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 
 interface CardProps {
+  key?: number;
   value: number;
   color: string;
   cardType: string;
+  selected?: boolean;
+  image?: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 class Card extends Component<CardProps> {
   render() {
-    const { value, color, cardType, onClick } = this.props;
+    const { value, color, onClick } = this.props;
     if (color == 'blue' && value <= 0) {
       console.warn(
         'blue card has a negative value. blue card values should be positive'

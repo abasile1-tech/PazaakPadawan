@@ -1,6 +1,6 @@
 import Header from './Header';
 import { Link } from 'react-router-dom';
-import UserBarComponent from './userBarComponent';
+import UserBarComponent from './UserBarComponent';
 
 function HomePage() {
   const musicChoice = 'homePage';

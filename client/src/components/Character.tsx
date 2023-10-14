@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
 
@@ -30,11 +30,15 @@ const characters = [
   // },
 ];
 
+interface CharacterData {
+  id: number;
+  name: string;
+  image: string;
+}
+
 function Character() {
   const musicChoice = 'characterPage';
-  const [selectedCharacter, setSelectedCharacter] = useState<number | null>(
-    null
-  );
+  const [, setSelectedCharacter] = useState<CharacterData | null>(null);
   const navigate = useNavigate();
 
   const handleCharacterSelect = (characterId: number) => {
