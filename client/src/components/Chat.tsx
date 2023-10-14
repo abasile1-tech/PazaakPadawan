@@ -36,8 +36,10 @@ const Chat = () => {
     setUserData({ ...userData, message: value });
   };
   const registerUser = () => {
-    const Sock = new SockJS('http://localhost:8080/ws');
-    // const Sock = new SockJS('https://pazaak-3533536a7b01.herokuapp.com/ws');
+    const url = import.meta.env.PROD
+      ? import.meta.env.VITE_PROD_URL
+      : import.meta.env.VITE_DEV_URL;
+    const Sock = new SockJS(url + 'ws');
     stompClient = over(Sock);
     stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
   };
