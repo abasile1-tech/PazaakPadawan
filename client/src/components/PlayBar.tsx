@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react';
 import ScoreKeeper from './ScoreKeeper';
 import TurnIndicator from './TurnIndicator';
+import penguinmall from '../assets/images/penguins/penguinmaul1.jpeg';
+
 interface PlayBarProps {
   playerTally: number;
   opponentTally: number;
   turnTracker: boolean;
 }
 
+interface Character {
+  id: number;
+  name: string;
+  image: string;
+}
+
 const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
-  const [opponentName, setOpponentName] = useState('Darth Molt');
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
+    null
+  );
+  const [opponentName] = useState('Darth Molt');
 
   useEffect(() => {
     const storedCharacter = localStorage.getItem('selectedCharacter');
@@ -48,10 +58,7 @@ const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
         </div>
         <h2>
           <div className="user-bar">
-            <img
-              src={'src/assets/images/penguins/penguinmaul1.jpeg'}
-              alt={opponentName}
-            />
+            <img src={penguinmall} alt={opponentName} />
             <h3>{opponentName}</h3>
             <ScoreKeeper cardTally={opponentTally} />
           </div>

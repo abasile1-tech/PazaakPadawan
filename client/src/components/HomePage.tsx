@@ -1,6 +1,7 @@
 import Header from './Header';
 import { Link } from 'react-router-dom';
-import UserBarComponent from './userBarComponent';
+import UserBarComponent from './UserBarComponent';
+import homepagecard from '../assets/images/cards/HomepageCard.png';
 
 function HomePage() {
   const musicChoice = 'homePage';
@@ -21,11 +22,7 @@ function HomePage() {
           </h2>
         </div>
         <div>
-          <img
-            id="image-three-cards"
-            src="src\assets\images\cards\HomepageCard.png"
-            alt="three cards"
-          />
+          <img id="image-three-cards" src={homepagecard} alt="three cards" />
         </div>
       </div>
 

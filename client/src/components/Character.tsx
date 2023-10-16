@@ -1,40 +1,43 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from './Header';
+import chillbacca from '../assets/images/penguins/chillbacca1.png';
+import icesoka from '../assets/images/penguins/Iceokapenguano.jpeg';
+import kenobi from '../assets/images/penguins/obipenguin1.jpeg';
+import jinn from '../assets/images/penguins/pen-giunjinn1.jpeg';
 
 const characters = [
   {
     id: 1,
     name: 'Chillbacca',
-    image: 'src/assets/images/penguins/chillbacca1.png',
+    image: chillbacca,
   },
   {
     id: 2,
     name: 'Icesoka Penguano',
-    image: './src/assets/images/penguins/Iceokapenguano.jpeg',
+    image: icesoka,
   },
   {
     id: 3,
     name: 'Peng-Wan Kenobi',
-    image: 'src/assets/images/penguins/obipenguin1.jpeg',
+    image: kenobi,
   },
   {
     id: 4,
     name: 'Pen-Guin Jinn',
-    image: 'src/assets/images/penguins/pen-giunjinn1.jpeg',
+    image: jinn,
   },
-  // {
-  //   id: 5,
-  //   name: 'Darth Molt',
-  //   image: 'src/assets/images/penguins/penguinmaul1.jpeg',
-  // },
 ];
+
+interface CharacterData {
+  id: number;
+  name: string;
+  image: string;
+}
 
 function Character() {
   const musicChoice = 'characterPage';
-  const [selectedCharacter, setSelectedCharacter] = useState<number | null>(
-    null
-  );
+  const [, setSelectedCharacter] = useState<CharacterData | null>(null);
   const navigate = useNavigate();
 
   const handleCharacterSelect = (characterId: number) => {

@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react';
 
+interface Character {
+  id: number;
+  name: string;
+  image: string;
+}
+
 const UserBarComponent = () => {
-  const [selectedCharacter, setSelectedCharacter] = useState(null);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
+    null
+  );
 
   useEffect(() => {
     const storedCharacter = localStorage.getItem('selectedCharacter');

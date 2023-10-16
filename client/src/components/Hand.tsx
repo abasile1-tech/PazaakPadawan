@@ -1,8 +1,8 @@
 import Card from './Card';
 
 interface HandProps {
-  hand: Array<Card>;
-  moveCard?: (card: Card, index: number) => void;
+  hand: Array<JSX.Element>;
+  moveCard?: (card: JSX.Element, index: number) => void;
 }
 
 const Hand = ({ hand, moveCard }: HandProps): JSX.Element => {
