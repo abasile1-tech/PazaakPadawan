@@ -198,10 +198,11 @@ function SoloGame(): JSX.Element {
       <hr />
       <div className="playerBoard">
         <div className="player1">
-          <Hand hand={playerTable} />
+          <div className="table">
+            <Hand hand={playerTable} />
+          </div>
           <hr />
           <Hand hand={playerHand} moveCard={moveCard} />
-          {/* buttons are here */}
           <div className="turnOptions">
             <GameButtons
               gameState={gameState}
@@ -210,10 +211,11 @@ function SoloGame(): JSX.Element {
               onStartGame={handleStartButtonClick}
             />
           </div>
-          {/* buttons are here */}
         </div>
         <div className="player2">
-          <Hand hand={opponentTable} />
+          <div className="table">
+            <Hand hand={opponentTable} />
+          </div>
           <hr />
           <Hand hand={opponentHand} />
         </div>
