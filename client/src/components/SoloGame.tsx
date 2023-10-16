@@ -1,6 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -53,13 +53,17 @@ function SoloGame(): JSX.Element {
   ]);
   const [playerTable, setPlayerTable] = useState<JSX.Element[]>([]);
   const [opponentHand] = useState([
-    <Card value={-1} color="red" cardType="normal_card" />,
+    <Card value={-3} color="red" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
+    <Card value={2} color="blue" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
   const [opponentTable, setOpponentTable] = useState<JSX.Element[]>([]);
-  const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
-  const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
+  const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(0);
+  const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(0);
   const [playerTally, setPlayerTally] = useState(0);
+  const [officialPlayerTally, setOfficialPlayerTally] = useState(0);
+  const [officialOpponentTally, setOfficialOpponentTally] = useState(0);
   const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice] = useState('soloGame');
   const [turnTracker, setTurnTracker] = useState(true);
@@ -70,20 +74,42 @@ function SoloGame(): JSX.Element {
     navigate('/');
   };
 
+  useEffect(() => {
+    console.log(
+      'use effect playerTally, opponentTally:',
+      playerTally,
+      ', ',
+      opponentTally
+    );
+    checkIfGE20(playerTally, opponentTally);
+    setOfficialPlayerTally(playerTally);
+    setOfficialOpponentTally(opponentTally);
+  }, [playerTally, opponentTally]);
+
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
   }
 
-  function addCardToTable(turn: boolean) {
+  function checkIfGE20(playerTally: number, opponentTally: number) {
+    if (playerTally >= 20 || opponentTally >= 20) {
+      console.log('GE20: ', playerTally, opponentTally);
+    }
+  }
+
+  async function addCardToTable(turn: boolean) {
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
     if (turn) {
+      console.log('turn:', turn);
       setPlayerTally(playerTally + randomNumber);
       setPlayerTable([...playerTable, newCard]);
     } else if (!turn) {
+      console.log('!turn:', !turn);
+      console.log('opponent tally before:', opponentTally);
       setOpponentTally(opponentTally + randomNumber);
+      console.log('opponent tally after:', opponentTally);
       setOpponentTable([...opponentTable, newCard]);
     }
   }
@@ -95,13 +121,24 @@ function SoloGame(): JSX.Element {
     addCardToTable(tmpTracker);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
-    setGameState(GameState.STARTED);
-    setTurnTracker(!tmpTracker);
-    addCardToTable(!tmpTracker);
-    setPlayedCardThisTurn(false);
+    console.log('after delay:', playerTally, opponentTally);
+    console.log(
+      'after delay official:',
+      officialPlayerTally,
+      officialOpponentTally
+    );
+    if (playerTally >= 20 || opponentTally >= 20) {
+      await endOfRoundCleaning();
+    } else {
+      setGameState(GameState.STARTED);
+      setTurnTracker(!tmpTracker);
+      addCardToTable(!tmpTracker);
+      setPlayedCardThisTurn(false);
+    }
   }
 
-  function checkRoundWinner() {
+  async function checkRoundWinner() {
+    console.log('checking:', playerTally, opponentTally);
     if (playerTally > 20 && opponentTally > 20) {
       console.log('you both went bust');
     } else if (playerTally > 20 && opponentTally <= 20) {
@@ -121,7 +158,7 @@ function SoloGame(): JSX.Element {
     } else {
       console.log('something unexpected happened with the scoring');
     }
-    console.log('the round is over');
+    console.log('the round is over', playerTally, opponentTally);
   }
 
   async function handleStandButtonClick() {
@@ -131,7 +168,17 @@ function SoloGame(): JSX.Element {
     addCardToTable(tmpTracker);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
-    checkRoundWinner();
+    await endOfRoundCleaning();
+  }
+
+  async function handleStartButtonClick() {
+    setPlayedCardThisTurn(false);
+    addCardToTable(turnTracker);
+    setGameState(GameState.STARTED);
+  }
+
+  async function endOfRoundCleaning() {
+    await checkRoundWinner();
     setPlayerTable([]);
     setOpponentTable([]);
     setGameState(GameState.INITIAL);
@@ -140,12 +187,6 @@ function SoloGame(): JSX.Element {
     const newTmpTracker = turnTracker;
     setTurnTracker(newTmpTracker);
     setPlayedCardThisTurn(false);
-  }
-
-  function handleStartButtonClick() {
-    setPlayedCardThisTurn(false);
-    addCardToTable(turnTracker);
-    setGameState(GameState.STARTED);
   }
 
   function moveCard(card: JSX.Element, index: number) {
