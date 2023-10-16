@@ -256,16 +256,17 @@
 
 /* popup message */
 .popup-box {
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   background-color: #1C2C3B;
-  border:3px solid #865DFF;
+  border: 3px solid #865DFF;
   border-radius: 20px;
-  min-width: none;
   max-width: 500px;
+  text-align: center;
   font-weight: bold;
+  padding: 15px;
 }
 
 .popup-content {
@@ -365,3 +366,5 @@
   height: 55px; 
   margin: 10px;
 }
+
+

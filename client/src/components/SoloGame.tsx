@@ -4,7 +4,9 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
-
+import PopUp from './PopUP/PopUp';
+import { useNavigate } from 'react-router-dom';
+import GameButtons from './GameButtons';
 // interface SoloGameProps {}
 
 // interface Player {
@@ -61,6 +63,10 @@ function SoloGame(): JSX.Element {
   const [musicChoice] = useState('soloGame');
   const [turnTracker, setTurnTracker] = useState(true);
   const [gameState, setGameState] = useState(GameState.INITIAL);
+  const navigate = useNavigate();
+  const handleGameOverClick = () => {
+    navigate('/');
+  };
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
@@ -137,6 +143,30 @@ function SoloGame(): JSX.Element {
     setPlayerTable([...playerTable, card]);
     setPlayerTally(playerTally + card.props.value);
   }
+  //game over
+  function renderPopup() {
+    if (numGamesWonPlayer === 3) {
+      return (
+        <PopUp
+          title="YOU WON "
+          message="Thanks for playing Pazaak Online. 
+          Click close to return to the main menu."
+          buttonText="CLOSE"
+          onClick={handleGameOverClick}
+        />
+      );
+    } else if (numGamesWonOpponent === 3) {
+      return (
+        <PopUp
+          title="YOU LOSE"
+          message="Thanks for playing Pazaak Online. 
+          Click close to return to the main menu."
+          buttonText="CLOSE"
+          onClick={handleGameOverClick}
+        />
+      );
+    }
+  }
 
   return (
     <>
@@ -156,38 +186,23 @@ function SoloGame(): JSX.Element {
           <Hand hand={playerTable} />
           <hr />
           <Hand hand={playerHand} moveCard={moveCard} />
+          {/* buttons are here */}
           <div className="turnOptions">
-            <button
-              onClick={handleStandButtonClick}
-              disabled={
-                gameState == GameState.INITIAL || gameState == GameState.STAND
-              }
-            >
-              Stand
-            </button>
-            <button
-              onClick={handleEndTurnButtonClick}
-              disabled={
-                gameState == GameState.INITIAL || gameState == GameState.STAND
-              }
-            >
-              End Turn
-            </button>
-            <button
-              onClick={handleStartButtonClick}
-              disabled={
-                gameState == GameState.STARTED || gameState == GameState.STAND
-              }
-            >
-              Start Game
-            </button>
+            <GameButtons
+              gameState={gameState}
+              onStand={handleStandButtonClick}
+              onEndTurn={handleEndTurnButtonClick}
+              onStartGame={handleStartButtonClick}
+            />
           </div>
+          {/* buttons are here */}
         </div>
         <div className="player2">
           <Hand hand={opponentTable} />
           <hr />
           <Hand hand={opponentHand} />
         </div>
+        <div className="center-message">{renderPopup()}</div>
       </div>
     </>
   );
