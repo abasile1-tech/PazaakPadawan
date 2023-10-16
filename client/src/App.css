@@ -33,12 +33,17 @@
   background-color: #213547; 
   color: white; 
   padding: 10px; 
+  height: 60px;
+  overflow: auto;
 }
 
 
 .headerh1 {
   margin: 0; 
-  background-color: #213547
+  background-color: #213547;
+  position: sticky;
+  top: 0;
+  z-index:0;
 }
 
 
@@ -240,7 +245,6 @@
     justify-content: space-between;
     cursor: pointer;
     padding: 5px;
-  
   }
   .ul {
     list-style: none;
