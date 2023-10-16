@@ -4,6 +4,7 @@ enum GameState {
   STARTED = 'started',
   ENDED = 'ended',
   STAND = 'stand',
+  WAIT = 'wait',
 }
 
 interface GameButtonsProps {
@@ -23,7 +24,9 @@ const GameButtons: React.FC<GameButtonsProps> = ({
       <button
         onClick={onStand}
         disabled={
-          gameState === GameState.INITIAL || gameState === GameState.STAND
+          gameState === GameState.INITIAL ||
+          gameState === GameState.STAND ||
+          gameState === GameState.WAIT
         }
       >
         Stand
@@ -31,7 +34,9 @@ const GameButtons: React.FC<GameButtonsProps> = ({
       <button
         onClick={onEndTurn}
         disabled={
-          gameState === GameState.INITIAL || gameState === GameState.STAND
+          gameState === GameState.INITIAL ||
+          gameState === GameState.STAND ||
+          gameState === GameState.WAIT
         }
       >
         End Turn
@@ -39,7 +44,9 @@ const GameButtons: React.FC<GameButtonsProps> = ({
       <button
         onClick={onStartGame}
         disabled={
-          gameState === GameState.STARTED || gameState === GameState.STAND
+          gameState === GameState.STARTED ||
+          gameState === GameState.STAND ||
+          gameState === GameState.WAIT
         }
       >
         Start Game

@@ -24,6 +24,7 @@ enum GameState {
   STARTED = 'started',
   ENDED = 'ended',
   STAND = 'stand',
+  WAIT = 'wait',
 }
 
 // enum RoundState {
@@ -88,11 +89,13 @@ function SoloGame(): JSX.Element {
   }
 
   async function handleEndTurnButtonClick() {
+    setGameState(GameState.WAIT);
     const tmpTracker = !turnTracker;
     setTurnTracker(tmpTracker);
     addCardToTable(tmpTracker);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
+    setGameState(GameState.STARTED);
     setTurnTracker(!tmpTracker);
     addCardToTable(!tmpTracker);
     setPlayedCardThisTurn(false);
