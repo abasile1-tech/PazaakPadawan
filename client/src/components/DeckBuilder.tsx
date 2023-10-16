@@ -56,30 +56,6 @@ function DeckBuilder() {
       imagePath: bluecard,
     },
     {
-      value: 7,
-      color: 'blue',
-      selected: false,
-      imagePath: bluecard,
-    },
-    {
-      value: 8,
-      color: 'blue',
-      selected: false,
-      imagePath: bluecard,
-    },
-    {
-      value: 9,
-      color: 'blue',
-      selected: false,
-      imagePath: bluecard,
-    },
-    {
-      value: 10,
-      color: 'blue',
-      selected: false,
-      imagePath: bluecard,
-    },
-    {
       value: -1,
       color: 'red',
       selected: false,
@@ -111,30 +87,6 @@ function DeckBuilder() {
     },
     {
       value: -6,
-      color: 'red',
-      selected: false,
-      imagePath: redcard,
-    },
-    {
-      value: -7,
-      color: 'red',
-      selected: false,
-      imagePath: redcard,
-    },
-    {
-      value: -8,
-      color: 'red',
-      selected: false,
-      imagePath: redcard,
-    },
-    {
-      value: -9,
-      color: 'red',
-      selected: false,
-      imagePath: redcard,
-    },
-    {
-      value: -10,
       color: 'red',
       selected: false,
       imagePath: redcard,
