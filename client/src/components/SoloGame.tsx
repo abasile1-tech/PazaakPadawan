@@ -63,6 +63,7 @@ function SoloGame(): JSX.Element {
   const [musicChoice] = useState('soloGame');
   const [turnTracker, setTurnTracker] = useState(true);
   const [gameState, setGameState] = useState(GameState.INITIAL);
+  const [playedCardThisTurn, setPlayedCardThisTurn] = useState(false);
   const navigate = useNavigate();
   const handleGameOverClick = () => {
     navigate('/');
@@ -94,6 +95,7 @@ function SoloGame(): JSX.Element {
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     setTurnTracker(!tmpTracker);
     addCardToTable(!tmpTracker);
+    setPlayedCardThisTurn(false);
   }
 
   async function handleStandButtonClick() {
@@ -130,18 +132,24 @@ function SoloGame(): JSX.Element {
     setOpponentTally(0);
     const newTmpTracker = turnTracker;
     setTurnTracker(newTmpTracker);
+    setPlayedCardThisTurn(false);
   }
 
   function handleStartButtonClick() {
+    setPlayedCardThisTurn(false);
     addCardToTable(turnTracker);
     setGameState(GameState.STARTED);
   }
 
   function moveCard(card: JSX.Element, index: number) {
-    playerHand.splice(index, 1);
-    setPlayerHand([...playerHand]);
-    setPlayerTable([...playerTable, card]);
-    setPlayerTally(playerTally + card.props.value);
+    // if no cards have been played yet this turn, play a card
+    if (!playedCardThisTurn) {
+      playerHand.splice(index, 1);
+      setPlayerHand([...playerHand]);
+      setPlayerTable([...playerTable, card]);
+      setPlayerTally(playerTally + card.props.value);
+      setPlayedCardThisTurn(true);
+    }
   }
   //game over
   function renderPopup() {
