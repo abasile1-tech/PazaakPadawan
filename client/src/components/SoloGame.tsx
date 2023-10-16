@@ -52,19 +52,23 @@ function SoloGame(): JSX.Element {
     <Card value={-2} color="red" cardType="normal_card" />,
   ]);
   const [playerTable, setPlayerTable] = useState<JSX.Element[]>([]);
-  const [opponentHand] = useState([
+  const [opponentHand, setOpponentHand] = useState([
     <Card value={-1} color="red" cardType="normal_card" />,
     <Card value={-2} color="red" cardType="normal_card" />,
+    <Card value={-3} color="red" cardType="normal_card" />,
+    <Card value={4} color="blue" cardType="normal_card" />,
   ]);
   const [opponentTable, setOpponentTable] = useState<JSX.Element[]>([]);
-  const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(1);
-  const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(2);
+  const [numGamesWonPlayer, setNumGamesWonPlayer] = useState(0);
+  const [numGamesWonOpponent, setNumGamesWonOpponent] = useState(0);
   const [playerTally, setPlayerTally] = useState(0);
   const [opponentTally, setOpponentTally] = useState(0);
   const [musicChoice] = useState('soloGame');
   const [turnTracker, setTurnTracker] = useState(true);
   const [gameState, setGameState] = useState(GameState.INITIAL);
   const [playedCardThisTurn, setPlayedCardThisTurn] = useState(false);
+  //both users stand
+  // const [bothPlayersStand, setBothPlayersStand] = useState(false);
   const navigate = useNavigate();
   const handleGameOverClick = () => {
     navigate('/');
@@ -99,6 +103,7 @@ function SoloGame(): JSX.Element {
     setTurnTracker(!tmpTracker);
     addCardToTable(!tmpTracker);
     setPlayedCardThisTurn(false);
+    aiChoice();
   }
 
   function checkRoundWinner() {
@@ -123,6 +128,69 @@ function SoloGame(): JSX.Element {
     }
     console.log('the round is over');
   }
+
+  //ai choice
+  function aiChoice() {
+    if (opponentTally < 17) {
+      addCardToTable(true);
+      console.log('more card');
+    } else if (opponentTally >= 17 && opponentTally <= 20) {
+      if (opponentHand.length > 0) {
+        let bestCard = null;
+        let bestSum = 0;
+        let bestCardIndex = -1;
+        for (let i = 0; i < opponentHand.length; i++) {
+          const card = opponentHand[i];
+          const sum = opponentTally + card.props.value;
+          if (sum <= 20 && sum > bestSum) {
+            bestSum = sum;
+            bestCard = card;
+            bestCardIndex = i;
+          }
+        }
+        if (bestCard) {
+          opponentHand.splice(bestCardIndex, 1);
+          setOpponentHand([...opponentHand]);
+          setOpponentTable([...opponentTable, bestCard]);
+          setOpponentTally(bestSum);
+        } else {
+          setGameState(GameState.STAND);
+          console.log('i want to stand');
+        }
+      } else {
+        setGameState(GameState.STAND);
+        console.log('i want to stand');
+      }
+    } else if (opponentTally > 20) {
+      if (opponentHand.length > 0) {
+        let bestCard = null;
+        let bestSum = 0;
+        let bestCardIndex = -1;
+        for (let i = 0; i < opponentHand.length; i++) {
+          const card = opponentHand[i];
+          const sum = opponentTally + card.props.value;
+          if (sum <= 20 && sum > bestSum) {
+            bestSum = sum;
+            bestCard = card;
+            bestCardIndex = i;
+          }
+        }
+        if (bestCard) {
+          opponentHand.splice(bestCardIndex, 1);
+          setOpponentHand([...opponentHand]);
+          setOpponentTable([...opponentTable, bestCard]);
+          setOpponentTally(bestSum);
+        } else {
+          setGameState(GameState.STAND);
+          console.log('i want to stand');
+        }
+      } else {
+        setGameState(GameState.STAND);
+        console.log('i want to stand');
+      }
+    }
+  }
+  //ai choice
 
   async function handleStandButtonClick() {
     setGameState(GameState.STAND);
