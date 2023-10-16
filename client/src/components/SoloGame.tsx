@@ -126,7 +126,6 @@ function SoloGame(): JSX.Element {
     };
     setPlayer(newPlayer);
     addCardToTable(newPlayer);
-    console.log('FIRST', computerPlayer.tally);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     console.log('after delay:', player.tally, computerPlayer.tally);
