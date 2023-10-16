@@ -101,13 +101,7 @@ function SoloGame(): JSX.Element {
     setPlayedCardThisTurn(false);
   }
 
-  async function handleStandButtonClick() {
-    setGameState(GameState.STAND);
-    const tmpTracker = !turnTracker;
-    setTurnTracker(tmpTracker);
-    addCardToTable(tmpTracker);
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-    await delay(3000); // wait for 3 seconds while the AI "decides...";
+  function checkRoundWinner() {
     if (playerTally > 20 && opponentTally > 20) {
       console.log('you both went bust');
     } else if (playerTally > 20 && opponentTally <= 20) {
@@ -128,6 +122,16 @@ function SoloGame(): JSX.Element {
       console.log('something unexpected happened with the scoring');
     }
     console.log('the round is over');
+  }
+
+  async function handleStandButtonClick() {
+    setGameState(GameState.STAND);
+    const tmpTracker = !turnTracker;
+    setTurnTracker(tmpTracker);
+    addCardToTable(tmpTracker);
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(3000); // wait for 3 seconds while the AI "decides...";
+    checkRoundWinner();
     setPlayerTable([]);
     setOpponentTable([]);
     setGameState(GameState.INITIAL);
