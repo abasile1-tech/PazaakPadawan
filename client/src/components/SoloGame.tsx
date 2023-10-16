@@ -202,7 +202,9 @@ function SoloGame(): JSX.Element {
             <Hand hand={playerTable} />
           </div>
           <hr />
-          <Hand hand={playerHand} moveCard={moveCard} />
+          <div className="hand">
+            <Hand hand={playerHand} moveCard={moveCard} />
+          </div>
           <div className="turnOptions">
             <GameButtons
               gameState={gameState}
@@ -217,7 +219,9 @@ function SoloGame(): JSX.Element {
             <Hand hand={opponentTable} />
           </div>
           <hr />
-          <Hand hand={opponentHand} />
+          <div className="hand">
+            <Hand hand={opponentHand} />
+          </div>
         </div>
         <div className="center-message">{renderPopup()}</div>
       </div>

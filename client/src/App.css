@@ -106,8 +106,18 @@
   display: flex;
 }
 
-.table {
+.table{
   min-height:300px; 
+  border: solid black 1px;
+  background-color: #213547; 
+  color: white;
+}
+
+.hand{
+  min-height: 150px;
+  border: solid black 1px;
+  background-color: #213547; 
+  color: white;
 }
 
 .player1 {
