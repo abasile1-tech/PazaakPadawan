@@ -105,9 +105,8 @@ function DeckBuilder() {
       const shuffledRightCards = shuffleArray(rightCards);
       const selectedHandCards = shuffledRightCards.slice(0, 4);
       setSelectedHand(selectedHandCards);
-      alert('Game will start with the chosen cards!');
       console.log('4 cards here', selectedHandCards);
-      // navigate('/');
+      navigate('/');
     } else {
       toast.error('Please select 10 cards to start the game!', {
         position: 'top-right',
