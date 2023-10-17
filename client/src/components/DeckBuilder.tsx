@@ -17,7 +17,7 @@ interface DeckCard {
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';
   const navigate = useNavigate();
-  const [selectedHand, setSelectedHand] = useState<DeckCard[]>([]);
+  const [, setSelectedHand] = useState<DeckCard[]>([]);
   const allCards = [
     {
       value: 1,
