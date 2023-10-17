@@ -264,8 +264,8 @@ function SoloGame(): JSX.Element {
       playedCardThisTurn: false,
     });
     setComputerPlayer({
-      ...player,
-      hand: player.hand,
+      ...computerPlayer,
+      hand: computerPlayer.hand,
       table: [],
       tally: 0,
       gamesWon:
