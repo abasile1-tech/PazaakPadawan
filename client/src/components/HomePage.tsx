@@ -28,16 +28,16 @@ function HomePage() {
 
       <div className="buttons">
         <Link to="/solo">
-          <button className="solo-button">Solo</button>
+          <button className="solo-button">Solo Game</button>
         </Link>
         <Link to="/pvp">
-          <button className="pvp-button">PVP</button>
+          <button className="pvp-button">PVP Game</button>
         </Link>
         <Link to="/deck">
           <button className="deck-button">Deck Builder</button>
         </Link>
         <Link to="/character">
-          <button className="character-button">Choose your character</button>
+          <button className="character-button">Characters </button>
         </Link>
       </div>
     </div>
