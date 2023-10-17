@@ -6,7 +6,8 @@ import penguinmall from '../assets/images/penguins/penguinmaul1.jpeg';
 interface PlayBarProps {
   playerTally: number;
   opponentTally: number;
-  turnTracker: boolean;
+  isPlayerTurn: boolean;
+  gameState: GameState;
 }
 
 interface Character {
@@ -15,7 +16,20 @@ interface Character {
   image: string;
 }
 
-const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
+enum GameState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+  STAND = 'stand',
+  WAIT = 'wait',
+}
+
+const PlayBar = ({
+  playerTally,
+  opponentTally,
+  isPlayerTurn,
+  gameState,
+}: PlayBarProps) => {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(
     null
   );
@@ -46,7 +60,7 @@ const PlayBar = ({ playerTally, opponentTally, turnTracker }: PlayBarProps) => {
           )}
         </h2>
         <div className="turn_indicator">
-          {turnTracker ? (
+          {isPlayerTurn || gameState === GameState.INITIAL ? (
             selectedCharacter ? (
               <TurnIndicator playerName={selectedCharacter.name} />
             ) : (
