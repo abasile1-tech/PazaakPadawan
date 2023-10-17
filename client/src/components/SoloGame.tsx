@@ -7,7 +7,6 @@ import PlayBar from './PlayBar';
 import PopUp from './PopUP/PopUp';
 import { useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
-// interface SoloGameProps {}
 
 interface Player {
   name: string;
@@ -29,22 +28,10 @@ enum GameState {
   WAIT = 'wait',
 }
 
-// enum RoundState {
-//   INITIAL = 'initial',
-//   STARTED = 'started',
-//   ENDED = 'ended',
-//   STAND = 'stand',
-// }
-
 enum PlayerState {
   STAND = 'stand',
   ENDTURN = 'endturn',
 }
-
-// enum OpponentState {
-//   STAND = 'stand',
-//   ENDTURN = 'endturn',
-// }
 
 function SoloGame(): JSX.Element {
   const initialPlayer: Player = {
