@@ -5,7 +5,7 @@ import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
 import cardflip from '../assets/music/flipcardfast.mp3';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
@@ -35,6 +35,8 @@ enum PlayerState {
 }
 
 function SoloGame(): JSX.Element {
+  const location = useLocation();
+  const selectedHand = location?.state?.selectedHand;
   const [endRoundMessage, setEndRoundMessage] = useState<string | null>(null);
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   const initialPlayer: Player = {
@@ -42,12 +44,9 @@ function SoloGame(): JSX.Element {
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: [
-      <Card value={-1} color="red" cardType="normal_card" />,
-      <Card value={3} color="blue" cardType="normal_card" />,
-      <Card value={1} color="blue" cardType="normal_card" />,
-      <Card value={-4} color="red" cardType="normal_card" />,
-    ],
+    hand: selectedHand.map((card) => (
+      <Card value={card.value} color={card.color} cardType="normal_card" />
+    )),
     tally: 0,
     table: [],
     gamesWon: 0,
