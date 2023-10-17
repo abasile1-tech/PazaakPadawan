@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import redcard from '../assets/images/cards/red_card.png';
 import bluecard from '../assets/images/cards/blue_card.png';
+import greencard from '../assets/images/cards/green_card.png';
 
 interface CardProps {
   key?: number;
@@ -18,6 +19,8 @@ function getImageSource(color: string) {
       return redcard;
     case 'blue':
       return bluecard;
+    case 'green':
+      return greencard;
   }
 }
 
