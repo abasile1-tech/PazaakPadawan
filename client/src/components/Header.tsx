@@ -38,7 +38,7 @@ function Header({ musicChoice }: MusicChoiceProps) {
                       <Link to="/deck">Deck Builder</Link>
                     </li>
                     <li>
-                      <Link to="/character">Choose Character</Link>
+                      <Link to="/character">Characters</Link>
                     </li>
                   </ul>
                 </nav>

@@ -150,16 +150,17 @@
 .buttons button {
   background-color: #213547; 
   color: white; 
-  padding: 25px 45px; 
+  padding: 10px; 
   border: none;
   cursor: pointer;
   border-radius: 5px; 
   margin: 20px;
+  height: 70px;
+  width: 165px;
 }
 
 .solo-button {
   background-color: #213547; 
-  
 }
 
 .pvp-button {
