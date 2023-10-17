@@ -52,9 +52,23 @@ function SoloGame(): JSX.Element {
     for (let i = 0; i < 4; i++) {
       const randomValue = Math.floor(Math.random() * 6) + 1;
       const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
-      randomHand.push(
-        <Card value={randomValue} color={randomColor} cardType="normal_card" />
-      );
+      if (randomColor === 'red') {
+        randomHand.push(
+          <Card
+            value={-randomValue}
+            color={randomColor}
+            cardType="normal_card"
+          />
+        );
+      } else {
+        randomHand.push(
+          <Card
+            value={randomValue}
+            color={randomColor}
+            cardType="normal_card"
+          />
+        );
+      }
     }
     return randomHand;
   }
