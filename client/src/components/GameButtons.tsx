@@ -12,12 +12,14 @@ interface GameButtonsProps {
   onStand: () => void;
   onEndTurn: () => void;
   onStartGame: () => void;
+  isPlayerTurn: boolean;
 }
 const GameButtons: React.FC<GameButtonsProps> = ({
   gameState,
   onStand,
   onEndTurn,
   onStartGame,
+  isPlayerTurn,
 }) => {
   return (
     <div className="turnOptions">
@@ -26,7 +28,8 @@ const GameButtons: React.FC<GameButtonsProps> = ({
         disabled={
           gameState === GameState.INITIAL ||
           gameState === GameState.STAND ||
-          gameState === GameState.WAIT
+          gameState === GameState.WAIT ||
+          !isPlayerTurn
         }
       >
         Stand
@@ -36,7 +39,8 @@ const GameButtons: React.FC<GameButtonsProps> = ({
         disabled={
           gameState === GameState.INITIAL ||
           gameState === GameState.STAND ||
-          gameState === GameState.WAIT
+          gameState === GameState.WAIT ||
+          !isPlayerTurn
         }
       >
         End Turn
