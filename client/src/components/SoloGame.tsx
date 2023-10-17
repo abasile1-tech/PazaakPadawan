@@ -92,7 +92,7 @@ function SoloGame(): JSX.Element {
     audio.play();
     const randomNumber = getRandomNumber();
     const newCard = (
-      <Card value={randomNumber} color="blue" cardType="normal_card" />
+      <Card value={randomNumber} color="green" cardType="normal_card" />
     );
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       setPlayer({
