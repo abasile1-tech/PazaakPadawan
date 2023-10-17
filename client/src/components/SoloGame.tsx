@@ -132,65 +132,47 @@ function SoloGame(): JSX.Element {
 
   //ai choice
   function aiChoice() {
-    if (opponentTally < 17) {
+    if (opponentTally > 20) {
+      if (opponentHand.length > 0) {
+        let bestCard = null;
+        let bestSum = 0;
+        let bestCardIndex = -1;
+        for (let i = 0; i < opponentHand.length; i++) {
+          const card = opponentHand[i];
+          const sum = opponentTally + card.props.value;
+          if (sum >= 15 && sum <= 20 && sum > bestSum) {
+            bestSum = sum;
+            bestCard = card;
+            bestCardIndex = i;
+          }
+        }
+        if (bestCard) {
+          opponentHand.splice(bestCardIndex, 1);
+          setOpponentHand([...opponentHand]);
+          setOpponentTable([...opponentTable, bestCard]);
+          setOpponentTally(bestSum);
+        } else {
+          setGameState(GameState.STAND);
+          console.log('i want to stand');
+        }
+      } else {
+        setGameState(GameState.STAND);
+        console.log('i want to stand');
+      }
+    } else if (opponentTally >= 17 && opponentTally <= 20) {
+      if (Math.random() === 0.7) {
+        setGameState(GameState.STAND);
+        console.log('randomly i want to stand');
+      } else {
+        addCardToTable(true);
+        console.log('number between 17 and 20 but i need more cards');
+      }
+    } else if (opponentTally < 17) {
       addCardToTable(true);
       console.log('more card');
-    } else if (opponentTally >= 17 && opponentTally <= 20) {
-      if (opponentHand.length > 0) {
-        let bestCard = null;
-        let bestSum = 0;
-        let bestCardIndex = -1;
-        for (let i = 0; i < opponentHand.length; i++) {
-          const card = opponentHand[i];
-          const sum = opponentTally + card.props.value;
-          if (sum <= 20 && sum > bestSum) {
-            bestSum = sum;
-            bestCard = card;
-            bestCardIndex = i;
-          }
-        }
-        if (bestCard) {
-          opponentHand.splice(bestCardIndex, 1);
-          setOpponentHand([...opponentHand]);
-          setOpponentTable([...opponentTable, bestCard]);
-          setOpponentTally(bestSum);
-        } else {
-          setGameState(GameState.STAND);
-          console.log('i want to stand');
-        }
-      } else {
-        setGameState(GameState.STAND);
-        console.log('i want to stand');
-      }
-    } else if (opponentTally > 20) {
-      if (opponentHand.length > 0) {
-        let bestCard = null;
-        let bestSum = 0;
-        let bestCardIndex = -1;
-        for (let i = 0; i < opponentHand.length; i++) {
-          const card = opponentHand[i];
-          const sum = opponentTally + card.props.value;
-          if (sum <= 20 && sum > bestSum) {
-            bestSum = sum;
-            bestCard = card;
-            bestCardIndex = i;
-          }
-        }
-        if (bestCard) {
-          opponentHand.splice(bestCardIndex, 1);
-          setOpponentHand([...opponentHand]);
-          setOpponentTable([...opponentTable, bestCard]);
-          setOpponentTally(bestSum);
-        } else {
-          setGameState(GameState.STAND);
-          console.log('i want to stand');
-        }
-      } else {
-        setGameState(GameState.STAND);
-        console.log('i want to stand');
-      }
     }
   }
+
   //ai choice
 
   async function handleStandButtonClick() {
