@@ -10,6 +10,13 @@ import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
 
+interface DeckCard {
+  value: number;
+  color: string;
+  selected: boolean;
+  imagePath: string;
+}
+
 interface Player {
   name: string;
   action: PlayerState;
@@ -37,6 +44,7 @@ enum PlayerState {
 function SoloGame(): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   function generateRandomHand() {
@@ -56,7 +64,7 @@ function SoloGame(): JSX.Element {
     wonGame: false,
     isTurn: false,
     hand: selectedHand
-      ? selectedHand.map((card) => (
+      ? selectedHand.map((card: DeckCard) => (
           <Card value={card.value} color={card.color} cardType="normal_card" />
         ))
       : generateRandomHand(),
@@ -151,7 +159,6 @@ function SoloGame(): JSX.Element {
     );
     const newComputerPlayer = addCardToTable(newPlayer);
     const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     // AI Choice starts
     if (cPlayer.tally < 20 && cPlayer.action != PlayerState.STAND) {
@@ -180,6 +187,7 @@ function SoloGame(): JSX.Element {
           };
           console.log('Computer Player Table', newComputerPlayer.table);
           setComputerPlayer(newComputerPlayer);
+          await delay(3000); // wait for 3 seconds while the AI "decides..."
           // setGameState(GameState.STAND);
           console.log('I just played a card and now I want to stand');
         }
@@ -288,7 +296,6 @@ function SoloGame(): JSX.Element {
     };
     setPlayer(newPlayer);
     const newComputerPlayer = addCardToTable(newPlayer);
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
     await endOfRoundCleaning(newComputerPlayer);
   }
