@@ -1,4 +1,4 @@
-![Main page screenshot](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Main.png?raw=true)
+![Main page screenshot](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/MainPage.png?raw=true)
 
 Pazaak Card Game!
 
@@ -49,6 +49,8 @@ Project_Team:
 * Paul Dennehy
 * Ewelina Nicholson
 * Ying Huai
+
+Risks:
 * Technical challenges in implementing game rules and card interactions.
 * Compatibility issues with different platforms and browsers.
 * User interface design and usability challenges.
@@ -81,8 +83,9 @@ Deliverables:
 * Communication Engagement: Encourage communication engagement by providing a platform for players to share their experiences, strategies, and feedback.
 
 
-![Board](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Board.png?raw=true)
-![Board2](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Board2.png?raw=true)
+![Board](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/SoloGame.png?raw=true)
+![Board2](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/DeckBuilder.png?raw=true)
+![Board2](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/ChooseCharacter.png?raw=true)
 
 ### Demo 
 
