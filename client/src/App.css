@@ -251,7 +251,6 @@
 }
 
 .hamburger {
-  .menu-button {
     width: 30px;
     height: 20px;
     display: flex;
@@ -259,14 +258,22 @@
     justify-content: space-between;
     cursor: pointer;
     padding: 5px;
+    position: absolute;
+    right: 180px;
   }
-  .ul {
+  .hamburger ul {
     list-style: none;
-    font-size: 14px;
+    font-size: 28px;
   }
- 
-  
+  .hamburger ul li {
+    padding: 0 9px;
+    background-color: #213547;
+    width: 150px;
+    border: 3px solid black;
+    border-radius: 15px;
 }
+  
+
 
 /* popup message */
 .popup-box {

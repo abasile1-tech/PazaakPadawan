@@ -20,8 +20,8 @@ function Header({ musicChoice }: MusicChoiceProps) {
             ☰
             <div>
               {isMenuOpen && (
-                <div className="hamburger">
-                  <ul className="ul">
+                <nav className="hamburger">
+                  <ul>
                     <li>
                       <Link to="/">Home</Link>
                     </li>
@@ -41,7 +41,7 @@ function Header({ musicChoice }: MusicChoiceProps) {
                       <Link to="/character">Choose Character</Link>
                     </li>
                   </ul>
-                </div>
+                </nav>
               )}
             </div>
           </button>
