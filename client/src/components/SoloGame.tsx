@@ -312,7 +312,7 @@ function SoloGame(): JSX.Element {
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
-    if (!player.playedCardThisTurn) {
+    if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
       player.hand.splice(index, 1);
       setPlayer({
         ...player,
