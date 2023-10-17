@@ -39,14 +39,27 @@ function SoloGame(): JSX.Element {
   const selectedHand = location?.state?.selectedHand;
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+  function generateRandomHand() {
+    const randomHand = [];
+    for (let i = 0; i < 4; i++) {
+      const randomValue = Math.floor(Math.random() * 6) + 1;
+      const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
+      randomHand.push(
+        <Card value={randomValue} color={randomColor} cardType="normal_card" />
+      );
+    }
+    return randomHand;
+  }
   const initialPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: selectedHand.map((card) => (
-      <Card value={card.value} color={card.color} cardType="normal_card" />
-    )),
+    hand: selectedHand
+      ? selectedHand.map((card) => (
+          <Card value={card.value} color={card.color} cardType="normal_card" />
+        ))
+      : generateRandomHand(),
     tally: 0,
     table: [],
     gamesWon: 0,
@@ -82,6 +95,7 @@ function SoloGame(): JSX.Element {
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
   }
+
   function showEndRoundWinner(winner: string) {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
