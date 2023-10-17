@@ -157,6 +157,7 @@
   margin: 20px;
   height: 70px;
   width: 165px;
+  font-size: 20px;
 }
 
 .solo-button {
@@ -260,7 +261,7 @@
     cursor: pointer;
     padding: 5px;
     position: absolute;
-    right: 180px;
+    right: 185px;
   }
   .hamburger ul {
     list-style: none;
@@ -273,6 +274,7 @@
     border: 3px solid black;
     border-radius: 15px;
     text-decoration-color: white;
+    margin: 1px;
 }
   
 
