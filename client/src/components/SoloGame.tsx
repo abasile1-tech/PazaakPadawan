@@ -35,6 +35,7 @@ enum PlayerState {
 }
 
 function SoloGame(): JSX.Element {
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   const initialPlayer: Player = {
@@ -138,7 +139,6 @@ function SoloGame(): JSX.Element {
     );
     const newComputerPlayer = addCardToTable(newPlayer);
     const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     // AI Choice starts
     if (cPlayer.tally < 20 && cPlayer.action != PlayerState.STAND) {
@@ -167,6 +167,7 @@ function SoloGame(): JSX.Element {
           };
           console.log('Computer Player Table', newComputerPlayer.table);
           setComputerPlayer(newComputerPlayer);
+          await delay(3000); // wait for 3 seconds while the AI "decides..."
           // setGameState(GameState.STAND);
           console.log('I just played a card and now I want to stand');
         }
@@ -275,7 +276,6 @@ function SoloGame(): JSX.Element {
     };
     setPlayer(newPlayer);
     const newComputerPlayer = addCardToTable(newPlayer);
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
     await endOfRoundCleaning(newComputerPlayer);
   }
