@@ -7,6 +7,8 @@ import PlayBar from './PlayBar';
 import PopUp from './PopUP/PopUp';
 import { useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
+import cardflip from '../assets/music/flipcardfast.mp3';
+
 // interface SoloGameProps {}
 
 // interface Player {
@@ -75,6 +77,8 @@ function SoloGame(): JSX.Element {
   }
 
   function addCardToTable(turn: boolean) {
+    let audio = new Audio(cardflip);
+    audio.play();
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
@@ -101,7 +105,13 @@ function SoloGame(): JSX.Element {
     setPlayedCardThisTurn(false);
   }
 
-  function checkRoundWinner() {
+  async function handleStandButtonClick() {
+    setGameState(GameState.STAND);
+    const tmpTracker = !turnTracker;
+    setTurnTracker(tmpTracker);
+    addCardToTable(tmpTracker);
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(3000); // wait for 3 seconds while the AI "decides...";
     if (playerTally > 20 && opponentTally > 20) {
       console.log('you both went bust');
     } else if (playerTally > 20 && opponentTally <= 20) {
@@ -122,16 +132,6 @@ function SoloGame(): JSX.Element {
       console.log('something unexpected happened with the scoring');
     }
     console.log('the round is over');
-  }
-
-  async function handleStandButtonClick() {
-    setGameState(GameState.STAND);
-    const tmpTracker = !turnTracker;
-    setTurnTracker(tmpTracker);
-    addCardToTable(tmpTracker);
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-    await delay(3000); // wait for 3 seconds while the AI "decides...";
-    checkRoundWinner();
     setPlayerTable([]);
     setOpponentTable([]);
     setGameState(GameState.INITIAL);
@@ -198,13 +198,10 @@ function SoloGame(): JSX.Element {
       <hr />
       <div className="playerBoard">
         <div className="player1">
-          <div className="table">
-            <Hand hand={playerTable} />
-          </div>
+          <Hand hand={playerTable} />
           <hr />
-          <div className="hand">
-            <Hand hand={playerHand} moveCard={moveCard} />
-          </div>
+          <Hand hand={playerHand} moveCard={moveCard} />
+          {/* buttons are here */}
           <div className="turnOptions">
             <GameButtons
               gameState={gameState}
@@ -213,15 +210,12 @@ function SoloGame(): JSX.Element {
               onStartGame={handleStartButtonClick}
             />
           </div>
+          {/* buttons are here */}
         </div>
         <div className="player2">
-          <div className="table">
-            <Hand hand={opponentTable} />
-          </div>
+          <Hand hand={opponentTable} />
           <hr />
-          <div className="hand">
-            <Hand hand={opponentHand} />
-          </div>
+          <Hand hand={opponentHand} />
         </div>
         <div className="center-message">{renderPopup()}</div>
       </div>
