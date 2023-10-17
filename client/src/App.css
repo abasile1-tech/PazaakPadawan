@@ -48,7 +48,7 @@
 
 
 .menu-button {
-  font-size: 30px; 
+  font-size: 15px; 
   cursor: pointer;
   background-color: #213547
 }
@@ -263,7 +263,7 @@
   }
   .hamburger ul {
     list-style: none;
-    font-size: 28px;
+    font-size: 20px;
   }
   .hamburger ul li {
     padding: 0 9px;
