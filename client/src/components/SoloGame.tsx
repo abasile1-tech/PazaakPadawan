@@ -307,6 +307,7 @@ function SoloGame(): JSX.Element {
       hand: player.hand,
       table: [],
       tally: 0,
+      action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
     });
@@ -315,6 +316,7 @@ function SoloGame(): JSX.Element {
       hand: computerPlayer.hand,
       table: [],
       tally: 0,
+      action: PlayerState.PLAY,
       gamesWon:
         winner === 0 ? computerPlayer.gamesWon + 1 : computerPlayer.gamesWon,
       playedCardThisTurn: false,
