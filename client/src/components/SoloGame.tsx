@@ -35,7 +35,7 @@ enum PlayerState {
 }
 
 function SoloGame(): JSX.Element {
-  const [endRoundMessage, setEndRoundMessage] = useState<string | null>(null);
+  const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   const initialPlayer: Player = {
     name: '',
