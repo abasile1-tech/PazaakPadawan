@@ -103,10 +103,10 @@ function DeckBuilder() {
   const startGame = useCallback(() => {
     if (rightCards.length === 10) {
       const shuffledRightCards = shuffleArray(rightCards);
-      const selectedHandCards = shuffledRightCards.slice(0, 4);
-      setSelectedHand(selectedHandCards);
-      console.log('4 cards here', selectedHandCards);
-      navigate('/');
+      const selectedHand = shuffledRightCards.slice(0, 4);
+      setSelectedHand(selectedHand);
+      console.log('4 cards here', selectedHand);
+      navigate('/solo', { state: { selectedHand } });
     } else {
       toast.error('Please select 10 cards to start the game!', {
         position: 'top-right',
