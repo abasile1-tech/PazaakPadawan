@@ -87,7 +87,6 @@ function SoloGame(): JSX.Element {
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
     if (newPlayer.isTurn) {
-      console.log('turn:', newPlayer.isTurn);
       setPlayer({
         ...newPlayer,
         tally: newPlayer.tally + randomNumber,
@@ -96,15 +95,12 @@ function SoloGame(): JSX.Element {
       return null;
     }
     if (!newPlayer.isTurn) {
-      console.log('!turn:', !newPlayer.isTurn);
-      console.log('opponent tally before:', computerPlayer.tally);
       const newComputerPlayer = {
         ...computerPlayer,
         tally: computerPlayer.tally + randomNumber,
         table: [...computerPlayer.table, newCard],
       };
       setComputerPlayer(newComputerPlayer);
-      console.log('opponent tally after:', computerPlayer.tally);
       return newComputerPlayer;
     }
     return null;
@@ -120,7 +116,6 @@ function SoloGame(): JSX.Element {
     const newComputerPlayer = addCardToTable(newPlayer);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
-    console.log('after delay:', player.tally, computerPlayer.tally);
     if (player.tally >= 20 || computerPlayer.tally >= 20) {
       await endOfRoundCleaning(newComputerPlayer);
     } else {
@@ -136,7 +131,12 @@ function SoloGame(): JSX.Element {
   }
 
   function getRoundWinner(computerPlayer: Player) {
-    console.log('checking:', player.tally, computerPlayer.tally);
+    console.log(
+      'Player Score: ',
+      player.tally,
+      'Computer Player Score: ',
+      computerPlayer.tally
+    );
     const playerBust = player.tally > 20;
     const computerBust = computerPlayer.tally > 20;
     const computerWon = computerPlayer.tally <= 20;
