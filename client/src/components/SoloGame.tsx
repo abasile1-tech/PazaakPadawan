@@ -8,6 +8,7 @@ import cardflip from '../assets/music/flipcardfast.mp3';
 import { useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
+import PopUp from './PopUP/PopUp';
 
 interface Player {
   name: string;
@@ -34,6 +35,8 @@ enum PlayerState {
 }
 
 function SoloGame(): JSX.Element {
+  const [endRoundMessage, setEndRoundMessage] = useState<string | null>(null);
+  const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   const initialPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
@@ -80,13 +83,16 @@ function SoloGame(): JSX.Element {
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
   }
-
+  function showEndRoundWinner(winner: string) {
+    setEndRoundMessage(winner);
+    setShowEndRoundPopup(true);
+  }
   function addCardToTable(newPlayer: Player): Player | null {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
     const newCard = (
-      <Card value={randomNumber} color="blue" cardType="normal_card" />
+      <Card value={randomNumber} color="green" cardType="normal_card" />
     );
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       setPlayer({
@@ -289,6 +295,13 @@ function SoloGame(): JSX.Element {
     const winner = getRoundWinner(
       newComputerPlayer ? newComputerPlayer : computerPlayer
     );
+    if (winner === 1) {
+      showEndRoundWinner('YOU WIN THE ROUND!');
+    } else if (winner === 0) {
+      showEndRoundWinner('OPPONENT WINS THE ROUND');
+    } else {
+      showEndRoundWinner('THIS ROUND IS TIED');
+    }
     setPlayer({
       ...player,
       hand: player.hand,
@@ -312,7 +325,10 @@ function SoloGame(): JSX.Element {
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
+
     if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+      const audio = new Audio(cardflip);
+      audio.play();
       player.hand.splice(index, 1);
       setPlayer({
         ...player,
@@ -371,6 +387,17 @@ function SoloGame(): JSX.Element {
             numGamesWonOpponent={computerPlayer.gamesWon}
             handleGameOverClick={handleGameOverClick}
           />
+        </div>
+        <div className="center-message">
+          {showEndRoundPopup && (
+            <PopUp
+              message={endRoundMessage}
+              buttonText="OK"
+              onClick={() => {
+                setShowEndRoundPopup(false);
+              }}
+            />
+          )}
         </div>
       </div>
     </>
