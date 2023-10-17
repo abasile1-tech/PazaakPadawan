@@ -4,10 +4,9 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
+import cardflip from '../assets/music/flipcardfast.mp3';
 import { useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
-import cardflip from '../assets/music/flipcardfast.mp3';
-
 import EndGamePopup from './EndGamePopUp';
 
 interface Player {
@@ -120,7 +119,56 @@ function SoloGame(): JSX.Element {
     const newComputerPlayer = addCardToTable(newPlayer);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
-    if (player.tally >= 20 || computerPlayer.tally >= 20) {
+    // AI Choice starts
+    // if (computerPlayer.tally < 20) {
+    //   if (computerPlayer.hand.length > 0) {
+    //     let bestCard = null;
+    //     let bestSum = 0;
+    //     let bestCardIndex = -1;
+    //     for (let i = 0; i < computerPlayer.hand.length; i++) {
+    //       const card = computerPlayer.hand[i];
+    //       const sum = computerPlayer.tally + card.props.value;
+    //       if (sum >= 15 && sum <= 20 && sum > bestSum) {
+    //         bestSum = sum;
+    //         bestCard = card;
+    //         bestCardIndex = i;
+    //       }
+    //     }
+    //     if (bestCard) {
+    //       computerPlayer.hand.splice(bestCardIndex, 1);
+    //       const newComputerPlayer = {
+    //         ...computerPlayer,
+    //         hand: [...computerPlayer.hand],
+    //         tally: bestSum,
+    //         table: [...computerPlayer.table, bestCard],
+    //       };
+    //       console.log('Computer Player Table', newComputerPlayer.table);
+    //       setComputerPlayer(newComputerPlayer);
+    //     } else {
+    //       setGameState(GameState.STAND);
+    //       console.log('i want to stand');
+    //     }
+    //   } else {
+    //     setGameState(GameState.STAND);
+    //     console.log('i want to stand');
+    //   }
+    // } else if (computerPlayer.tally >= 17 && computerPlayer.tally <= 20) {
+    //   if (Math.random() < 0.7) {
+    //     setGameState(GameState.STAND);
+    //     console.log('mostly i want to stand');
+    //   } else {
+    //     addCardToTable(computerPlayer);
+    //     console.log('number between 17 and 20 but i need more cards');
+    //   }
+    // } else if (computerPlayer.tally < 17) {
+    //   addCardToTable(newPlayer);
+    //   console.log('more card');
+    // }
+    // AI choice ends
+    if (
+      newPlayer.tally >= 20 ||
+      (newComputerPlayer && newComputerPlayer.tally >= 20)
+    ) {
       await endOfRoundCleaning(newComputerPlayer);
     } else {
       setGameState(GameState.STARTED);
