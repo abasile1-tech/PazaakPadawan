@@ -25,11 +25,10 @@ enum GameState {
   INITIAL = 'initial',
   STARTED = 'started',
   ENDED = 'ended',
-  STAND = 'stand',
-  WAIT = 'wait',
 }
 
 enum PlayerState {
+  PLAY = 'play',
   STAND = 'stand',
   ENDTURN = 'endturn',
 }
@@ -37,7 +36,7 @@ enum PlayerState {
 function SoloGame(): JSX.Element {
   const initialPlayer: Player = {
     name: '',
-    action: PlayerState.STAND,
+    action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
     hand: [
@@ -54,7 +53,7 @@ function SoloGame(): JSX.Element {
 
   const initialComputerPlayer: Player = {
     name: '',
-    action: PlayerState.STAND,
+    action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
     hand: [
@@ -89,39 +88,54 @@ function SoloGame(): JSX.Element {
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
     );
-    if (newPlayer.isTurn) {
+    if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       setPlayer({
         ...newPlayer,
         tally: newPlayer.tally + randomNumber,
         table: [...newPlayer.table, newCard],
+        action: PlayerState.PLAY,
       });
       return null;
     }
-    if (!newPlayer.isTurn) {
+    if (newPlayer.action == PlayerState.STAND) {
+      console.log('player stood');
+    }
+
+    if (!newPlayer.isTurn && computerPlayer.action != PlayerState.STAND) {
+      console.log('computerPlayer.action before', computerPlayer.action);
       const newComputerPlayer = {
         ...computerPlayer,
         tally: computerPlayer.tally + randomNumber,
         table: [...computerPlayer.table, newCard],
+        action: PlayerState.PLAY,
       };
       setComputerPlayer(newComputerPlayer);
+      console.log('computerPlayer.action after', computerPlayer.action);
       return newComputerPlayer;
     }
+    console.log('both stood');
     return null;
   }
 
   async function handleEndTurnButtonClick() {
-    setGameState(GameState.WAIT);
     const newPlayer = {
       ...player,
       isTurn: false,
+      action: PlayerState.ENDTURN,
     };
     setPlayer(newPlayer);
+    console.log(
+      'newPlayer, newPlayer.action',
+      newPlayer,
+      ', ',
+      newPlayer.action
+    );
     const newComputerPlayer = addCardToTable(newPlayer);
     const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     // AI Choice starts
-    if (cPlayer.tally < 20) {
+    if (cPlayer.tally < 20 && cPlayer.action != PlayerState.STAND) {
       if (cPlayer.hand.length > 0) {
         let bestSum = 0;
         let bestCardIndex = -1;
@@ -143,27 +157,48 @@ function SoloGame(): JSX.Element {
             hand: [...cPlayer.hand],
             tally: playedCard.props.value + cPlayer.tally,
             table: [...cPlayer.table, playedCard],
+            action: PlayerState.STAND,
           };
           console.log('Computer Player Table', newComputerPlayer.table);
           setComputerPlayer(newComputerPlayer);
-          setGameState(GameState.STAND);
-          console.log('i want to stand #1');
+          // setGameState(GameState.STAND);
+          console.log('I just played a card and now I want to stand');
         }
       } else {
-        setGameState(GameState.STAND);
+        const newComputerPlayer = {
+          ...cPlayer,
+          action: PlayerState.STAND,
+        };
+        setComputerPlayer(newComputerPlayer);
+        // setGameState(GameState.STAND);
         console.log('i want to stand #2');
       }
     } else if (cPlayer.tally >= 17 && cPlayer.tally <= 20) {
       if (Math.random() < 0.7) {
-        setGameState(GameState.STAND);
+        const newComputerPlayer = {
+          ...cPlayer,
+          action: PlayerState.STAND,
+        };
+        setComputerPlayer(newComputerPlayer);
+        // setGameState(GameState.STAND);
         console.log('mostly i want to stand');
       } else {
         // addCardToTable(newPlayer);
         console.log('number between 17 and 20 but i need more cards');
+        const newComputerPlayer = {
+          ...cPlayer,
+          action: PlayerState.PLAY,
+        };
+        setComputerPlayer(newComputerPlayer);
       }
     } else if (cPlayer.tally < 17) {
       // addCardToTable(newPlayer);
       console.log('more card');
+      const newComputerPlayer = {
+        ...cPlayer,
+        action: PlayerState.PLAY,
+      };
+      setComputerPlayer(newComputerPlayer);
     }
     // AI choice ends
     if (newPlayer.tally >= 20 || cPlayer.tally >= 20) {
@@ -226,10 +261,11 @@ function SoloGame(): JSX.Element {
   }
 
   async function handleStandButtonClick() {
-    setGameState(GameState.STAND);
+    // setGameState(GameState.STAND);
     const newPlayer = {
       ...player,
       isTurn: false,
+      action: PlayerState.STAND,
     };
     setPlayer(newPlayer);
     const newComputerPlayer = addCardToTable(newPlayer);
