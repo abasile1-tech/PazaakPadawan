@@ -58,10 +58,10 @@ function SoloGame(): JSX.Element {
     wonGame: false,
     isTurn: false,
     hand: [
-      <Card value={-3} color="red" cardType="normal_card" />,
+      <Card value={3} color="blue" cardType="normal_card" />,
       <Card value={4} color="blue" cardType="normal_card" />,
       <Card value={2} color="blue" cardType="normal_card" />,
-      <Card value={-2} color="red" cardType="normal_card" />,
+      <Card value={1} color="blue" cardType="normal_card" />,
     ],
     tally: 0,
     table: [],
@@ -117,59 +117,57 @@ function SoloGame(): JSX.Element {
     };
     setPlayer(newPlayer);
     const newComputerPlayer = addCardToTable(newPlayer);
+    const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     // AI Choice starts
-    if (computerPlayer.tally < 20) {
-      if (computerPlayer.hand.length > 0) {
-        let bestCard = null;
+    if (cPlayer.tally < 20) {
+      if (cPlayer.hand.length > 0) {
         let bestSum = 0;
         let bestCardIndex = -1;
-        for (let i = 0; i < computerPlayer.hand.length; i++) {
-          const card = computerPlayer.hand[i];
-          const sum = computerPlayer.tally + card.props.value;
+        // Check to see if you have any cards that can get you to 20
+        for (let i = 0; i < cPlayer.hand.length; i++) {
+          const card = cPlayer.hand[i];
+          const sum = cPlayer.tally + card.props.value;
           if (sum >= 15 && sum <= 20 && sum > bestSum) {
             bestSum = sum;
-            bestCard = card;
             bestCardIndex = i;
           }
         }
-        if (bestCard) {
-          computerPlayer.hand.splice(bestCardIndex, 1);
+        console.log('bestCardIndex', bestCardIndex);
+        if (bestCardIndex !== -1) {
+          console.log('trying to play best card', bestCardIndex);
+          const [playedCard] = cPlayer.hand.splice(bestCardIndex, 1);
           const newComputerPlayer = {
-            ...computerPlayer,
-            hand: [...computerPlayer.hand],
-            tally: bestSum,
-            table: [...computerPlayer.table, bestCard],
+            ...cPlayer,
+            hand: [...cPlayer.hand],
+            tally: playedCard.props.value + cPlayer.tally,
+            table: [...cPlayer.table, playedCard],
           };
           console.log('Computer Player Table', newComputerPlayer.table);
           setComputerPlayer(newComputerPlayer);
-        } else {
           setGameState(GameState.STAND);
-          console.log('i want to stand');
+          console.log('i want to stand #1');
         }
       } else {
         setGameState(GameState.STAND);
-        console.log('i want to stand');
+        console.log('i want to stand #2');
       }
-    } else if (computerPlayer.tally >= 17 && computerPlayer.tally <= 20) {
+    } else if (cPlayer.tally >= 17 && cPlayer.tally <= 20) {
       if (Math.random() < 0.7) {
         setGameState(GameState.STAND);
         console.log('mostly i want to stand');
       } else {
-        addCardToTable(computerPlayer);
+        // addCardToTable(newPlayer);
         console.log('number between 17 and 20 but i need more cards');
       }
-    } else if (computerPlayer.tally < 17) {
-      addCardToTable(newPlayer);
+    } else if (cPlayer.tally < 17) {
+      // addCardToTable(newPlayer);
       console.log('more card');
     }
     // AI choice ends
-    if (
-      newPlayer.tally >= 20 ||
-      (newComputerPlayer && newComputerPlayer.tally >= 20)
-    ) {
-      await endOfRoundCleaning(newComputerPlayer);
+    if (newPlayer.tally >= 20 || cPlayer.tally >= 20) {
+      await endOfRoundCleaning(cPlayer);
     } else {
       setGameState(GameState.STARTED);
       const newPlayer = {
