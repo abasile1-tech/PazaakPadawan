@@ -94,7 +94,7 @@ function SoloGame(): JSX.Element {
     return Math.floor(Math.random() * 10) + 1;
   }
 
-  async function addCardToTable(newPlayer: Player) {
+  function addCardToTable(newPlayer: Player): Player | null {
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
@@ -106,16 +106,21 @@ function SoloGame(): JSX.Element {
         tally: newPlayer.tally + randomNumber,
         table: [...newPlayer.table, newCard],
       });
-    } else if (!newPlayer.isTurn) {
+      return null;
+    }
+    if (!newPlayer.isTurn) {
       console.log('!turn:', !newPlayer.isTurn);
       console.log('opponent tally before:', computerPlayer.tally);
-      setComputerPlayer({
+      const newComputerPlayer = {
         ...computerPlayer,
         tally: computerPlayer.tally + randomNumber,
         table: [...computerPlayer.table, newCard],
-      });
+      };
+      setComputerPlayer(newComputerPlayer);
       console.log('opponent tally after:', computerPlayer.tally);
+      return newComputerPlayer;
     }
+    return null;
   }
 
   async function handleEndTurnButtonClick() {
@@ -125,12 +130,12 @@ function SoloGame(): JSX.Element {
       isTurn: false,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+    const newComputerPlayer = addCardToTable(newPlayer);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     console.log('after delay:', player.tally, computerPlayer.tally);
     if (player.tally >= 20 || computerPlayer.tally >= 20) {
-      await endOfRoundCleaning();
+      await endOfRoundCleaning(newComputerPlayer);
     } else {
       setGameState(GameState.STARTED);
       const newPlayer = {
@@ -143,7 +148,7 @@ function SoloGame(): JSX.Element {
     }
   }
 
-  function getRoundWinner() {
+  function getRoundWinner(computerPlayer: Player) {
     console.log('checking:', player.tally, computerPlayer.tally);
     const playerBust = player.tally > 20;
     const computerBust = computerPlayer.tally > 20;
@@ -190,10 +195,10 @@ function SoloGame(): JSX.Element {
       isTurn: false,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+    const newComputerPlayer = addCardToTable(newPlayer);
     const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
-    await endOfRoundCleaning();
+    await endOfRoundCleaning(newComputerPlayer);
   }
 
   async function handleStartButtonClick() {
@@ -207,8 +212,10 @@ function SoloGame(): JSX.Element {
     setGameState(GameState.STARTED);
   }
 
-  async function endOfRoundCleaning() {
-    const winner = getRoundWinner();
+  async function endOfRoundCleaning(newComputerPlayer: Player | null) {
+    const winner = getRoundWinner(
+      newComputerPlayer ? newComputerPlayer : computerPlayer
+    );
     setPlayer({
       ...player,
       hand: player.hand,
