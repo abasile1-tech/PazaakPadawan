@@ -391,6 +391,7 @@ function SoloGame(): JSX.Element {
               onStand={handleStandButtonClick}
               onEndTurn={handleEndTurnButtonClick}
               onStartGame={handleStartButtonClick}
+              isPlayerTurn={player.isTurn}
             />
           </div>
         </div>
