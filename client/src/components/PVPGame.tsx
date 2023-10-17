@@ -1,28 +1,18 @@
-import PlayBar from './PlayBar';
+import BackgroundMusic from './BackgroundMusic';
 import Header from './Header';
 import Chat from './Chat';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
 
 function PVPGame() {
   const musicChoice = 'pvpGame';
-  const numGamesWonPlayer = 0;
-  const numGamesWonOpponent = 2;
-  const [playerTally] = useState(0);
-  const [opponentTally] = useState(0);
-  const [turnTracker] = useState(true);
+  let numGamesWonPlayer = 0;
+  let numGamesWonOpponent = 2;
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <div className="scoreBoard">
-        <ScoreLights numGamesWon={numGamesWonPlayer} />
-        <PlayBar
-          playerTally={playerTally}
-          opponentTally={opponentTally}
-          turnTracker={turnTracker}
-        />
-        <ScoreLights numGamesWon={numGamesWonOpponent} />
-      </div>
+      <h1>PVP Game!</h1>
+      <ScoreLights numGamesWon={numGamesWonPlayer} />
+      <ScoreLights numGamesWon={numGamesWonOpponent} />
       <Chat />
     </>
   );

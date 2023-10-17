@@ -5,6 +5,8 @@ import chillbacca from '../assets/images/penguins/chillbacca1.png';
 import icesoka from '../assets/images/penguins/Iceokapenguano.jpeg';
 import kenobi from '../assets/images/penguins/obipenguin1.jpeg';
 import jinn from '../assets/images/penguins/pen-giunjinn1.jpeg';
+import pengolo from '../assets/images/penguins/PenGolo.jpeg';
+import leia from '../assets/images/penguins/PenguinessLeia.jpeg';
 
 const characters = [
   {
@@ -26,6 +28,16 @@ const characters = [
     id: 4,
     name: 'Pen-Guin Jinn',
     image: jinn,
+  },
+  {
+    id: 5,
+    name: 'Pen-Golo',
+    image: pengolo,
+  },
+  {
+    id: 6,
+    name: 'Penguiness Leia',
+    image: leia,
   },
 ];
 
