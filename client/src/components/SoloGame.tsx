@@ -4,9 +4,11 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
-import PopUp from './PopUP/PopUp';
 import { useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
+import cardflip from '../assets/music/flipcardfast.mp3';
+
+import EndGamePopup from './EndGamePopUp';
 
 interface Player {
   name: string;
@@ -82,6 +84,8 @@ function SoloGame(): JSX.Element {
   }
 
   function addCardToTable(newPlayer: Player): Player | null {
+    const audio = new Audio(cardflip);
+    audio.play();
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="blue" cardType="normal_card" />
@@ -237,30 +241,6 @@ function SoloGame(): JSX.Element {
       });
     }
   }
-  //game over
-  function renderPopup() {
-    if (player.gamesWon === 3) {
-      return (
-        <PopUp
-          title="YOU WON "
-          message="Thanks for playing Pazaak Online. 
-          Click close to return to the main menu."
-          buttonText="CLOSE"
-          onClick={handleGameOverClick}
-        />
-      );
-    } else if (computerPlayer.gamesWon === 3) {
-      return (
-        <PopUp
-          title="YOU LOSE"
-          message="Thanks for playing Pazaak Online. 
-          Click close to return to the main menu."
-          buttonText="CLOSE"
-          onClick={handleGameOverClick}
-        />
-      );
-    }
-  }
 
   return (
     <>
@@ -303,7 +283,13 @@ function SoloGame(): JSX.Element {
             <Hand hand={computerPlayer.hand} />
           </div>
         </div>
-        <div className="center-message">{renderPopup()}</div>
+        <div className="center-message">
+          <EndGamePopup
+            numGamesWonPlayer={player.gamesWon}
+            numGamesWonOpponent={computerPlayer.gamesWon}
+            handleGameOverClick={handleGameOverClick}
+          />
+        </div>
       </div>
     </>
   );
