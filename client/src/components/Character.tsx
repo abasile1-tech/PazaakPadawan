@@ -31,7 +31,7 @@ const characters = [
   },
   {
     id: 5,
-    name: 'Pen-Golo',
+    name: 'Pen Golo',
     image: pengolo,
   },
   {
