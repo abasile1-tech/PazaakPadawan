@@ -326,6 +326,8 @@ function SoloGame(): JSX.Element {
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
     if (!player.playedCardThisTurn) {
+      const audio = new Audio(cardflip);
+      audio.play();
       player.hand.splice(index, 1);
       setPlayer({
         ...player,
