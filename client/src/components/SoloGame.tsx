@@ -93,12 +93,7 @@ function SoloGame(): JSX.Element {
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: [
-      <Card value={3} color="blue" cardType="normal_card" />,
-      <Card value={4} color="blue" cardType="normal_card" />,
-      <Card value={2} color="blue" cardType="normal_card" />,
-      <Card value={1} color="blue" cardType="normal_card" />,
-    ],
+    hand: generateRandomHand(),
     tally: 0,
     table: [],
     gamesWon: 0,
