@@ -20,8 +20,6 @@ enum GameState {
   INITIAL = 'initial',
   STARTED = 'started',
   ENDED = 'ended',
-  STAND = 'stand',
-  WAIT = 'wait',
 }
 
 const PlayBar = ({
