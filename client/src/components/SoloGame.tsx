@@ -37,7 +37,7 @@ enum PlayerState {
 function SoloGame(): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
-  const [endRoundMessage, setEndRoundMessage] = useState<string | null>(null);
+  const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   const initialPlayer: Player = {
     name: '',
@@ -306,6 +306,7 @@ function SoloGame(): JSX.Element {
       hand: player.hand,
       table: [],
       tally: 0,
+      action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
     });
@@ -314,6 +315,7 @@ function SoloGame(): JSX.Element {
       hand: computerPlayer.hand,
       table: [],
       tally: 0,
+      action: PlayerState.PLAY,
       gamesWon:
         winner === 0 ? computerPlayer.gamesWon + 1 : computerPlayer.gamesWon,
       playedCardThisTurn: false,
@@ -324,7 +326,8 @@ function SoloGame(): JSX.Element {
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
-    if (!player.playedCardThisTurn) {
+
+    if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
       const audio = new Audio(cardflip);
       audio.play();
       player.hand.splice(index, 1);
