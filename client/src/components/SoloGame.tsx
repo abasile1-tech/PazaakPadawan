@@ -160,9 +160,9 @@ function SoloGame(): JSX.Element {
         console.log('i want to stand');
       }
     } else if (opponentTally >= 17 && opponentTally <= 20) {
-      if (Math.random() === 0.7) {
+      if (Math.random() < 0.7) {
         setGameState(GameState.STAND);
-        console.log('randomly i want to stand');
+        console.log('mostly i want to stand');
       } else {
         addCardToTable(true);
         console.log('number between 17 and 20 but i need more cards');
