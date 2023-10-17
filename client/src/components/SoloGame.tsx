@@ -4,11 +4,11 @@ import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
-import PopUp from './PopUP/PopUp';
 import { useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import cardflip from '../assets/music/flipcardfast.mp3';
 
+import EndGamePopup from './EndGamePopUp';
 // interface SoloGameProps {}
 
 // interface Player {
@@ -159,29 +159,28 @@ function SoloGame(): JSX.Element {
     }
   }
   //game over
-  function renderPopup() {
-    if (numGamesWonPlayer === 3) {
-      return (
-        <PopUp
-          title="YOU WON "
-          message="Thanks for playing Pazaak Online. 
-          Click close to return to the main menu."
-          buttonText="CLOSE"
-          onClick={handleGameOverClick}
-        />
-      );
-    } else if (numGamesWonOpponent === 3) {
-      return (
-        <PopUp
-          title="YOU LOSE"
-          message="Thanks for playing Pazaak Online. 
-          Click close to return to the main menu."
-          buttonText="CLOSE"
-          onClick={handleGameOverClick}
-        />
-      );
-    }
-  }
+  // function renderPopup() {
+  //   if (numGamesWonPlayer === 3) {
+  //     return (
+  //       <PopUp
+  //         title="YOU WON "
+  //         message="Thanks for playing Pazaak Online.
+  //         Click close to return to the main menu."
+  //         buttonText="CLOSE"
+  //         onClick={handleGameOverClick}
+  //       />
+  //     );
+  //   } else if (numGamesWonOpponent === 3) {
+  //     return (
+  //       <PopUp
+  //         title="YOU LOSE"
+  //         message="Thanks for playing Pazaak Online.
+  //         Click close to return to the main menu."
+  //         buttonText="CLOSE"
+  //         onClick={handleGameOverClick}
+  //       />
+  //     );
+  //   }
 
   return (
     <>
@@ -217,7 +216,13 @@ function SoloGame(): JSX.Element {
           <hr />
           <Hand hand={opponentHand} />
         </div>
-        <div className="center-message">{renderPopup()}</div>
+        <div className="center-message">
+          <EndGamePopup
+            numGamesWonPlayer={numGamesWonPlayer}
+            numGamesWonOpponent={numGamesWonOpponent}
+            handleGameOverClick={handleGameOverClick}
+          />
+        </div>
       </div>
     </>
   );
