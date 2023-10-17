@@ -5,9 +5,17 @@ import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
 import cardflip from '../assets/music/flipcardfast.mp3';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
+import PopUp from './PopUP/PopUp';
+
+interface DeckCard {
+  value: number;
+  color: string;
+  selected: boolean;
+  imagePath: string;
+}
 
 interface Player {
   name: string;
@@ -34,17 +42,32 @@ enum PlayerState {
 }
 
 function SoloGame(): JSX.Element {
+  const location = useLocation();
+  const selectedHand = location?.state?.selectedHand;
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  const [endRoundMessage, setEndRoundMessage] = useState<string>('');
+  const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+  function generateRandomHand() {
+    const randomHand = [];
+    for (let i = 0; i < 4; i++) {
+      const randomValue = Math.floor(Math.random() * 6) + 1;
+      const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
+      randomHand.push(
+        <Card value={randomValue} color={randomColor} cardType="normal_card" />
+      );
+    }
+    return randomHand;
+  }
   const initialPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: [
-      <Card value={-1} color="red" cardType="normal_card" />,
-      <Card value={3} color="blue" cardType="normal_card" />,
-      <Card value={1} color="blue" cardType="normal_card" />,
-      <Card value={-4} color="red" cardType="normal_card" />,
-    ],
+    hand: selectedHand
+      ? selectedHand.map((card: DeckCard) => (
+          <Card value={card.value} color={card.color} cardType="normal_card" />
+        ))
+      : generateRandomHand(),
     tally: 0,
     table: [],
     gamesWon: 0,
@@ -81,12 +104,16 @@ function SoloGame(): JSX.Element {
     return Math.floor(Math.random() * 10) + 1;
   }
 
+  function showEndRoundWinner(winner: string) {
+    setEndRoundMessage(winner);
+    setShowEndRoundPopup(true);
+  }
   function addCardToTable(newPlayer: Player): Player | null {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
     const newCard = (
-      <Card value={randomNumber} color="blue" cardType="normal_card" />
+      <Card value={randomNumber} color="green" cardType="normal_card" />
     );
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       setPlayer({
@@ -132,7 +159,6 @@ function SoloGame(): JSX.Element {
     );
     const newComputerPlayer = addCardToTable(newPlayer);
     const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     // AI Choice starts
     if (cPlayer.tally < 20 && cPlayer.action != PlayerState.STAND) {
@@ -161,6 +187,7 @@ function SoloGame(): JSX.Element {
           };
           console.log('Computer Player Table', newComputerPlayer.table);
           setComputerPlayer(newComputerPlayer);
+          await delay(3000); // wait for 3 seconds while the AI "decides..."
           // setGameState(GameState.STAND);
           console.log('I just played a card and now I want to stand');
         }
@@ -269,7 +296,6 @@ function SoloGame(): JSX.Element {
     };
     setPlayer(newPlayer);
     const newComputerPlayer = addCardToTable(newPlayer);
-    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
     await delay(3000); // wait for 3 seconds while the AI "decides...";
     await endOfRoundCleaning(newComputerPlayer);
   }
@@ -289,11 +315,19 @@ function SoloGame(): JSX.Element {
     const winner = getRoundWinner(
       newComputerPlayer ? newComputerPlayer : computerPlayer
     );
+    if (winner === 1) {
+      showEndRoundWinner('YOU WIN THE ROUND!');
+    } else if (winner === 0) {
+      showEndRoundWinner('OPPONENT WINS THE ROUND');
+    } else {
+      showEndRoundWinner('THIS ROUND IS TIED');
+    }
     setPlayer({
       ...player,
       hand: player.hand,
       table: [],
       tally: 0,
+      action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
     });
@@ -302,6 +336,7 @@ function SoloGame(): JSX.Element {
       hand: computerPlayer.hand,
       table: [],
       tally: 0,
+      action: PlayerState.PLAY,
       gamesWon:
         winner === 0 ? computerPlayer.gamesWon + 1 : computerPlayer.gamesWon,
       playedCardThisTurn: false,
@@ -312,7 +347,10 @@ function SoloGame(): JSX.Element {
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
+
     if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+      const audio = new Audio(cardflip);
+      audio.play();
       player.hand.splice(index, 1);
       setPlayer({
         ...player,
@@ -372,6 +410,17 @@ function SoloGame(): JSX.Element {
             numGamesWonOpponent={computerPlayer.gamesWon}
             handleGameOverClick={handleGameOverClick}
           />
+        </div>
+        <div className="center-message">
+          {showEndRoundPopup && (
+            <PopUp
+              message={endRoundMessage}
+              buttonText="OK"
+              onClick={() => {
+                setShowEndRoundPopup(false);
+              }}
+            />
+          )}
         </div>
       </div>
     </>
