@@ -167,19 +167,29 @@
 }
 
 .solo-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
 }
 
 .pvp-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
+}
+.pvp-button:hoover {
+    transform: scale(0.98); 
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+    background-color: pink;
 }
 
 .deck-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
 }
 
 .character-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
+  
 }
 
 .user-bar {
