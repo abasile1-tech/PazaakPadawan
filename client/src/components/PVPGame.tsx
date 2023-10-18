@@ -50,7 +50,6 @@ enum PlayerState {
 function PVPGame(): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
-  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
   function generateRandomHand() {
@@ -119,70 +118,76 @@ function PVPGame(): JSX.Element {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
   }
-  function addCardToTable(newPlayer: Player): Player | null {
+
+  function getNewCardForTable(): CardProps {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
-    if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
-      setPlayer({
-        ...newPlayer,
-        tally: newPlayer.tally + randomNumber,
-        table: [...newPlayer.table, { value: randomNumber, color: 'green' }],
-        action: PlayerState.PLAY,
-      });
-      return null;
-    }
-    if (newPlayer.action == PlayerState.STAND) {
-      console.log('player stood');
-    }
-
-    if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
-      console.log('otherPlayer.action before', otherPlayer.action);
-      const newOtherPlayer = {
-        ...otherPlayer,
-        tally: otherPlayer.tally + randomNumber,
-        table: [...otherPlayer.table, { value: randomNumber, color: 'green' }],
-        action: PlayerState.PLAY,
-      };
-      setOtherPlayer(newOtherPlayer);
-      console.log('otherPlayer.action after', otherPlayer.action);
-      return newOtherPlayer;
-    }
-    console.log('both stood');
-    return null;
+    return { value: randomNumber, color: 'green' };
   }
 
-  async function handleEndTurnButtonClick() {
+  async function handlePlayerEndTurnButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
       action: PlayerState.ENDTURN,
     };
     setPlayer(newPlayer);
-    console.log(
-      'newPlayer, newPlayer.action',
-      newPlayer,
-      ', ',
-      newPlayer.action
-    );
-    const newOtherPlayer = addCardToTable(newPlayer);
-    const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
-    await delay(3000); // wait for 3 seconds while the AI "decides..."
-    if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
-      await endOfRoundCleaning(ePlayer);
+
+    console.log('newPlayer, newPlayer.action', player, ', ', player.action);
+
+    const card = getNewCardForTable();
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+
+    if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
+      await endOfRoundCleaning(newPlayer, newOtherPlayer);
     } else {
       setGameState(GameState.STARTED);
-      const newPlayer = {
-        ...player,
-        isTurn: true,
-        playedCardThisTurn: false,
-      };
-      setPlayer(newPlayer);
-      addCardToTable(newPlayer);
+      setOtherPlayer(newOtherPlayer);
     }
   }
 
-  function getRoundWinner(otherPlayer: Player) {
+  async function handleOtherPlayerEndTurnButtonClick() {
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: false,
+      action: PlayerState.ENDTURN,
+    };
+    setOtherPlayer(newOtherPlayer);
+
+    console.log(
+      'newPlayer, newPlayer.action',
+      otherPlayer,
+      ', ',
+      otherPlayer.action
+    );
+
+    const card = getNewCardForTable();
+    const newPlayer = {
+      ...player,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+
+    if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
+      await endOfRoundCleaning(newPlayer, newOtherPlayer);
+    } else {
+      setGameState(GameState.STARTED);
+      setPlayer(newPlayer);
+    }
+  }
+
+  function getRoundWinner(player: Player, otherPlayer: Player) {
     console.log(
       'Player Score: ',
       player.tally,
@@ -227,34 +232,67 @@ function PVPGame(): JSX.Element {
     console.log('the round is over', player.tally, otherPlayer.tally);
   }
 
-  async function handleStandButtonClick() {
-    // setGameState(GameState.STAND);
+  async function handlePlayerStandButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
       action: PlayerState.STAND,
     };
     setPlayer(newPlayer);
-    const newOtherPlayer = addCardToTable(newPlayer);
-    await delay(3000); // wait for 3 seconds while the AI "decides...";
-    await endOfRoundCleaning(newOtherPlayer);
+
+    const card = getNewCardForTable();
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+    setOtherPlayer(newOtherPlayer);
+
+    await endOfRoundCleaning(newPlayer, newOtherPlayer);
   }
 
-  async function handleStartButtonClick() {
+  async function handleOtherPlayerStandButtonClick() {
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: false,
+      action: PlayerState.STAND,
+    };
+    setOtherPlayer(newOtherPlayer);
+
+    const card = getNewCardForTable();
     const newPlayer = {
       ...player,
       isTurn: true,
       playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+
+    await endOfRoundCleaning(newPlayer, newOtherPlayer);
+  }
+
+  async function handleStartButtonClick() {
+    const card = getNewCardForTable();
+    const newPlayer = {
+      ...player,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+    setPlayer(newPlayer);
+
     setGameState(GameState.STARTED);
   }
 
-  async function endOfRoundCleaning(newOtherPlayer: Player | null) {
-    const winner = getRoundWinner(
-      newOtherPlayer ? newOtherPlayer : otherPlayer
-    );
+  async function endOfRoundCleaning(player: Player, otherPlayer: Player) {
+    const winner = getRoundWinner(player, otherPlayer);
     if (winner === 1) {
       showEndRoundWinner('YOU WIN THE ROUND!');
     } else if (winner === 0) {
@@ -337,8 +375,8 @@ function PVPGame(): JSX.Element {
           <div className="turnOptions">
             <GameButtons
               gameState={gameState}
-              onStand={handleStandButtonClick}
-              onEndTurn={handleEndTurnButtonClick}
+              onStand={handlePlayerStandButtonClick}
+              onEndTurn={handlePlayerEndTurnButtonClick}
               onStartGame={handleStartButtonClick}
               isPlayerTurn={player.isTurn}
             />
@@ -351,6 +389,15 @@ function PVPGame(): JSX.Element {
           <hr />
           <div className="hand">
             <Hand hand={listOfCards(otherPlayer.hand)} />
+          </div>
+          <div className="turnOptions">
+            <GameButtons
+              gameState={gameState}
+              onStand={handleOtherPlayerStandButtonClick}
+              onEndTurn={handleOtherPlayerEndTurnButtonClick}
+              onStartGame={handleStartButtonClick}
+              isPlayerTurn={otherPlayer.isTurn}
+            />
           </div>
         </div>
         <div className="center-message">

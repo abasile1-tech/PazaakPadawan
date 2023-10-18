@@ -57,7 +57,13 @@ interface ChatProps {
   setSessionID: React.Dispatch<SetStateAction<string>>;
 }
 
-const Chat: React.FC<ChatProps> = ({ gameObject }) => {
+const Chat: React.FC<ChatProps> = ({
+  gameObject,
+  setPlayer,
+  setOtherPlayer,
+  setGameState,
+  setSessionID,
+}) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
   const [userData, setUserData] = useState({
     username: '',
@@ -120,6 +126,8 @@ const Chat: React.FC<ChatProps> = ({ gameObject }) => {
       return;
     }
     stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
+    // stompClient.subscribe('/game/initialConnection', onGameInitialConnectionReceived);
+    stompClient.subscribe('/game/updated', onGameUpdatedReceived);
     userJoin();
     sendInitialConnectingData();
   };
@@ -137,8 +145,12 @@ const Chat: React.FC<ChatProps> = ({ gameObject }) => {
   };
 
   const sendInitialConnectingData = () => {
+    // We will always set the player1 name to the user name on initial connection.
+    // The backend will handle assigning the players.
+    const player1 = { ...gameObject.player1, name: userData.username };
     const initialConnectingData = {
-      name: userData.username,
+      ...gameObject,
+      player1: player1,
       sessionID: userData.sessionID,
     };
     if (!stompClient) {
@@ -146,7 +158,7 @@ const Chat: React.FC<ChatProps> = ({ gameObject }) => {
       return;
     }
     stompClient.send(
-      '/app/initialConnection',
+      '/app/updateGame',
       {},
       JSON.stringify(initialConnectingData)
     );
@@ -160,9 +172,23 @@ const Chat: React.FC<ChatProps> = ({ gameObject }) => {
     body: string;
   }
 
+  // const onGameInitialConnectionReceived = (payload: Payload) => {
+  //   const payloadData = JSON.parse(payload.body);
+  //   console.log('payLoadData: ', payloadData);
+  //   setSessionID(payloadData.sessionId);
+  // };
+
+  const onGameUpdatedReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
+    console.log('payloadData: ', payloadData);
+    setPlayer(payloadData.player1);
+    setOtherPlayer(payloadData.player2);
+    setGameState(payloadData.gameState);
+    setSessionID(payloadData.sessionID);
+  };
+
   const onPublicMessageReceived = (payload: Payload) => {
     const payloadData = JSON.parse(payload.body);
-    console.log('payLoadData: ', payloadData);
     switch (payloadData.status) {
       case 'MESSAGE':
         publicChats.push(payloadData);

@@ -9,5 +9,6 @@ import lombok.*;
 @ToString
 public class InitialConnectingData {
     private String sessionID;
-    private String name;
+    private String player1Name;
+    private String player2Name;
 }
