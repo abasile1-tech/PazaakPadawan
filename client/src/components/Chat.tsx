@@ -6,7 +6,9 @@ let stompClient: Client | null = null;
 
 interface PublicChat {
   senderName: string;
+  receiverName: string;
   message: string;
+  date: Date;
   status: string;
 }
 
@@ -86,10 +88,13 @@ const Chat = () => {
 
   const sendPublicMessage = () => {
     if (stompClient) {
+      const today = new Date();
       const chatMessage = {
         senderName: userData.username,
+        receiverName: 'hard-coded receiver name',
         message: userData.message,
         status: 'MESSAGE',
+        date: today,
       };
       stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
       setUserData({ ...userData, message: '' });
