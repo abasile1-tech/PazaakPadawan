@@ -66,6 +66,7 @@ const Chat = () => {
     }
     stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
     userJoin();
+    sendInitialConnectingData();
   };
 
   const userJoin = () => {
@@ -78,6 +79,22 @@ const Chat = () => {
       return;
     }
     stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+  };
+
+  const sendInitialConnectingData = () => {
+    const initialConnectingData = {
+      name: userData.username,
+      sessionID: userData.sessionID,
+    };
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    stompClient.send(
+      '/app/initialConnection',
+      {},
+      JSON.stringify(initialConnectingData)
+    );
   };
 
   const onError = (err: string | Frame) => {
