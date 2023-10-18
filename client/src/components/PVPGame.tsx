@@ -1,6 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
+import { useState, useRef, MutableRefObject } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -105,6 +105,14 @@ function PVPGame(): JSX.Element {
   const [gameState, setGameState] = useState(GameState.INITIAL);
   const [sessionID, setSessionID] = useState('');
 
+  const chatRef = useRef();
+
+  function sendUpdateToWebSocket() {
+    if (chatRef?.current) {
+      chatRef.current.updateGame();
+    }
+  }
+
   const navigate = useNavigate();
   const handleGameOverClick = () => {
     navigate('/');
@@ -126,7 +134,7 @@ function PVPGame(): JSX.Element {
     return { value: randomNumber, color: 'green' };
   }
 
-  async function handlePlayerEndTurnButtonClick() {
+  function handlePlayerEndTurnButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
@@ -147,11 +155,12 @@ function PVPGame(): JSX.Element {
     };
 
     if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
-      await endOfRoundCleaning(newPlayer, newOtherPlayer);
+      endOfRoundCleaning(newPlayer, newOtherPlayer);
     } else {
       setGameState(GameState.STARTED);
       setOtherPlayer(newOtherPlayer);
     }
+    sendUpdateToWebSocket();
   }
 
   async function handleOtherPlayerEndTurnButtonClick() {
@@ -180,11 +189,12 @@ function PVPGame(): JSX.Element {
     };
 
     if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
-      await endOfRoundCleaning(newPlayer, newOtherPlayer);
+      endOfRoundCleaning(newPlayer, newOtherPlayer);
     } else {
       setGameState(GameState.STARTED);
       setPlayer(newPlayer);
     }
+    sendUpdateToWebSocket();
   }
 
   function getRoundWinner(player: Player, otherPlayer: Player) {
@@ -251,7 +261,8 @@ function PVPGame(): JSX.Element {
     };
     setOtherPlayer(newOtherPlayer);
 
-    await endOfRoundCleaning(newPlayer, newOtherPlayer);
+    endOfRoundCleaning(newPlayer, newOtherPlayer);
+    sendUpdateToWebSocket();
   }
 
   async function handleOtherPlayerStandButtonClick() {
@@ -273,7 +284,8 @@ function PVPGame(): JSX.Element {
     };
     setPlayer(newPlayer);
 
-    await endOfRoundCleaning(newPlayer, newOtherPlayer);
+    endOfRoundCleaning(newPlayer, newOtherPlayer);
+    sendUpdateToWebSocket();
   }
 
   async function handleStartButtonClick() {
@@ -289,9 +301,10 @@ function PVPGame(): JSX.Element {
     setPlayer(newPlayer);
 
     setGameState(GameState.STARTED);
+    sendUpdateToWebSocket();
   }
 
-  async function endOfRoundCleaning(player: Player, otherPlayer: Player) {
+  function endOfRoundCleaning(player: Player, otherPlayer: Player) {
     const winner = getRoundWinner(player, otherPlayer);
     if (winner === 1) {
       showEndRoundWinner('YOU WIN THE ROUND!');
@@ -320,12 +333,17 @@ function PVPGame(): JSX.Element {
     });
 
     setGameState(GameState.INITIAL);
+    sendUpdateToWebSocket();
   }
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
 
-    if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+    if (
+      gameState === GameState.STARTED &&
+      !player.playedCardThisTurn &&
+      player.isTurn
+    ) {
       const audio = new Audio(cardflip);
       audio.play();
       player.hand.splice(index, 1);
@@ -339,6 +357,28 @@ function PVPGame(): JSX.Element {
         tally: player.tally + card.props.value,
         playedCardThisTurn: true,
       });
+      sendUpdateToWebSocket();
+    }
+
+    if (
+      gameState === GameState.STARTED &&
+      !otherPlayer.playedCardThisTurn &&
+      otherPlayer.isTurn
+    ) {
+      const audio = new Audio(cardflip);
+      audio.play();
+      otherPlayer.hand.splice(index, 1);
+      setOtherPlayer({
+        ...otherPlayer,
+        hand: otherPlayer.hand,
+        table: [
+          ...otherPlayer.table,
+          { value: card.props.value, color: card.props.color },
+        ],
+        tally: otherPlayer.tally + card.props.value,
+        playedCardThisTurn: true,
+      });
+      sendUpdateToWebSocket();
     }
   }
 
@@ -420,6 +460,7 @@ function PVPGame(): JSX.Element {
         </div>
       </div>
       <Chat
+        ref={chatRef}
         gameObject={{
           player1: player,
           player2: otherPlayer,
