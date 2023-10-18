@@ -114,6 +114,7 @@ const Chat = () => {
             ))}
           </div>
           <input
+            className="messageBox"
             type="text"
             placeholder="Type message here..."
             value={userData.message}
@@ -126,13 +127,14 @@ const Chat = () => {
       ) : (
         <div>
           <input
+            className="messageBox"
             id="user-name"
             placeholder="Enter the user name"
             value={userData.username}
             onChange={handleUserName}
           />
-          <button type="button" onClick={registerUser}>
-            connect
+          <button className="gameButtons" type="button" onClick={registerUser}>
+            Connect
           </button>
         </div>
       )}
