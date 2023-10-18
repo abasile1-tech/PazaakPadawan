@@ -105,6 +105,7 @@ function SoloGame(): JSX.Element {
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
+
   const navigate = useNavigate();
   const handleGameOverClick = () => {
     navigate('/');
@@ -364,7 +365,7 @@ function SoloGame(): JSX.Element {
           )}
         </div>
       </div>
-      <Chat />
+      <Chat player1Turn={player.isTurn} />
     </>
   );
 }

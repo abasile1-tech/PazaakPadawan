@@ -8,8 +8,8 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 public class GameObject {
-    private String player1;
-    private String player2;
-    private String gameState;
-    private String sessionID;
+    private String player1Turn;
+//    private String player2;
+//    private String gameState;
+//    private String sessionID;
 }

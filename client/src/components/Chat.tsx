@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { over, Client, Frame } from 'stompjs';
 import SockJS from 'sockjs-client';
 
@@ -13,7 +13,35 @@ interface PublicChat {
   sessionID: string;
 }
 
-const Chat = () => {
+// enum GameState {
+//   INITIAL = 'initial',
+//   STARTED = 'started',
+//   ENDED = 'ended',
+// }
+
+// enum PlayerState {
+//   PLAY = 'play',
+//   STAND = 'stand',
+//   ENDTURN = 'endturn',
+// }
+
+// interface Player {
+//   name: string;
+//   action: PlayerState;
+//   wonGame: boolean;
+//   isTurn: boolean;
+//   hand: JSX.Element[];
+//   tally: number;
+//   table: JSX.Element[];
+//   gamesWon: number;
+//   playedCardThisTurn: boolean;
+// }
+
+interface ChatProps {
+  player1Turn: boolean;
+}
+
+const Chat: React.FC<ChatProps> = ({ player1Turn }) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
   const [userData, setUserData] = useState({
     username: '',
@@ -22,6 +50,20 @@ const Chat = () => {
     message: '',
     sessionID: '',
   });
+
+  useEffect(() => {
+    const updateGameObject = () => {
+      const gameData = {
+        player1Turn: player1Turn,
+      };
+      if (!stompClient) {
+        console.warn('stompClient is undefined. Unable to send message.');
+        return;
+      }
+      stompClient.send('/app/updateGame', {}, JSON.stringify(gameData));
+    };
+    updateGameObject();
+  }, [player1Turn]);
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
