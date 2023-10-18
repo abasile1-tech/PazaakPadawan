@@ -7,6 +7,18 @@ import kenobi from '../assets/images/penguins/obipenguin1.jpeg';
 import jinn from '../assets/images/penguins/pen-giunjinn1.jpeg';
 import pengolo from '../assets/images/penguins/PenGolo.jpeg';
 import leia from '../assets/images/penguins/PenguinessLeia.jpeg';
+import pengwindu from '../assets/images/penguins/MaceWindu.jpg';
+import kyloren from '../assets/images/penguins/kyloren.jpg';
+import bb8 from '../assets/images/penguins/bb8.jpg';
+import c3p0 from '../assets/images/penguins/c3p0.jpg';
+import r2d2 from '../assets/images/penguins/r2d2Penguin.jpg';
+import darthsidious from '../assets/images/penguins/darthsidious.jpg';
+import darthvader from '../assets/images/penguins/DarthVader.jpg';
+import yoda from '../assets/images/penguins/yoda.jpg';
+import ewok from '../assets/images/penguins/ewok.jpg';
+import mandalorian from '../assets/images/penguins/mandalorian.jpg';
+import stormtrooper from '../assets/images/penguins/stormTrooper.jpg';
+import jabba from '../assets/images/penguins/PengTheHut.jpeg';
 
 const characters = [
   {
@@ -31,13 +43,73 @@ const characters = [
   },
   {
     id: 5,
-    name: 'Pen-Golo',
+    name: 'Pen Golo',
     image: pengolo,
   },
   {
     id: 6,
     name: 'Penguiness Leia',
     image: leia,
+  },
+  {
+    id: 7,
+    name: 'Peng Windu',
+    image: pengwindu,
+  },
+  {
+    id: 8,
+    name: 'Pengo Wen',
+    image: kyloren,
+  },
+  {
+    id: 9,
+    name: 'PP-8',
+    image: bb8,
+  },
+  {
+    id: 10,
+    name: 'C-3PengO',
+    image: c3p0,
+  },
+  {
+    id: 11,
+    name: 'P2-D2',
+    image: r2d2,
+  },
+  {
+    id: 12,
+    name: 'Darth Icyous',
+    image: darthsidious,
+  },
+  {
+    id: 13,
+    name: 'Darth Wader',
+    image: darthvader,
+  },
+  {
+    id: 14,
+    name: 'Poda',
+    image: yoda,
+  },
+  {
+    id: 15,
+    name: 'Ewoddle',
+    image: ewok,
+  },
+  {
+    id: 16,
+    name: 'The Pengalorian',
+    image: mandalorian,
+  },
+  {
+    id: 17,
+    name: 'Snowsledder',
+    image: stormtrooper,
+  },
+  {
+    id: 18,
+    name: 'Penga the Wutt',
+    image: jabba,
   },
 ];
 

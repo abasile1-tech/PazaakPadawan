@@ -23,6 +23,12 @@
   max-height: 500px;
 }
 
+/* character selector */
+
+.centered-image {
+  border-radius: 25px;
+}
+
 /* player page */
 
 /* Header styles */
