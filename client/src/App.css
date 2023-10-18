@@ -69,6 +69,16 @@
   background-color: #213547
 }
 
+.gameButtons {
+  font-size: 18px;
+    height: 50px;
+    width: 130px;
+    padding: 0;
+    margin: 1px;
+    background-color: #213547;
+    color: white;
+}
+
 
 .grouping_hamburger_music {
   display: flex; 

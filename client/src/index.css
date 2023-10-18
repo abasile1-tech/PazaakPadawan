@@ -56,7 +56,7 @@ button:focus-visible {
 }
 button:disabled {
   background-color: grey;
-  color: gray;
+  color: white;
 }
 
 @media (prefers-color-scheme: light) {

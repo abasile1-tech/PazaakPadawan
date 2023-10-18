@@ -24,6 +24,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
   return (
     <div className="turnOptions">
       <button
+        className="gameButtons"
         onClick={onStand}
         disabled={
           gameState === GameState.INITIAL ||
@@ -35,6 +36,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
         Stand
       </button>
       <button
+        className="gameButtons"
         onClick={onEndTurn}
         disabled={
           gameState === GameState.INITIAL ||
@@ -46,6 +48,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
         End Turn
       </button>
       <button
+        className="gameButtons"
         onClick={onStartGame}
         disabled={
           gameState === GameState.STARTED ||
