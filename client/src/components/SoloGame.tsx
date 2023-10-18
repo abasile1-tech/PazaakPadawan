@@ -136,6 +136,7 @@ function SoloGame(): JSX.Element {
     }
     if (newPlayer.action == PlayerState.STAND) {
       console.log('player stood');
+      return null;
     }
 
     if (!newPlayer.isTurn && computerPlayer.action != PlayerState.STAND) {
