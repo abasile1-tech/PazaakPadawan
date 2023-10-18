@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import { over, Client, Frame } from 'stompjs';
 import SockJS from 'sockjs-client';
 
@@ -13,11 +13,11 @@ interface PublicChat {
   sessionID: string;
 }
 
-// enum GameState {
-//   INITIAL = 'initial',
-//   STARTED = 'started',
-//   ENDED = 'ended',
-// }
+enum GameState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+}
 
 enum PlayerState {
   PLAY = 'play',
@@ -25,23 +25,39 @@ enum PlayerState {
   ENDTURN = 'endturn',
 }
 
+interface CardProps {
+  value: number;
+  color: string;
+}
+
 interface Player {
   name: string;
   action: PlayerState;
   wonGame: boolean;
   isTurn: boolean;
-  hand: JSX.Element[];
+  hand: CardProps[];
   tally: number;
-  table: JSX.Element[];
+  table: CardProps[];
   gamesWon: number;
   playedCardThisTurn: boolean;
 }
 
-interface ChatProps {
+interface GameObject {
   player1: Player;
+  player2: Player;
+  gameState: GameState;
+  sessionID: string;
 }
 
-const Chat: React.FC<ChatProps> = ({ player1 }) => {
+interface ChatProps {
+  gameObject: GameObject;
+  setPlayer: React.Dispatch<SetStateAction<Player>>;
+  setOtherPlayer: React.Dispatch<SetStateAction<Player>>;
+  setGameState: React.Dispatch<SetStateAction<GameState>>;
+  setSessionID: React.Dispatch<SetStateAction<string>>;
+}
+
+const Chat: React.FC<ChatProps> = ({ gameObject }) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
   const [userData, setUserData] = useState({
     username: '',
@@ -53,26 +69,14 @@ const Chat: React.FC<ChatProps> = ({ player1 }) => {
 
   useEffect(() => {
     const updateGameObject = () => {
-      const gameData = {
-        name: player1.name,
-        action: player1.action,
-        wonGame: player1.wonGame,
-        isTurn: player1.isTurn,
-        // hand: player1.hand,
-        tally: player1.tally,
-        table: player1.table,
-        gamesWon: player1.gamesWon,
-        playedCardThisTurn: player1.playedCardThisTurn,
-      };
       if (!stompClient) {
         console.warn('stompClient is undefined. Unable to send message.');
         return;
       }
-      console.log('player:', player1);
-      stompClient.send('/app/updateGame', {}, JSON.stringify(gameData));
+      stompClient.send('/app/updateGame', {}, JSON.stringify(gameObject));
     };
     updateGameObject();
-  }, [player1]);
+  }, [gameObject]);
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
@@ -158,6 +162,7 @@ const Chat: React.FC<ChatProps> = ({ player1 }) => {
 
   const onPublicMessageReceived = (payload: Payload) => {
     const payloadData = JSON.parse(payload.body);
+    console.log('payLoadData: ', payloadData);
     switch (payloadData.status) {
       case 'MESSAGE':
         publicChats.push(payloadData);

@@ -18,14 +18,19 @@ interface DeckCard {
   imagePath: string;
 }
 
+interface CardProps {
+  value: number;
+  color: string;
+}
+
 interface Player {
   name: string;
   action: PlayerState;
   wonGame: boolean;
   isTurn: boolean;
-  hand: JSX.Element[];
+  hand: CardProps[];
   tally: number;
-  table: JSX.Element[];
+  table: CardProps[];
   gamesWon: number;
   playedCardThisTurn: boolean;
 }
@@ -42,7 +47,7 @@ enum PlayerState {
   ENDTURN = 'endturn',
 }
 
-function SoloGame(): JSX.Element {
+function PVPGame(): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -54,21 +59,14 @@ function SoloGame(): JSX.Element {
       const randomValue = Math.floor(Math.random() * 6) + 1;
       const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
       if (randomColor === 'red') {
-        randomHand.push(
-          <Card
-            value={-randomValue}
-            color={randomColor}
-            cardType="normal_card"
-          />
-        );
+        const cardProps: CardProps = {
+          value: -randomValue,
+          color: randomColor,
+        };
+        randomHand.push(cardProps);
       } else {
-        randomHand.push(
-          <Card
-            value={randomValue}
-            color={randomColor}
-            cardType="normal_card"
-          />
-        );
+        const cardProps: CardProps = { value: randomValue, color: randomColor };
+        randomHand.push(cardProps);
       }
     }
     return randomHand;
@@ -79,9 +77,10 @@ function SoloGame(): JSX.Element {
     wonGame: false,
     isTurn: false,
     hand: selectedHand
-      ? selectedHand.map((card: DeckCard) => (
-          <Card value={card.value} color={card.color} cardType="normal_card" />
-        ))
+      ? selectedHand.map((card: DeckCard) => ({
+          value: card.value,
+          color: card.color,
+        }))
       : generateRandomHand(),
     tally: 0,
     table: [],
@@ -105,6 +104,7 @@ function SoloGame(): JSX.Element {
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
+  const [sessionID, setSessionID] = useState('');
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -123,14 +123,11 @@ function SoloGame(): JSX.Element {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
-    const newCard = (
-      <Card value={randomNumber} color="green" cardType="normal_card" />
-    );
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       setPlayer({
         ...newPlayer,
         tally: newPlayer.tally + randomNumber,
-        table: [...newPlayer.table, newCard],
+        table: [...newPlayer.table, { value: randomNumber, color: 'green' }],
         action: PlayerState.PLAY,
       });
       return null;
@@ -144,7 +141,7 @@ function SoloGame(): JSX.Element {
       const newOtherPlayer = {
         ...otherPlayer,
         tally: otherPlayer.tally + randomNumber,
-        table: [...otherPlayer.table, newCard],
+        table: [...otherPlayer.table, { value: randomNumber, color: 'green' }],
         action: PlayerState.PLAY,
       };
       setOtherPlayer(newOtherPlayer);
@@ -297,12 +294,22 @@ function SoloGame(): JSX.Element {
       setPlayer({
         ...player,
         hand: player.hand,
-        table: [...player.table, card],
+        table: [
+          ...player.table,
+          { value: card.props.value, color: card.props.color },
+        ],
         tally: player.tally + card.props.value,
         playedCardThisTurn: true,
       });
     }
   }
+
+  const listOfCards = (cards: CardProps[]): JSX.Element[] =>
+    cards.map((card) => {
+      return (
+        <Card value={card.value} color={card.color} cardType="normal_card" />
+      );
+    });
 
   return (
     <>
@@ -321,11 +328,11 @@ function SoloGame(): JSX.Element {
       <div className="playerBoard">
         <div className="player1">
           <div className="table">
-            <Hand hand={player.table} />
+            <Hand hand={listOfCards(player.table)} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={player.hand} moveCard={moveCard} />
+            <Hand hand={listOfCards(player.hand)} moveCard={moveCard} />
           </div>
           <div className="turnOptions">
             <GameButtons
@@ -339,11 +346,11 @@ function SoloGame(): JSX.Element {
         </div>
         <div className="player2">
           <div className="table">
-            <Hand hand={otherPlayer.table} />
+            <Hand hand={listOfCards(otherPlayer.table)} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={otherPlayer.hand} />
+            <Hand hand={listOfCards(otherPlayer.hand)} />
           </div>
         </div>
         <div className="center-message">
@@ -365,8 +372,19 @@ function SoloGame(): JSX.Element {
           )}
         </div>
       </div>
-      <Chat player1={player} />
+      <Chat
+        gameObject={{
+          player1: player,
+          player2: otherPlayer,
+          gameState: gameState,
+          sessionID: sessionID,
+        }}
+        setPlayer={setPlayer}
+        setOtherPlayer={setOtherPlayer}
+        setGameState={setGameState}
+        setSessionID={setSessionID}
+      />
     </>
   );
 }
-export default SoloGame;
+export default PVPGame;

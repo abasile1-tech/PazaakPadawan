@@ -23,14 +23,14 @@ public class ChatController {
     }
 
     @MessageMapping("/updateGame")
-    @SendTo("/chatroom/public")
+    @SendTo("/game/updated")
     private GameObject receiveGameObject(@Payload GameObject gameObject){
         System.out.printf("Game object received: %s\n",gameObject);
         return gameObject;
     }
 
     @MessageMapping("/initialConnection")
-    @SendTo("/chatroom/public")
+    @SendTo("/game/initialConnection")
     private InitialConnectingData receivePublicMessage(@Payload InitialConnectingData initialConnectingData){
         System.out.printf("Initial Connection Data received: %s\n",initialConnectingData);
         return initialConnectingData;
