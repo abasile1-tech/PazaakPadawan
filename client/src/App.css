@@ -121,7 +121,8 @@
   padding: 0px;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%)
+  transform: translate(-50%, -50%);
+  color: white;
 }
 
 .card_image {
@@ -395,7 +396,7 @@
   cursor: pointer;
   background-color: #213547;
   border-radius: 10px;
-  
+  height: calc(100vh - 350px);
 }
 
 .right-box {
@@ -440,6 +441,7 @@
   width: 250px; 
   height: 55px; 
   margin: 10px;
+  color: white;
 }
 
 
