@@ -73,16 +73,28 @@ const Chat: React.FC<ChatProps> = ({
     sessionID: '',
   });
 
-  useEffect(() => {
-    const updateGameObject = () => {
-      if (!stompClient) {
-        console.warn('stompClient is undefined. Unable to send message.');
-        return;
-      }
-      stompClient.send('/app/updateGame', {}, JSON.stringify(gameObject));
-    };
-    updateGameObject();
-  }, [gameObject]);
+  // useEffect(() => {
+  //   const updateGameObject = () => {
+  //     if (!stompClient) {
+  //       console.warn('stompClient is undefined. Unable to send message.');
+  //       return;
+  //     }
+  //     stompClient.send(
+  //       '/app/updateGame',
+  //       {
+  //         id: 'game',
+  //       },
+  //       JSON.stringify(gameObject)
+  //     );
+  //   };
+  //   updateGameObject();
+  // }, [
+  //   gameObject,
+  //   gameObject.player1,
+  //   gameObject.player2,
+  //   gameObject.gameState,
+  //   gameObject.sessionID,
+  // ]);
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
@@ -111,10 +123,11 @@ const Chat: React.FC<ChatProps> = ({
     setUserData({ ...userData, message: value });
   };
   const registerUser = () => {
-    const url = import.meta.env.PROD
-      ? import.meta.env.VITE_PROD_URL
-      : import.meta.env.VITE_DEV_URL;
-    const Sock = new SockJS(url + 'ws');
+    // const url = import.meta.env.PROD
+    //   ? import.meta.env.VITE_PROD_URL
+    //   : import.meta.env.VITE_DEV_URL;
+    // const Sock = new SockJS(url + 'ws');
+    const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
     stompClient = over(Sock);
     stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
   };
@@ -125,9 +138,11 @@ const Chat: React.FC<ChatProps> = ({
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
     }
-    stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
+    stompClient.subscribe('/chatroom/public', onPublicMessageReceived, {});
     // stompClient.subscribe('/game/initialConnection', onGameInitialConnectionReceived);
-    stompClient.subscribe('/game/updated', onGameUpdatedReceived);
+    stompClient.subscribe('/game/updated', onGameUpdatedReceived, {
+      id: 'game',
+    });
     userJoin();
     sendInitialConnectingData();
   };
@@ -159,7 +174,9 @@ const Chat: React.FC<ChatProps> = ({
     }
     stompClient.send(
       '/app/updateGame',
-      {},
+      {
+        id: 'game',
+      },
       JSON.stringify(initialConnectingData)
     );
   };

@@ -3,21 +3,18 @@ package com.codeclan.server.controllers;
 import com.codeclan.server.models.GameObject;
 import com.codeclan.server.models.InitialConnectingData;
 import com.codeclan.server.models.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 
 @Controller
 public class ChatController {
-    @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
     
-    private ArrayList<GameObject> gameObjects = new ArrayList<>();
+    private final ArrayList<GameObject> gameObjects = new ArrayList<>();
 
     @MessageMapping("/message")
     @SendTo("/chatroom/public")
@@ -32,8 +29,11 @@ public class ChatController {
         System.out.printf("Game object received: %s\n", frontEndGameObject);
         for (GameObject gameObject:
                 gameObjects) {
-            if (gameObject.getSessionID().equals(frontEndGameObject.getSessionID())) {
+            if (gameObject.getSessionID().equals(frontEndGameObject.getSessionID()) && !gameObject.getPlayer1().getName().equals(frontEndGameObject.getPlayer1().getName())) {
                 gameObject.setPlayer2(frontEndGameObject.getPlayer1());
+                System.out.printf("This is the session id found: %s\n",gameObject.getSessionID());
+                System.out.printf("Updated GameObject: %s\n", gameObject);
+                System.out.printf("Print game objects for first: %s\n", gameObjects);
                 return gameObject;
             }
         }
@@ -44,6 +44,8 @@ public class ChatController {
                 frontEndGameObject.getSessionID()
         );
         gameObjects.add(newGame);
+        System.out.printf("This is the second attempt, session id found: %s\n",newGame.getSessionID());
+        System.out.printf("Print game objects: %s\n", gameObjects);
         return newGame;
     }
 
