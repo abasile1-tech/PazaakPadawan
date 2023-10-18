@@ -19,6 +19,7 @@ const Chat = () => {
     receiverName: '',
     connected: false,
     message: '',
+    sessionID: '',
   });
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
@@ -29,6 +30,16 @@ const Chat = () => {
     const { value } = event.target;
     setUserData({ ...userData, username: value });
   };
+
+  const handleSessionID = (event: { target: HTMLInputElement }) => {
+    if (!event || !event.target) {
+      console.warn('event is null');
+      return;
+    }
+    const { value } = event.target;
+    setUserData({ ...userData, sessionID: value });
+  };
+
   const handleMessage = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
       console.warn('event is null');
@@ -130,6 +141,12 @@ const Chat = () => {
             placeholder="Enter the user name"
             value={userData.username}
             onChange={handleUserName}
+          />
+          <input
+            id="session-id"
+            placeholder="Enter the session id"
+            value={userData.sessionID}
+            onChange={handleSessionID}
           />
           <button type="button" onClick={registerUser}>
             connect
