@@ -79,6 +79,13 @@
     color: white;
 }
 
+.messageBox {
+  height: 50px;
+  width: 257px;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
 
 .grouping_hamburger_music {
   display: flex; 
