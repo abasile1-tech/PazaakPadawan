@@ -69,6 +69,16 @@
   background-color: #213547
 }
 
+.gameButtons {
+  font-size: 18px;
+    height: 50px;
+    width: 130px;
+    padding: 0;
+    margin: 1px;
+    background-color: #213547;
+    color: white;
+}
+
 
 .grouping_hamburger_music {
   display: flex; 
@@ -141,10 +151,10 @@
 }
 
 .turn-indicator {
-  background-color: #1C2C3B;
+  background-color: #213547;
   color: #fff;
   text-align: center;
-  border-radius: 20px; 
+  border-radius: 40px; 
   margin: 0 auto;
   display: flex;
   justify-content: center;
@@ -152,6 +162,8 @@
   padding: 0 auto; 
   min-width: 60px; 
   max-width: 35%; 
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .turn_indicator {
