@@ -66,7 +66,8 @@
 .menu-button {
   font-size: 15px; 
   cursor: pointer;
-  background-color: #213547
+  background-color: #213547;
+  color: white;
 }
 
 .gameButtons {
@@ -276,6 +277,8 @@
   gap: 20px;
   max-width: 80%;
   margin-top: 20px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .character-item {
@@ -289,12 +292,20 @@
   height: auto;
   max-width: 140%;
   margin: 0 auto;
+  border: solid thick;
+  border-color: #213547;
 }
 
 
 .character-item p {
   margin-top: 10px;
   font-size: larger;
+  background-color: #213547;
+  border-radius: 20px;
+  color: white;
+  max-width: 65%;
+  margin-left: auto;
+  margin-right: auto;
 }
 .main-text {
   text-align: center;
