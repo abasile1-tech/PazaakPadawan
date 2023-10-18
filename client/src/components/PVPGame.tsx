@@ -53,13 +53,27 @@ function SoloGame(): JSX.Element {
     for (let i = 0; i < 4; i++) {
       const randomValue = Math.floor(Math.random() * 6) + 1;
       const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
-      randomHand.push(
-        <Card value={randomValue} color={randomColor} cardType="normal_card" />
-      );
+      if (randomColor === 'red') {
+        randomHand.push(
+          <Card
+            value={-randomValue}
+            color={randomColor}
+            cardType="normal_card"
+          />
+        );
+      } else {
+        randomHand.push(
+          <Card
+            value={randomValue}
+            color={randomColor}
+            cardType="normal_card"
+          />
+        );
+      }
     }
     return randomHand;
   }
-  const initialPlayer1: Player = {
+  const initialPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
     wonGame: false,
@@ -75,24 +89,20 @@ function SoloGame(): JSX.Element {
     playedCardThisTurn: false,
   };
 
-  const initialPlayer2: Player = {
+  const initialOtherPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: selectedHand
-      ? selectedHand.map((card: DeckCard) => (
-          <Card value={card.value} color={card.color} cardType="normal_card" />
-        ))
-      : generateRandomHand(),
+    hand: generateRandomHand(),
     tally: 0,
     table: [],
     gamesWon: 0,
     playedCardThisTurn: false,
   };
 
-  const [player1, setPlayer1] = useState(initialPlayer1);
-  const [player2, setPlayer2] = useState(initialPlayer2);
+  const [player, setPlayer] = useState(initialPlayer);
+  const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
   const navigate = useNavigate();
@@ -116,7 +126,7 @@ function SoloGame(): JSX.Element {
       <Card value={randomNumber} color="green" cardType="normal_card" />
     );
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
-      setPlayer1({
+      setPlayer({
         ...newPlayer,
         tally: newPlayer.tally + randomNumber,
         table: [...newPlayer.table, newCard],
@@ -128,17 +138,17 @@ function SoloGame(): JSX.Element {
       console.log('player stood');
     }
 
-    if (!newPlayer.isTurn && player2.action != PlayerState.STAND) {
-      console.log('player2.action before', player2.action);
-      const newPlayer2 = {
-        ...player2,
-        tally: player2.tally + randomNumber,
-        table: [...player2.table, newCard],
+    if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
+      console.log('otherPlayer.action before', otherPlayer.action);
+      const newOtherPlayer = {
+        ...otherPlayer,
+        tally: otherPlayer.tally + randomNumber,
+        table: [...otherPlayer.table, newCard],
         action: PlayerState.PLAY,
       };
-      setPlayer2(newPlayer2);
-      console.log('player2.action after', player2.action);
-      return newPlayer2;
+      setOtherPlayer(newOtherPlayer);
+      console.log('otherPlayer.action after', otherPlayer.action);
+      return newOtherPlayer;
     }
     console.log('both stood');
     return null;
@@ -146,129 +156,129 @@ function SoloGame(): JSX.Element {
 
   async function handleEndTurnButtonClick() {
     const newPlayer = {
-      ...player1,
+      ...player,
       isTurn: false,
       action: PlayerState.ENDTURN,
     };
-    setPlayer1(newPlayer);
+    setPlayer(newPlayer);
     console.log(
       'newPlayer, newPlayer.action',
       newPlayer,
       ', ',
       newPlayer.action
     );
-    const newPlayer2 = addCardToTable(newPlayer);
-    const player2 = newPlayer2 ? newPlayer2 : player2;
+    const newOtherPlayer = addCardToTable(newPlayer);
+    const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
     await delay(3000); // wait for 3 seconds while the AI "decides..."
     // AI Choice starts
-    if (player2.tally < 20 && player2.action != PlayerState.STAND) {
-      if (player2.hand.length > 0) {
-        let bestSum = 0;
-        let bestCardIndex = -1;
-        // Check to see if you have any cards that can get you to 20
-        for (let i = 0; i < player2.hand.length; i++) {
-          const card = player2.hand[i];
-          const sum = player2.tally + card.props.value;
-          if (sum >= 15 && sum <= 20 && sum > bestSum) {
-            bestSum = sum;
-            bestCardIndex = i;
-          }
-        }
-        console.log('bestCardIndex', bestCardIndex);
-        if (bestCardIndex !== -1) {
-          console.log('trying to play best card', bestCardIndex);
-          const [playedCard] = player2.hand.splice(bestCardIndex, 1);
-          const newPlayer2 = {
-            ...player2,
-            hand: [...player2.hand],
-            tally: playedCard.props.value + player2.tally,
-            table: [...player2.table, playedCard],
-            action: PlayerState.STAND,
-          };
-          console.log('Player2 Table', newPlayer2.table);
-          setPlayer2(newPlayer2);
-          await delay(3000); // wait for 3 seconds while the AI "decides..."
-          // setGameState(GameState.STAND);
-          console.log('I just played a card and now I want to stand');
-        }
-      } else {
-        const newPlayer2 = {
-          ...player2,
-          action: PlayerState.STAND,
-        };
-        setPlayer2(newPlayer2);
-        // setGameState(GameState.STAND);
-        console.log('i want to stand #2');
-      }
-    } else if (player2.tally >= 17 && player2.tally <= 20) {
-      if (Math.random() < 0.7) {
-        const newPlayer2 = {
-          ...player2,
-          action: PlayerState.STAND,
-        };
-        setPlayer2(newPlayer2);
-        // setGameState(GameState.STAND);
-        console.log('mostly i want to stand');
-      } else {
-        // addCardToTable(newPlayer);
-        console.log('number between 17 and 20 but i need more cards');
-        const newPlayer2 = {
-          ...player2,
-          action: PlayerState.PLAY,
-        };
-        setPlayer2(newPlayer2);
-      }
-    } else if (player2.tally < 17) {
-      // addCardToTable(newPlayer);
-      console.log('more card');
-      const newPlayer2 = {
-        ...player2,
-        action: PlayerState.PLAY,
-      };
-      setPlayer2(newPlayer2);
-    }
+    // if (ePlayer.tally < 20 && ePlayer.action != PlayerState.STAND) {
+    //   if (ePlayer.hand.length > 0) {
+    //     let bestSum = 0;
+    //     let bestCardIndex = -1;
+    //     // Check to see if you have any cards that can get you to 20
+    //     for (let i = 0; i < ePlayer.hand.length; i++) {
+    //       const card = ePlayer.hand[i];
+    //       const sum = ePlayer.tally + card.props.value;
+    //       if (sum >= 15 && sum <= 20 && sum > bestSum) {
+    //         bestSum = sum;
+    //         bestCardIndex = i;
+    //       }
+    //     }
+    //     console.log('bestCardIndex', bestCardIndex);
+    //     if (bestCardIndex !== -1) {
+    //       console.log('trying to play best card', bestCardIndex);
+    //       const [playedCard] = ePlayer.hand.splice(bestCardIndex, 1);
+    //       const newOtherPlayer = {
+    //         ...ePlayer,
+    //         hand: [...ePlayer.hand],
+    //         tally: playedCard.props.value + ePlayer.tally,
+    //         table: [...ePlayer.table, playedCard],
+    //         action: PlayerState.STAND,
+    //       };
+    //       console.log('Other Player Table', newOtherPlayer.table);
+    //       setOtherPlayer(newOtherPlayer);
+    //       await delay(3000); // wait for 3 seconds while the AI "decides..."
+    //       // setGameState(GameState.STAND);
+    //       console.log('I just played a card and now I want to stand');
+    //     }
+    //   } else {
+    //     const newOtherPlayer = {
+    //       ...ePlayer,
+    //       action: PlayerState.STAND,
+    //     };
+    //     setOtherPlayer(newOtherPlayer);
+    //     // setGameState(GameState.STAND);
+    //     console.log('i want to stand #2');
+    //   }
+    // } else if (ePlayer.tally >= 17 && ePlayer.tally <= 20) {
+    //   if (Math.random() < 0.7) {
+    //     const newOtherPlayer = {
+    //       ...ePlayer,
+    //       action: PlayerState.STAND,
+    //     };
+    //     setOtherPlayer(newOtherPlayer);
+    //     // setGameState(GameState.STAND);
+    //     console.log('mostly i want to stand');
+    //   } else {
+    //     // addCardToTable(newPlayer);
+    //     console.log('number between 17 and 20 but i need more cards');
+    //     const newOtherPlayer = {
+    //       ...ePlayer,
+    //       action: PlayerState.PLAY,
+    //     };
+    //     setOtherPlayer(newOtherPlayer);
+    //   }
+    // } else if (ePlayer.tally < 17) {
+    //   // addCardToTable(newPlayer);
+    //   console.log('more card');
+    //   const newOtherPlayer = {
+    //     ...ePlayer,
+    //     action: PlayerState.PLAY,
+    //   };
+    //   setOtherPlayer(newOtherPlayer);
+    // }
     // AI choice ends
-    if (newPlayer.tally >= 20 || player2.tally >= 20) {
-      await endOfRoundCleaning(player2);
+    if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
+      await endOfRoundCleaning(ePlayer);
     } else {
       setGameState(GameState.STARTED);
-      const newPlayer1 = {
-        ...player1,
+      const newPlayer = {
+        ...player,
         isTurn: true,
         playedCardThisTurn: false,
       };
-      setPlayer1(newPlayer1);
-      addCardToTable(newPlayer1);
+      setPlayer(newPlayer);
+      addCardToTable(newPlayer);
     }
   }
 
-  function getRoundWinner(player: Player) {
+  function getRoundWinner(otherPlayer: Player) {
     console.log(
       'Player Score: ',
       player.tally,
-      'Computer Player Score: ',
-      player2.tally
+      'Other Player Score: ',
+      otherPlayer.tally
     );
     const playerBust = player.tally > 20;
-    const player2Bust = player2.tally > 20;
-    const player2Won = player2.tally <= 20;
+    const otherPlayerBust = otherPlayer.tally > 20;
+    const otherPlayerWon = otherPlayer.tally <= 20;
     const playerWon = player.tally <= 20;
-    const tie = player.tally == player2.tally;
-    const player1LessThanPlayer2 = player.tally < player2.tally;
-    const player2LessThanPlayer1 = player.tally > player2.tally;
+    const tie = player.tally == otherPlayer.tally;
+    const playerLessThanOther = player.tally < otherPlayer.tally;
+    const otherPlayerLessThanPlayer = player.tally > otherPlayer.tally;
     const playerReturn = 1;
-    const player2Return = 0;
+    const otherPlayerPlayerReturn = 0;
     const tieOrBustReturn = -1;
 
-    if (playerBust && player2Bust) {
+    if (playerBust && otherPlayerBust) {
       console.log('you both went bust');
       return tieOrBustReturn;
     }
-    if (playerBust && player2Won) {
+    if (playerBust && otherPlayerWon) {
       console.log('opponent won');
-      return player2Return;
+      return otherPlayerPlayerReturn;
     }
-    if (player2Bust && playerWon) {
+    if (otherPlayerBust && playerWon) {
       console.log('you won');
       return playerReturn;
     }
@@ -276,43 +286,45 @@ function SoloGame(): JSX.Element {
       console.log('you tied');
       return tieOrBustReturn;
     }
-    if (player1LessThanPlayer2) {
+    if (playerLessThanOther) {
       console.log('opponent won');
-      return player2Return;
+      return otherPlayerPlayerReturn;
     }
-    if (player2LessThanPlayer1) {
+    if (otherPlayerLessThanPlayer) {
       console.log('you won');
       return playerReturn;
     }
-    console.log('the round is over', player.tally, player2.tally);
+    console.log('the round is over', player.tally, otherPlayer.tally);
   }
 
   async function handleStandButtonClick() {
     // setGameState(GameState.STAND);
-    const newPlayer1 = {
-      ...player1,
+    const newPlayer = {
+      ...player,
       isTurn: false,
       action: PlayerState.STAND,
     };
-    setPlayer1(newPlayer1);
-    const newPlayer2 = addCardToTable(newPlayer2);
-    // await delay(3000);
-    await endOfRoundCleaning(newPlayer2);
+    setPlayer(newPlayer);
+    const newOtherPlayer = addCardToTable(newPlayer);
+    await delay(3000); // wait for 3 seconds while the AI "decides...";
+    await endOfRoundCleaning(newOtherPlayer);
   }
 
   async function handleStartButtonClick() {
-    const newPlayer1 = {
-      ...player1,
+    const newPlayer = {
+      ...player,
       isTurn: true,
       playedCardThisTurn: false,
     };
-    setPlayer1(newPlayer1);
-    addCardToTable(newPlayer1);
+    setPlayer(newPlayer);
+    addCardToTable(newPlayer);
     setGameState(GameState.STARTED);
   }
 
-  async function endOfRoundCleaning(newPlayer2: Player | null) {
-    const winner = getRoundWinner(newPlayer2 ? newPlayer2 : player2);
+  async function endOfRoundCleaning(newOtherPlayer: Player | null) {
+    const winner = getRoundWinner(
+      newOtherPlayer ? newOtherPlayer : otherPlayer
+    );
     if (winner === 1) {
       showEndRoundWinner('YOU WIN THE ROUND!');
     } else if (winner === 0) {
@@ -320,22 +332,22 @@ function SoloGame(): JSX.Element {
     } else {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    setPlayer1({
-      ...player1,
-      hand: player1.hand,
+    setPlayer({
+      ...player,
+      hand: player.hand,
       table: [],
       tally: 0,
       action: PlayerState.PLAY,
-      gamesWon: winner === 1 ? player1.gamesWon + 1 : player1.gamesWon,
+      gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
     });
-    setPlayer2({
-      ...player2,
-      hand: player2.hand,
+    setOtherPlayer({
+      ...otherPlayer,
+      hand: otherPlayer.hand,
       table: [],
       tally: 0,
       action: PlayerState.PLAY,
-      gamesWon: winner === 0 ? player2.gamesWon + 1 : player2.gamesWon,
+      gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
       playedCardThisTurn: false,
     });
 
@@ -345,15 +357,15 @@ function SoloGame(): JSX.Element {
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
 
-    if (gameState === GameState.STARTED && !player1.playedCardThisTurn) {
+    if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
       const audio = new Audio(cardflip);
       audio.play();
-      player1.hand.splice(index, 1);
-      setPlayer1({
-        ...player1,
-        hand: player1.hand,
-        table: [...player1.table, card],
-        tally: player1.tally + card.props.value,
+      player.hand.splice(index, 1);
+      setPlayer({
+        ...player,
+        hand: player.hand,
+        table: [...player.table, card],
+        tally: player.tally + card.props.value,
         playedCardThisTurn: true,
       });
     }
@@ -363,24 +375,24 @@ function SoloGame(): JSX.Element {
     <>
       <Header musicChoice={musicChoice} />
       <div className="scoreBoard">
-        <ScoreLights numGamesWon={player1.gamesWon} />
+        <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBar
-          playerTally={player1.tally}
-          opponentTally={player2.tally}
-          isPlayerTurn={player1.isTurn}
+          playerTally={player.tally}
+          opponentTally={otherPlayer.tally}
+          isPlayerTurn={player.isTurn}
           gameState={gameState}
         />
-        <ScoreLights numGamesWon={player2.gamesWon} />
+        <ScoreLights numGamesWon={otherPlayer.gamesWon} />
       </div>
       <hr />
       <div className="playerBoard">
         <div className="player1">
           <div className="table">
-            <Hand hand={player1.table} />
+            <Hand hand={player.table} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={player1.hand} moveCard={moveCard} />
+            <Hand hand={player.hand} moveCard={moveCard} />
           </div>
           <div className="turnOptions">
             <GameButtons
@@ -388,23 +400,23 @@ function SoloGame(): JSX.Element {
               onStand={handleStandButtonClick}
               onEndTurn={handleEndTurnButtonClick}
               onStartGame={handleStartButtonClick}
-              isPlayerTurn={player1.isTurn}
+              isPlayerTurn={player.isTurn}
             />
           </div>
         </div>
         <div className="player2">
           <div className="table">
-            <Hand hand={player2.table} />
+            <Hand hand={otherPlayer.table} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={player2.hand} />
+            <Hand hand={otherPlayer.hand} />
           </div>
         </div>
         <div className="center-message">
           <EndGamePopup
-            numGamesWonPlayer={player1.gamesWon}
-            numGamesWonOpponent={player2.gamesWon}
+            numGamesWonPlayer={player.gamesWon}
+            numGamesWonOpponent={otherPlayer.gamesWon}
             handleGameOverClick={handleGameOverClick}
           />
         </div>
