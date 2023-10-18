@@ -107,6 +107,7 @@ Java (Desktop Version)
 * Navigate to the java directory
 * Copy code cd PazaakPadawan/java
 * Compile and run the Java program
+* Add the Lombok IntelliJ plugin [Lombok Link](https://projectlombok.org/setup/intellij)
 ￼
 ![InstallationJava](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/InstallationJava.png?raw=true)
 
