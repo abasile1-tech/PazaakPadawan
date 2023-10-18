@@ -365,7 +365,7 @@ function SoloGame(): JSX.Element {
           )}
         </div>
       </div>
-      <Chat player1Turn={player.isTurn} />
+      <Chat player1={player} />
     </>
   );
 }

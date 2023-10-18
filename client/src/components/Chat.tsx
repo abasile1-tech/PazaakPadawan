@@ -19,29 +19,29 @@ interface PublicChat {
 //   ENDED = 'ended',
 // }
 
-// enum PlayerState {
-//   PLAY = 'play',
-//   STAND = 'stand',
-//   ENDTURN = 'endturn',
-// }
-
-// interface Player {
-//   name: string;
-//   action: PlayerState;
-//   wonGame: boolean;
-//   isTurn: boolean;
-//   hand: JSX.Element[];
-//   tally: number;
-//   table: JSX.Element[];
-//   gamesWon: number;
-//   playedCardThisTurn: boolean;
-// }
-
-interface ChatProps {
-  player1Turn: boolean;
+enum PlayerState {
+  PLAY = 'play',
+  STAND = 'stand',
+  ENDTURN = 'endturn',
 }
 
-const Chat: React.FC<ChatProps> = ({ player1Turn }) => {
+interface Player {
+  name: string;
+  action: PlayerState;
+  wonGame: boolean;
+  isTurn: boolean;
+  hand: JSX.Element[];
+  tally: number;
+  table: JSX.Element[];
+  gamesWon: number;
+  playedCardThisTurn: boolean;
+}
+
+interface ChatProps {
+  player1: Player;
+}
+
+const Chat: React.FC<ChatProps> = ({ player1 }) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
   const [userData, setUserData] = useState({
     username: '',
@@ -54,16 +54,25 @@ const Chat: React.FC<ChatProps> = ({ player1Turn }) => {
   useEffect(() => {
     const updateGameObject = () => {
       const gameData = {
-        player1Turn: player1Turn,
+        name: player1.name,
+        action: player1.action,
+        wonGame: player1.wonGame,
+        isTurn: player1.isTurn,
+        // hand: player1.hand,
+        tally: player1.tally,
+        table: player1.table,
+        gamesWon: player1.gamesWon,
+        playedCardThisTurn: player1.playedCardThisTurn,
       };
       if (!stompClient) {
         console.warn('stompClient is undefined. Unable to send message.');
         return;
       }
+      console.log('player:', player1);
       stompClient.send('/app/updateGame', {}, JSON.stringify(gameData));
     };
     updateGameObject();
-  }, [player1Turn]);
+  }, [player1]);
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
