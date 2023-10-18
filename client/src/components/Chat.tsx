@@ -119,6 +119,7 @@ const Chat = () => {
       {userData.connected ? (
         <div>
           <h2>Your username: {userData.username} </h2>
+          <h2>Your session ID: {userData.sessionID}</h2>
           <div>
             {publicChats.map((chat, index) => (
               <div key={index}>
