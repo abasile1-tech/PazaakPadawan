@@ -19,10 +19,4 @@ public class ChatController {
         System.out.printf("message received: %s\n",message);
         return message;
     }
-
-    @MessageMapping("/private-message")
-    public Message receivePrivateMessage(@Payload Message message) {
-        simpMessagingTemplate.convertAndSendToUser(message.getReceiverName(), "/private", message); // /user/David/private
-        return message;
-    }
 }
