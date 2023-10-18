@@ -1,7 +1,7 @@
 import React from 'react';
 import PopUp from './PopUP/PopUp';
-import victory from '../assets/music/8bitvictorymarch.mp3';
-import defeat from '../assets/music/8bitimperialmarch.mp3';
+import victory from '../assets/music/lightsaber.mp3';
+import defeat from '../assets/music/blaster.mp3';
 
 interface EndGamePopupProps {
   numGamesWonPlayer: number;
