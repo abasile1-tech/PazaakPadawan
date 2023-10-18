@@ -10,6 +10,7 @@ interface PublicChat {
   message: string;
   date: Date;
   status: string;
+  sessionID: string;
 }
 
 const Chat = () => {
@@ -106,6 +107,7 @@ const Chat = () => {
         message: userData.message,
         status: 'MESSAGE',
         date: today,
+        sessionID: userData.sessionID,
       };
       stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
       setUserData({ ...userData, message: '' });
