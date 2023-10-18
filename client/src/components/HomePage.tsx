@@ -9,7 +9,9 @@ function HomePage() {
   return (
     <div className="home-page">
       <Header musicChoice={musicChoice} />
-      <UserBarComponent />
+      <div className="userbar-container">
+        <UserBarComponent />
+      </div>
 
       <div className="main-content">
         <div id="home-page-text">

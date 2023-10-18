@@ -10,7 +10,8 @@
 .main-content {
   display:flex;
   justify-content: space-around;
- 
+  margin-left:200px;
+  margin-right:200px;
 }
 
 #image-three-cards {
@@ -21,6 +22,10 @@
 #home-page-text {
   max-width: 500px;
   max-height: 500px;
+}
+
+#home-page-text h1 {
+  color: #5572F6;
 }
 
 /* character selector */
@@ -38,7 +43,9 @@
   justify-content: space-between; 
   background-color: #213547; 
   color: white; 
-  padding: 10px; 
+  padding-left: 50px;
+  padding-top: 10px;
+  padding-bottom: 10px;
   height: 60px;
   overflow: auto;
 }
@@ -50,6 +57,9 @@
   position: sticky;
   top: 0;
   z-index:0;
+}
+.userbar-container {
+  padding-left: 50px;
 }
 
 
@@ -74,8 +84,8 @@
 
 
 #image_score_lights {
-  width: 50px;
-  height: 75px;
+  width: 54px;
+  height: 105px;
 }
 
 .card_content {
@@ -153,6 +163,10 @@
 .player2 {
   width: 50%;
 }
+.buttons {
+  /* text-align: center; */
+  margin-left: 50px;
+}
 .buttons button {
   background-color: #213547; 
   color: white; 
@@ -167,19 +181,29 @@
 }
 
 .solo-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
 }
 
 .pvp-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
+}
+.pvp-button:hoover {
+    transform: scale(0.98); 
+    box-shadow: 3px 2px 22px 1px rgba(0, 0, 0, 0.24); 
+    background-color: pink;
 }
 
 .deck-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
 }
 
 .character-button {
-  background-color: #213547; 
+  border-radius: 30px;
+  background: linear-gradient(98deg, #677BDA -2.46%, #313751 99.34%);
+  
 }
 
 .user-bar {
