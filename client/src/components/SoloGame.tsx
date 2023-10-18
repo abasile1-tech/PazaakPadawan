@@ -9,6 +9,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
+import popup from '../assets/music/8bitpopupmessage.mp3';
 
 interface DeckCard {
   value: number;
@@ -421,15 +422,18 @@ function SoloGame(): JSX.Element {
           />
         </div>
         <div className="center-message">
-          {showEndRoundPopup && (
-            <PopUp
-              message={endRoundMessage}
-              buttonText="OK"
-              onClick={() => {
-                setShowEndRoundPopup(false);
-              }}
-            />
-          )}
+          {showEndRoundPopup &&
+            player.gamesWon !== 3 &&
+            computerPlayer.gamesWon !== 3 && (
+              <PopUp
+                audiofile={popup}
+                message={endRoundMessage}
+                buttonText="OK"
+                onClick={() => {
+                  setShowEndRoundPopup(false);
+                }}
+              />
+            )}
         </div>
       </div>
     </>
