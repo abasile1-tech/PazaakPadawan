@@ -64,11 +64,12 @@
 
 
 .menu-button {
-  font-size: 30px; 
+  font-size: 15px; 
   cursor: pointer;
   background-color: #213547;
    color: white;
   margin-right: 40px; 
+  margin: 5px;
 }
 
 .gameButtons {
@@ -311,7 +312,8 @@
 .main-text {
   text-align: center;
   font-size: 40px; 
-  margin-top: 20px; 
+  margin-top: 20px;
+  font-weight: 700; 
 }
 
 .hamburger {
@@ -381,6 +383,7 @@
   max-width: 300px; 
   font-size: 20px;
   margin: 10px 0;
+  color: white;
 } 
 
 .popup-button{
@@ -461,6 +464,11 @@
   height: 55px; 
   margin: 10px;
   color: white;
+}
+
+.userBarName {
+  margin-right: 10px;
+  font-size: 25px;
 }
 
 

@@ -50,7 +50,7 @@ const PlayBar = ({
           {selectedCharacter ? (
             <div className="user-bar">
               <img src={selectedCharacter.image} alt={selectedCharacter.name} />
-              <h3>{selectedCharacter.name}!</h3>
+              <h3 className="userBarName">{selectedCharacter.name}</h3>
               <ScoreKeeper cardTally={playerTally} />
             </div>
           ) : (
@@ -71,7 +71,7 @@ const PlayBar = ({
         <h2>
           <div className="user-bar">
             <img src={penguinmall} alt={opponentName} />
-            <h3>{opponentName}</h3>
+            <h3 className="userBarName">{opponentName}</h3>
             <ScoreKeeper cardTally={opponentTally} />
           </div>
         </h2>
