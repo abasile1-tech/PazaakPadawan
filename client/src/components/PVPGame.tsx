@@ -127,7 +127,7 @@ function PVPGame(): JSX.Element {
     sessionID: string,
     gameState: GameState
   ) {
-    await delay(10000);
+    await delay(20000);
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
@@ -181,7 +181,7 @@ function PVPGame(): JSX.Element {
       gameState: gameState,
       sessionID: sessionID,
     };
-    console.log('HERE MO FO', gameObject);
+    console.log('LOOK HERE', gameObject);
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
