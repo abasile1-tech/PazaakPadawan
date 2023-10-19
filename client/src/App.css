@@ -417,6 +417,8 @@
   background-color: #213547;
   border-radius: 10px;
   height: calc(100vh - 350px);
+  padding: 20px;
+
 }
 
 .right-box {
@@ -438,7 +440,7 @@
   font-size: 16px;
   width: 200px; 
   height: 30px; 
-  margin: 10px;
+  margin: 10px auto;
 
 }
 
