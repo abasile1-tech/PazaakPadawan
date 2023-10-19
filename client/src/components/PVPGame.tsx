@@ -317,11 +317,13 @@ function PVPGame(): JSX.Element {
     gameState: GameState,
     sessionID: string
   ) {
-    stompClient?.send(
-      '/app/message',
-      {},
-      JSON.stringify({ player, otherPlayer, gameState, sessionID })
-    );
+    if (player || otherPlayer || gameState || sessionID) {
+      stompClient?.send(
+        '/app/updateGame',
+        {},
+        JSON.stringify({ player, otherPlayer, gameState, sessionID })
+      );
+    }
   }
 
   const navigate = useNavigate();
