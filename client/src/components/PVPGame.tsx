@@ -1,6 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -119,6 +119,36 @@ function PVPGame(): JSX.Element {
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
   const [sessionID, setSessionID] = useState('');
+  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
+  async function updateGameObject(
+    player: Player,
+    otherPlayer: Player,
+    sessionID: string,
+    gameState: GameState
+  ) {
+    await delay(10000);
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify({
+        player1: player,
+        player2: otherPlayer,
+        sessionID: sessionID,
+        gameState: gameState,
+      })
+    );
+  }
+
+  useEffect(() => {
+    updateGameObject(player, otherPlayer, sessionID, gameState);
+  }, [player, otherPlayer, sessionID, gameState]);
 
   const connectToWs = () => {
     // const url = import.meta.env.PROD
@@ -205,20 +235,20 @@ function PVPGame(): JSX.Element {
     return randomHand;
   }
 
-  function sendUpdateToWebSocket(
-    player: Player,
-    otherPlayer: Player,
-    gameState: GameState,
-    sessionID: string
-  ) {
-    if (player || otherPlayer || gameState || sessionID) {
-      stompClient?.send(
-        '/app/updateGame',
-        {},
-        JSON.stringify({ player, otherPlayer, gameState, sessionID })
-      );
-    }
-  }
+  // function sendUpdateToWebSocket(
+  //   player: Player,
+  //   otherPlayer: Player,
+  //   gameState: GameState,
+  //   sessionID: string
+  // ) {
+  //   if (player || otherPlayer || gameState || sessionID) {
+  //     stompClient?.send(
+  //       '/app/updateGame',
+  //       {},
+  //       JSON.stringify({ player, otherPlayer, gameState, sessionID })
+  //     );
+  //   }
+  // }
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -266,12 +296,12 @@ function PVPGame(): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       setOtherPlayer(newOtherPlayer);
-      sendUpdateToWebSocket(
-        newPlayer,
-        newOtherPlayer,
-        GameState.STARTED,
-        sessionID
-      );
+      // sendUpdateToWebSocket(
+      //   newPlayer,
+      //   newOtherPlayer,
+      //   GameState.STARTED,
+      //   sessionID
+      // );
     }
   }
 
@@ -305,12 +335,12 @@ function PVPGame(): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       setPlayer(newPlayer);
-      sendUpdateToWebSocket(
-        newPlayer,
-        newOtherPlayer,
-        GameState.STARTED,
-        sessionID
-      );
+      // sendUpdateToWebSocket(
+      //   newPlayer,
+      //   newOtherPlayer,
+      //   GameState.STARTED,
+      //   sessionID
+      // );
     }
   }
 
@@ -416,7 +446,7 @@ function PVPGame(): JSX.Element {
     setPlayer(newPlayer);
 
     setGameState(GameState.STARTED);
-    sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
+    // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
   }
 
   function endOfRoundCleaning(player: Player, otherPlayer: Player) {
@@ -450,12 +480,12 @@ function PVPGame(): JSX.Element {
     setOtherPlayer(newOtherPlayer);
 
     setGameState(GameState.INITIAL);
-    sendUpdateToWebSocket(
-      newPlayer,
-      newOtherPlayer,
-      GameState.INITIAL,
-      sessionID
-    );
+    // sendUpdateToWebSocket(
+    //   newPlayer,
+    //   newOtherPlayer,
+    //   GameState.INITIAL,
+    //   sessionID
+    // );
   }
 
   function moveCard(card: JSX.Element, index: number) {
@@ -480,7 +510,7 @@ function PVPGame(): JSX.Element {
         playedCardThisTurn: true,
       };
       setPlayer(newPlayer);
-      sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
+      // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
     }
 
     if (
@@ -502,7 +532,7 @@ function PVPGame(): JSX.Element {
         playedCardThisTurn: true,
       };
       setOtherPlayer(newOtherPlayer);
-      sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
+      // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
 
