@@ -64,11 +64,12 @@
 
 
 .menu-button {
-  font-size: 30px; 
+  font-size: 15px; 
   cursor: pointer;
   background-color: #213547;
    color: white;
   margin-right: 40px; 
+  margin: 5px;
 }
 
 .gameButtons {
