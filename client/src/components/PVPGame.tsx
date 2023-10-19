@@ -151,11 +151,11 @@ function PVPGame(): JSX.Element {
   }, [player, otherPlayer, sessionID, gameState]);
 
   const connectToWs = () => {
-    // const url = import.meta.env.PROD
-    //   ? import.meta.env.VITE_PROD_URL
-    //   : import.meta.env.VITE_DEV_URL;
-    // const Sock = new SockJS(url + 'ws');
-    const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
+    const url = import.meta.env.PROD
+      ? import.meta.env.VITE_PROD_URL
+      : import.meta.env.VITE_DEV_URL;
+    const Sock = new SockJS(url + 'ws');
+    // const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
     stompClient = over(Sock);
     stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
   };
