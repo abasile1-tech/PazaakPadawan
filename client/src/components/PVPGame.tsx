@@ -494,7 +494,18 @@ function PVPGame(): JSX.Element {
         setGameState={setGameState}
         setSessionID={setSessionID}
       />
-      <button onClick={() => chatRef?.current?.updateGame()}>Click</button>
+      <button
+        onClick={() =>
+          chatRef?.current?.updateGame(
+            player,
+            otherPlayer,
+            gameState,
+            sessionID
+          )
+        }
+      >
+        Click
+      </button>
     </>
   );
 }
