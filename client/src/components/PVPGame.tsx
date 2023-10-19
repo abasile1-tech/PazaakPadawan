@@ -171,31 +171,31 @@ function PVPGame(): JSX.Element {
     stompClient.subscribe('/game/updated', onGameUpdatedReceived, {
       id: 'game',
     });
-    // sendInitialConnectingData();
+    sendInitialConnectingData();
   };
 
-  // const sendInitialConnectingData = () => {
-  //   // We will always set the player1 name to the user name on initial connection.
-  //   // The backend will handle assigning the players.
-  //   const gameObject: GameObject = {
-  //     player1: player,
-  //     player2: otherPlayer,
-  //     gameState: gameState,
-  //     sessionID: sessionID,
-  //   };
-  //   console.log('HERE MO FO', gameObject);
-  //   if (!stompClient?.connected) {
-  //     console.warn('stompClient is undefined. Unable to send message.');
-  //     return;
-  //   }
-  //   stompClient.send(
-  //     '/app/updateGame',
-  //     {
-  //       id: 'game',
-  //     },
-  //     JSON.stringify(gameObject)
-  //   );
-  // };
+  const sendInitialConnectingData = () => {
+    // We will always set the player1 name to the user name on initial connection.
+    // The backend will handle assigning the players.
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState: gameState,
+      sessionID: sessionID,
+    };
+    console.log('HERE MO FO', gameObject);
+    if (!stompClient?.connected) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
+  };
 
   const onError = (err: string | Frame) => {
     console.log(err);
