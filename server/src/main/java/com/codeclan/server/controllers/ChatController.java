@@ -1,13 +1,11 @@
 package com.codeclan.server.controllers;
 
 import com.codeclan.server.models.GameObject;
-import com.codeclan.server.models.InitialConnectingData;
 import com.codeclan.server.models.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
-import org.springframework.http.ResponseEntity;
 
 import java.util.ArrayList;
 
@@ -45,6 +43,7 @@ public class ChatController {
                 gameObjects) {
             if (gameObject.getSessionID().equals(frontEndGameObject.getSessionID())) {
                 sessionExists = true;
+                break;
             }
         }
 
@@ -64,17 +63,4 @@ public class ChatController {
         // If we get to here, the session exists and has player1 and player2 so just return the passed in value
         return frontEndGameObject;
     }
-
-//    @MessageMapping("/initialConnection")
-//    @SendTo("/game/initialConnection")
-//    private InitialConnectingData receivePublicMessage(@Payload InitialConnectingData initialConnectingData){
-//        System.out.printf("Initial Connection Data received: %s\n",initialConnectingData);
-//        for (GameObject gameObject:
-//             gameObjects) {
-//            if (gameObject.getSessionID().equals(initialConnectingData.getSessionID())) {
-//                gameObject.setPlayer2();
-//            }
-//        }
-//        return initialConnectingData;
-//    }
 }
