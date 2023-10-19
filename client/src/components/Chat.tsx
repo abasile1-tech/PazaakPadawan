@@ -83,7 +83,13 @@ const Chat = forwardRef(
     });
 
     useImperativeHandle(ref, () => ({
-      updateGame() {
+      updateGame(
+        player: Player,
+        otherPlayer: Player,
+        gameState: GameState,
+        sessionID: string
+      ) {
+        console.log('ABOUT TO SEND', JSON.stringify(player), otherPlayer);
         if (!stompClient) {
           console.warn('stompClient is undefined. Unable to send message.');
           return;
@@ -93,7 +99,7 @@ const Chat = forwardRef(
           {
             id: 'game',
           },
-          JSON.stringify(gameObject)
+          JSON.stringify({ player, otherPlayer, gameState, sessionID })
         );
       },
     }));
@@ -169,6 +175,7 @@ const Chat = forwardRef(
         player1: player1,
         sessionID: userData.sessionID,
       };
+      console.log('HERE MO FO', player1);
       if (!stompClient) {
         console.warn('stompClient is undefined. Unable to send message.');
         return;
@@ -193,10 +200,12 @@ const Chat = forwardRef(
     const onGameUpdatedReceived = (payload: Payload) => {
       const payloadData = JSON.parse(payload.body);
       console.log('payloadData: ', payloadData);
-      setPlayer(payloadData.player1);
-      setOtherPlayer(payloadData.player2);
-      setGameState(payloadData.gameState);
-      setSessionID(payloadData.sessionID);
+      if (gameObject.sessionID === payloadData.sessionID) {
+        setPlayer(payloadData.player1);
+        setOtherPlayer(payloadData.player2);
+        setGameState(payloadData.gameState);
+        setSessionID(payloadData.sessionID);
+      }
     };
 
     const onPublicMessageReceived = (payload: Payload) => {

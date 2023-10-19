@@ -1,6 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState, useRef, MutableRefObject } from 'react';
+import { useState, useRef } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -107,11 +107,16 @@ function PVPGame(): JSX.Element {
 
   const chatRef = useRef();
 
-  function sendUpdateToWebSocket() {
-    if (chatRef?.current) {
-      chatRef.current.updateGame();
-    }
-  }
+  // function sendUpdateToWebSocket(
+  //   player: Player,
+  //   otherPlayer: Player,
+  //   gameState: GameState,
+  //   sessionID: string
+  // ) {
+  //   if (chatRef?.current) {
+  //     chatRef.current.updateGame(player, otherPlayer, gameState, sessionID);
+  //   }
+  // }
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -159,8 +164,13 @@ function PVPGame(): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       setOtherPlayer(newOtherPlayer);
+      // sendUpdateToWebSocket(
+      //   newPlayer,
+      //   newOtherPlayer,
+      //   GameState.STARTED,
+      //   sessionID
+      // );
     }
-    sendUpdateToWebSocket();
   }
 
   async function handleOtherPlayerEndTurnButtonClick() {
@@ -193,8 +203,13 @@ function PVPGame(): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       setPlayer(newPlayer);
+      // sendUpdateToWebSocket(
+      //   newPlayer,
+      //   newOtherPlayer,
+      //   GameState.STARTED,
+      //   sessionID
+      // );
     }
-    sendUpdateToWebSocket();
   }
 
   function getRoundWinner(player: Player, otherPlayer: Player) {
@@ -262,7 +277,6 @@ function PVPGame(): JSX.Element {
     setOtherPlayer(newOtherPlayer);
 
     endOfRoundCleaning(newPlayer, newOtherPlayer);
-    sendUpdateToWebSocket();
   }
 
   async function handleOtherPlayerStandButtonClick() {
@@ -285,7 +299,6 @@ function PVPGame(): JSX.Element {
     setPlayer(newPlayer);
 
     endOfRoundCleaning(newPlayer, newOtherPlayer);
-    sendUpdateToWebSocket();
   }
 
   async function handleStartButtonClick() {
@@ -301,7 +314,7 @@ function PVPGame(): JSX.Element {
     setPlayer(newPlayer);
 
     setGameState(GameState.STARTED);
-    sendUpdateToWebSocket();
+    // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
   }
 
   function endOfRoundCleaning(player: Player, otherPlayer: Player) {
@@ -313,7 +326,7 @@ function PVPGame(): JSX.Element {
     } else {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    setPlayer({
+    const newPlayer = {
       ...player,
       hand: player.hand,
       table: [],
@@ -321,8 +334,9 @@ function PVPGame(): JSX.Element {
       action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
-    });
-    setOtherPlayer({
+    };
+    setPlayer(newPlayer);
+    const newOtherPlayer = {
       ...otherPlayer,
       hand: otherPlayer.hand,
       table: [],
@@ -330,10 +344,16 @@ function PVPGame(): JSX.Element {
       action: PlayerState.PLAY,
       gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
       playedCardThisTurn: false,
-    });
+    };
+    setOtherPlayer(newOtherPlayer);
 
     setGameState(GameState.INITIAL);
-    sendUpdateToWebSocket();
+    // sendUpdateToWebSocket(
+    //   newPlayer,
+    //   newOtherPlayer,
+    //   GameState.INITIAL,
+    //   sessionID
+    // );
   }
 
   function moveCard(card: JSX.Element, index: number) {
@@ -347,7 +367,7 @@ function PVPGame(): JSX.Element {
       const audio = new Audio(cardflip);
       audio.play();
       player.hand.splice(index, 1);
-      setPlayer({
+      const newPlayer = {
         ...player,
         hand: player.hand,
         table: [
@@ -356,8 +376,9 @@ function PVPGame(): JSX.Element {
         ],
         tally: player.tally + card.props.value,
         playedCardThisTurn: true,
-      });
-      sendUpdateToWebSocket();
+      };
+      setPlayer(newPlayer);
+      // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
     }
 
     if (
@@ -368,7 +389,7 @@ function PVPGame(): JSX.Element {
       const audio = new Audio(cardflip);
       audio.play();
       otherPlayer.hand.splice(index, 1);
-      setOtherPlayer({
+      const newOtherPlayer = {
         ...otherPlayer,
         hand: otherPlayer.hand,
         table: [
@@ -377,8 +398,9 @@ function PVPGame(): JSX.Element {
         ],
         tally: otherPlayer.tally + card.props.value,
         playedCardThisTurn: true,
-      });
-      sendUpdateToWebSocket();
+      };
+      setOtherPlayer(newOtherPlayer);
+      // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
 
@@ -472,6 +494,7 @@ function PVPGame(): JSX.Element {
         setGameState={setGameState}
         setSessionID={setSessionID}
       />
+      <button onClick={() => chatRef?.current?.updateGame()}>Click</button>
     </>
   );
 }

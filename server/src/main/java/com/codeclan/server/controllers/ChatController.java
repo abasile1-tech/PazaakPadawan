@@ -27,6 +27,7 @@ public class ChatController {
     @SendTo("/game/updated")
     private GameObject receiveGameObject(@Payload GameObject frontEndGameObject){
         System.out.printf("Game object received: %s\n", frontEndGameObject);
+        // If the session exists, there should be a player1, so we will set player2
         for (GameObject gameObject:
                 gameObjects) {
             if (gameObject.getSessionID().equals(frontEndGameObject.getSessionID()) && !gameObject.getPlayer1().getName().equals(frontEndGameObject.getPlayer1().getName())) {
@@ -37,16 +38,31 @@ public class ChatController {
                 return gameObject;
             }
         }
-        GameObject newGame = new GameObject(
-                frontEndGameObject.getPlayer1(),
-                frontEndGameObject.getPlayer2(), // fake player passed by frontend
-                frontEndGameObject.getGameState(),
-                frontEndGameObject.getSessionID()
-        );
-        gameObjects.add(newGame);
-        System.out.printf("This is the second attempt, session id found: %s\n",newGame.getSessionID());
-        System.out.printf("Print game objects: %s\n", gameObjects);
-        return newGame;
+
+        // If the session does not exist, we need to create it and add it to the games
+        boolean sessionExists = false;
+        for (GameObject gameObject:
+                gameObjects) {
+            if (gameObject.getSessionID().equals(frontEndGameObject.getSessionID())) {
+                sessionExists = true;
+            }
+        }
+
+        if (!sessionExists) {
+            GameObject newGame = new GameObject(
+                    frontEndGameObject.getPlayer1(),
+                    frontEndGameObject.getPlayer2(), // fake player passed by frontend
+                    frontEndGameObject.getGameState(),
+                    frontEndGameObject.getSessionID()
+            );
+            gameObjects.add(newGame);
+            System.out.printf("This is the second attempt, session id found: %s\n",newGame.getSessionID());
+            System.out.printf("Print game objects: %s\n", gameObjects);
+            return newGame;
+        }
+
+        // If we get to here, the session exists and has player1 and player2 so just return the passed in value
+        return frontEndGameObject;
     }
 
 //    @MessageMapping("/initialConnection")
