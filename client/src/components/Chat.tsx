@@ -57,6 +57,8 @@ interface ChatProps {
   setSessionID: React.Dispatch<SetStateAction<string>>;
 }
 
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 const Chat: React.FC<ChatProps> = ({
   gameObject,
   setPlayer,
@@ -73,28 +75,24 @@ const Chat: React.FC<ChatProps> = ({
     sessionID: '',
   });
 
-  // useEffect(() => {
-  //   const updateGameObject = () => {
-  //     if (!stompClient) {
-  //       console.warn('stompClient is undefined. Unable to send message.');
-  //       return;
-  //     }
-  //     stompClient.send(
-  //       '/app/updateGame',
-  //       {
-  //         id: 'game',
-  //       },
-  //       JSON.stringify(gameObject)
-  //     );
-  //   };
-  //   updateGameObject();
-  // }, [
-  //   gameObject,
-  //   gameObject.player1,
-  //   gameObject.player2,
-  //   gameObject.gameState,
-  //   gameObject.sessionID,
-  // ]);
+  async function updateGameObject(gameObject: GameObject) {
+    await delay(10000);
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
+  }
+
+  useEffect(() => {
+    updateGameObject(gameObject);
+  }, [gameObject]);
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
