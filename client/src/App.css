@@ -64,10 +64,11 @@
 
 
 .menu-button {
-  font-size: 15px; 
+  font-size: 30px; 
   cursor: pointer;
   background-color: #213547;
-  color: white;
+   color: white;
+  margin-right: 40px; 
 }
 
 .gameButtons {
@@ -339,7 +340,12 @@
     text-decoration-color: white;
     margin: 1px;
 }
-  
+/* instruction */
+.instruction-container{
+  margin-left: 200px;
+  margin-right: 200px;
+}
+/* instruction */
 
 
 /* popup message */
