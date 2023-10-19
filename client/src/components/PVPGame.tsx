@@ -1,6 +1,6 @@
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -9,7 +9,48 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
-import Chat from './Chat';
+import { over, Client, Frame } from 'stompjs';
+import SockJS from 'sockjs-client';
+
+let stompClient: Client | null = null;
+
+interface PublicChat {
+  senderName: string;
+  receiverName: string;
+  message: string;
+  date: Date;
+  status: string;
+  sessionID: string;
+}
+
+enum GameState {
+  INITIAL = 'initial',
+  STARTED = 'started',
+  ENDED = 'ended',
+}
+
+enum PlayerState {
+  PLAY = 'play',
+  STAND = 'stand',
+  ENDTURN = 'endturn',
+}
+
+interface CardProps {
+  value: number;
+  color: string;
+}
+
+interface Player {
+  name: string;
+  action: PlayerState;
+  wonGame: boolean;
+  isTurn: boolean;
+  hand: CardProps[];
+  tally: number;
+  table: CardProps[];
+  gamesWon: number;
+  playedCardThisTurn: boolean;
+}
 
 interface DeckCard {
   value: number;
@@ -35,16 +76,15 @@ interface Player {
   playedCardThisTurn: boolean;
 }
 
-enum GameState {
-  INITIAL = 'initial',
-  STARTED = 'started',
-  ENDED = 'ended',
+interface Payload {
+  body: string;
 }
 
-enum PlayerState {
-  PLAY = 'play',
-  STAND = 'stand',
-  ENDTURN = 'endturn',
+interface GameObject {
+  player1: Player;
+  player2: Player;
+  gameState: GameState;
+  sessionID: string;
 }
 
 function PVPGame(): JSX.Element {
@@ -52,6 +92,172 @@ function PVPGame(): JSX.Element {
   const selectedHand = location?.state?.selectedHand;
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+  const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
+  const [userData, setUserData] = useState({
+    username: '',
+    receiverName: '',
+    connected: false,
+    message: '',
+    sessionID: '',
+  });
+
+  // function updateGame(
+  //   player: Player,
+  //   otherPlayer: Player,
+  //   gameState: GameState,
+  //   sessionID: string
+  // ) {
+  //   console.log('ABOUT TO SEND', JSON.stringify(player), otherPlayer);
+  //   if (!stompClient) {
+  //     console.warn('stompClient is undefined. Unable to send message.');
+  //     return;
+  //   }
+  //   stompClient.send(
+  //     '/app/updateGame',
+  //     {
+  //       id: 'game',
+  //     },
+  //     JSON.stringify({ player, otherPlayer, gameState, sessionID })
+  //   );
+  // }
+
+  const handleUserName = (event: { target: HTMLInputElement }) => {
+    if (!event || !event.target) {
+      console.warn('event is null');
+      return;
+    }
+    const { value } = event.target;
+    setUserData({ ...userData, username: value });
+  };
+
+  const handleSessionID = (event: { target: HTMLInputElement }) => {
+    if (!event || !event.target) {
+      console.warn('event is null');
+      return;
+    }
+    const { value } = event.target;
+    setUserData({ ...userData, sessionID: value });
+  };
+
+  const handleMessage = (event: { target: HTMLInputElement }) => {
+    if (!event || !event.target) {
+      console.warn('event is null');
+      return;
+    }
+    const { value } = event.target;
+    setUserData({ ...userData, message: value });
+  };
+  const registerUser = () => {
+    // const url = import.meta.env.PROD
+    //   ? import.meta.env.VITE_PROD_URL
+    //   : import.meta.env.VITE_DEV_URL;
+    // const Sock = new SockJS(url + 'ws');
+    const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
+    stompClient = over(Sock);
+    stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
+  };
+
+  const onConnected = () => {
+    setUserData({ ...userData, connected: true });
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to subcribe to events.');
+      return;
+    }
+    stompClient.subscribe('/chatroom/public', onPublicMessageReceived, {});
+    stompClient.subscribe('/game/updated', onGameUpdatedReceived, {
+      id: 'game',
+    });
+    userJoin();
+    sendInitialConnectingData();
+  };
+
+  const userJoin = () => {
+    const chatMessage = {
+      senderName: userData.username,
+      status: 'JOIN',
+    };
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+  };
+
+  const sendInitialConnectingData = () => {
+    // We will always set the player1 name to the user name on initial connection.
+    // The backend will handle assigning the players.
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState: gameState,
+      sessionID: sessionID,
+    };
+    const player1 = { ...gameObject.player1, name: userData.username };
+    const initialConnectingData = {
+      ...gameObject,
+      player1: player1,
+      sessionID: userData.sessionID,
+    };
+    console.log('HERE MO FO', player1);
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(initialConnectingData)
+    );
+  };
+
+  const onError = (err: string | Frame) => {
+    console.log(err);
+  };
+
+  const onGameUpdatedReceived = (payload: Payload) => {
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState: gameState,
+      sessionID: sessionID,
+    };
+    const payloadData = JSON.parse(payload.body);
+    console.log('payloadData: ', payloadData);
+    if (gameObject.sessionID === payloadData.sessionID) {
+      setPlayer(payloadData.player1);
+      setOtherPlayer(payloadData.player2);
+      setGameState(payloadData.gameState);
+      setSessionID(payloadData.sessionID);
+    }
+  };
+
+  const onPublicMessageReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
+    switch (payloadData.status) {
+      case 'MESSAGE':
+        publicChats.push(payloadData);
+        setPublicChats([...publicChats]);
+        break;
+    }
+  };
+
+  const sendPublicMessage = () => {
+    if (stompClient) {
+      const today = new Date();
+      const chatMessage = {
+        senderName: userData.username,
+        receiverName: 'hard-coded receiver name',
+        message: userData.message,
+        status: 'MESSAGE',
+        date: today,
+        sessionID: userData.sessionID,
+      };
+      stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+      setUserData({ ...userData, message: '' });
+    }
+  };
   function generateRandomHand() {
     const randomHand = [];
     for (let i = 0; i < 4; i++) {
@@ -105,18 +311,18 @@ function PVPGame(): JSX.Element {
   const [gameState, setGameState] = useState(GameState.INITIAL);
   const [sessionID, setSessionID] = useState('');
 
-  const chatRef = useRef();
-
-  // function sendUpdateToWebSocket(
-  //   player: Player,
-  //   otherPlayer: Player,
-  //   gameState: GameState,
-  //   sessionID: string
-  // ) {
-  //   if (chatRef?.current) {
-  //     chatRef.current.updateGame(player, otherPlayer, gameState, sessionID);
-  //   }
-  // }
+  function sendUpdateToWebSocket(
+    player: Player,
+    otherPlayer: Player,
+    gameState: GameState,
+    sessionID: string
+  ) {
+    stompClient?.send(
+      '/app/message',
+      {},
+      JSON.stringify({ player, otherPlayer, gameState, sessionID })
+    );
+  }
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -164,12 +370,12 @@ function PVPGame(): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       setOtherPlayer(newOtherPlayer);
-      // sendUpdateToWebSocket(
-      //   newPlayer,
-      //   newOtherPlayer,
-      //   GameState.STARTED,
-      //   sessionID
-      // );
+      sendUpdateToWebSocket(
+        newPlayer,
+        newOtherPlayer,
+        GameState.STARTED,
+        sessionID
+      );
     }
   }
 
@@ -203,12 +409,12 @@ function PVPGame(): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       setPlayer(newPlayer);
-      // sendUpdateToWebSocket(
-      //   newPlayer,
-      //   newOtherPlayer,
-      //   GameState.STARTED,
-      //   sessionID
-      // );
+      sendUpdateToWebSocket(
+        newPlayer,
+        newOtherPlayer,
+        GameState.STARTED,
+        sessionID
+      );
     }
   }
 
@@ -314,7 +520,7 @@ function PVPGame(): JSX.Element {
     setPlayer(newPlayer);
 
     setGameState(GameState.STARTED);
-    // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
+    sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
   }
 
   function endOfRoundCleaning(player: Player, otherPlayer: Player) {
@@ -348,12 +554,12 @@ function PVPGame(): JSX.Element {
     setOtherPlayer(newOtherPlayer);
 
     setGameState(GameState.INITIAL);
-    // sendUpdateToWebSocket(
-    //   newPlayer,
-    //   newOtherPlayer,
-    //   GameState.INITIAL,
-    //   sessionID
-    // );
+    sendUpdateToWebSocket(
+      newPlayer,
+      newOtherPlayer,
+      GameState.INITIAL,
+      sessionID
+    );
   }
 
   function moveCard(card: JSX.Element, index: number) {
@@ -378,7 +584,7 @@ function PVPGame(): JSX.Element {
         playedCardThisTurn: true,
       };
       setPlayer(newPlayer);
-      // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
+      sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
     }
 
     if (
@@ -400,7 +606,7 @@ function PVPGame(): JSX.Element {
         playedCardThisTurn: true,
       };
       setOtherPlayer(newOtherPlayer);
-      // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
+      sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
 
@@ -481,31 +687,48 @@ function PVPGame(): JSX.Element {
           )}
         </div>
       </div>
-      <Chat
-        ref={chatRef}
-        gameObject={{
-          player1: player,
-          player2: otherPlayer,
-          gameState: gameState,
-          sessionID: sessionID,
-        }}
-        setPlayer={setPlayer}
-        setOtherPlayer={setOtherPlayer}
-        setGameState={setGameState}
-        setSessionID={setSessionID}
-      />
-      <button
-        onClick={() =>
-          chatRef?.current?.updateGame(
-            player,
-            otherPlayer,
-            gameState,
-            sessionID
-          )
-        }
-      >
-        Click
-      </button>
+      <div>
+        {userData.connected ? (
+          <div>
+            <h2>Your username: {userData.username} </h2>
+            <h2>Your session ID: {userData.sessionID}</h2>
+            <div>
+              {publicChats.map((chat, index) => (
+                <div key={index}>
+                  {chat.senderName}: {chat.message}
+                </div>
+              ))}
+            </div>
+            <input
+              type="text"
+              placeholder="Type message here..."
+              value={userData.message}
+              onChange={handleMessage}
+            />
+            <button type="button" onClick={sendPublicMessage}>
+              Send
+            </button>
+          </div>
+        ) : (
+          <div>
+            <input
+              id="user-name"
+              placeholder="Enter the user name"
+              value={userData.username}
+              onChange={handleUserName}
+            />
+            <input
+              id="session-id"
+              placeholder="Enter the session id"
+              value={userData.sessionID}
+              onChange={handleSessionID}
+            />
+            <button type="button" onClick={registerUser}>
+              connect
+            </button>
+          </div>
+        )}
+      </div>
     </>
   );
 }
