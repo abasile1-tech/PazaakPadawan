@@ -119,7 +119,7 @@ function PVPGame(): JSX.Element {
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
   const [sessionID, setSessionID] = useState('');
-  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
 
   async function updateGameObject(
     player: Player,
@@ -127,23 +127,25 @@ function PVPGame(): JSX.Element {
     sessionID: string,
     gameState: GameState
   ) {
-    await delay(10000);
-    if (!stompClient) {
+    // await delay(10000);
+    if (!stompClient?.connected) {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
     }
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify({
-        player1: player,
-        player2: otherPlayer,
-        sessionID: sessionID,
-        gameState: gameState,
-      })
-    );
+    if (sessionID !== '' && player.name !== '') {
+      stompClient.send(
+        '/app/updateGame',
+        {
+          id: 'game',
+        },
+        JSON.stringify({
+          player1: player,
+          player2: otherPlayer,
+          sessionID: sessionID,
+          gameState: gameState,
+        })
+      );
+    }
   }
 
   useEffect(() => {
@@ -161,7 +163,7 @@ function PVPGame(): JSX.Element {
   };
 
   const onConnected = () => {
-    if (!stompClient) {
+    if (!stompClient?.connected) {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
     }
@@ -169,31 +171,31 @@ function PVPGame(): JSX.Element {
     stompClient.subscribe('/game/updated', onGameUpdatedReceived, {
       id: 'game',
     });
-    sendInitialConnectingData();
+    // sendInitialConnectingData();
   };
 
-  const sendInitialConnectingData = () => {
-    // We will always set the player1 name to the user name on initial connection.
-    // The backend will handle assigning the players.
-    const gameObject: GameObject = {
-      player1: player,
-      player2: otherPlayer,
-      gameState: gameState,
-      sessionID: sessionID,
-    };
-    console.log('HERE MO FO', gameObject);
-    if (!stompClient) {
-      console.warn('stompClient is undefined. Unable to send message.');
-      return;
-    }
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
-  };
+  // const sendInitialConnectingData = () => {
+  //   // We will always set the player1 name to the user name on initial connection.
+  //   // The backend will handle assigning the players.
+  //   const gameObject: GameObject = {
+  //     player1: player,
+  //     player2: otherPlayer,
+  //     gameState: gameState,
+  //     sessionID: sessionID,
+  //   };
+  //   console.log('HERE MO FO', gameObject);
+  //   if (!stompClient?.connected) {
+  //     console.warn('stompClient is undefined. Unable to send message.');
+  //     return;
+  //   }
+  //   stompClient.send(
+  //     '/app/updateGame',
+  //     {
+  //       id: 'game',
+  //     },
+  //     JSON.stringify(gameObject)
+  //   );
+  // };
 
   const onError = (err: string | Frame) => {
     console.log(err);

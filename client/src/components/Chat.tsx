@@ -85,11 +85,11 @@ const Chat = ({
   };
 
   const registerUser = () => {
-    connectToWs();
-    console.log('CONNECTING TO WEBSOCKET');
     setUserData({ ...userData, connected: true });
     setSessionID(userData.sessionID);
     setPlayer({ ...player1, name: userData.username });
+    connectToWs();
+    console.log('CONNECTING TO WEBSOCKET');
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
