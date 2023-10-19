@@ -57,6 +57,7 @@ button:focus-visible {
 button:disabled {
   background-color: grey;
   color: white;
+  cursor: not-allowed;
 }
 
 @media (prefers-color-scheme: light) {
