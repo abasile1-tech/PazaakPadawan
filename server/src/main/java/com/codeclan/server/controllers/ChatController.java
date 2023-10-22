@@ -1,5 +1,6 @@
 package com.codeclan.server.controllers;
 
+import com.codeclan.server.models.Card;
 import com.codeclan.server.models.GameObject;
 import com.codeclan.server.models.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Controller
@@ -73,5 +75,12 @@ public class ChatController {
     private String receivePlayerName(@Payload String playerName){
         System.out.printf("Player name received: %s\n",playerName);
         return playerName;
+    }
+
+    @MessageMapping("/updateHand")
+    @SendTo("/game/hand")
+    private ArrayList<Card> receiveHand(@Payload ArrayList<Card> hand){
+        System.out.printf("Hand received: %s\n",hand);
+        return hand;
     }
 }

@@ -18,14 +18,19 @@ interface DeckCard {
   imagePath: string;
 }
 
+interface CardProps {
+  value: number;
+  color: string;
+}
+
 interface Player {
   name: string;
   action: PlayerState;
   wonGame: boolean;
   isTurn: boolean;
-  hand: JSX.Element[];
+  hand: CardProps[];
   tally: number;
-  table: JSX.Element[];
+  table: CardProps[];
   gamesWon: number;
   playedCardThisTurn: boolean;
 }
@@ -58,7 +63,7 @@ interface PVPGameProps {
 function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
-  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
 
@@ -68,21 +73,14 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       const randomValue = Math.floor(Math.random() * 6) + 1;
       const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
       if (randomColor === 'red') {
-        randomHand.push(
-          <Card
-            value={-randomValue}
-            color={randomColor}
-            cardType="normal_card"
-          />
-        );
+        const cardProps: CardProps = {
+          value: -randomValue,
+          color: randomColor,
+        };
+        randomHand.push(cardProps);
       } else {
-        randomHand.push(
-          <Card
-            value={randomValue}
-            color={randomColor}
-            cardType="normal_card"
-          />
-        );
+        const cardProps: CardProps = { value: randomValue, color: randomColor };
+        randomHand.push(cardProps);
       }
     }
     return randomHand;
@@ -93,9 +91,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     wonGame: false,
     isTurn: false,
     hand: selectedHand
-      ? selectedHand.map((card: DeckCard) => (
-          <Card value={card.value} color={card.color} cardType="normal_card" />
-        ))
+      ? selectedHand.map((card: DeckCard) => ({
+          value: card.value,
+          color: card.color,
+        }))
       : generateRandomHand(),
     tally: 0,
     table: [],
@@ -132,73 +131,162 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
   }
-  function addCardToTable(newPlayer: Player): Player | null {
+  // function addCardToTable(newPlayer: Player): Player | null {
+  //   const audio = new Audio(cardflip);
+  //   audio.play();
+  //   const randomNumber = getRandomNumber();
+  //   const newCard = (
+  //     <Card value={randomNumber} color="green" cardType="normal_card" />
+  //   );
+  //   if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
+  //     setPlayer({
+  //       ...newPlayer,
+  //       tally: newPlayer.tally + randomNumber,
+  //       table: [...newPlayer.table, newCard],
+  //       action: PlayerState.PLAY,
+  //     });
+  //     return null;
+  //   }
+  //   if (newPlayer.action == PlayerState.STAND) {
+  //     console.log('player stood');
+  //   }
+
+  //   if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
+  //     console.log('otherPlayer.action before', otherPlayer.action);
+  //     const newOtherPlayer = {
+  //       ...otherPlayer,
+  //       tally: otherPlayer.tally + randomNumber,
+  //       table: [...otherPlayer.table, newCard],
+  //       action: PlayerState.PLAY,
+  //     };
+  //     setOtherPlayer(newOtherPlayer);
+  //     console.log('otherPlayer.action after', otherPlayer.action);
+  //     return newOtherPlayer;
+  //   }
+  //   console.log('both stood');
+  //   return null;
+  // }
+
+  //new
+  function getNewCardForTable(): CardProps {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
-    const newCard = (
-      <Card value={randomNumber} color="green" cardType="normal_card" />
-    );
-    if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
-      setPlayer({
-        ...newPlayer,
-        tally: newPlayer.tally + randomNumber,
-        table: [...newPlayer.table, newCard],
-        action: PlayerState.PLAY,
-      });
-      return null;
-    }
-    if (newPlayer.action == PlayerState.STAND) {
-      console.log('player stood');
-    }
-
-    if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
-      console.log('otherPlayer.action before', otherPlayer.action);
-      const newOtherPlayer = {
-        ...otherPlayer,
-        tally: otherPlayer.tally + randomNumber,
-        table: [...otherPlayer.table, newCard],
-        action: PlayerState.PLAY,
-      };
-      setOtherPlayer(newOtherPlayer);
-      console.log('otherPlayer.action after', otherPlayer.action);
-      return newOtherPlayer;
-    }
-    console.log('both stood');
-    return null;
+    return { value: randomNumber, color: 'green' };
   }
 
-  async function handleEndTurnButtonClick() {
+  // async function handleEndTurnButtonClick() {
+  //   const newPlayer = {
+  //     ...player,
+  //     isTurn: false,
+  //     action: PlayerState.ENDTURN,
+  //   };
+  //   setPlayer(newPlayer);
+  //   console.log(
+  //     'newPlayer, newPlayer.action',
+  //     newPlayer,
+  //     ', ',
+  //     newPlayer.action
+  //   );
+  //   const newOtherPlayer = addCardToTable(newPlayer);
+  //   const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
+  //   await delay(3000); // wait for 3 seconds while the AI "decides..."
+  //   if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
+  //     await endOfRoundCleaning(ePlayer);
+  //   } else {
+  //     setGameState(GameState.STARTED);
+  //     const newPlayer = {
+  //       ...player,
+  //       isTurn: true,
+  //       playedCardThisTurn: false,
+  //     };
+  //     setPlayer(newPlayer);
+  //     addCardToTable(newPlayer);
+  //   }
+  // }
+
+  // new
+  function handlePlayerEndTurnButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
       action: PlayerState.ENDTURN,
     };
     setPlayer(newPlayer);
-    console.log(
-      'newPlayer, newPlayer.action',
-      newPlayer,
-      ', ',
-      newPlayer.action
-    );
-    const newOtherPlayer = addCardToTable(newPlayer);
-    const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
-    await delay(3000); // wait for 3 seconds while the AI "decides..."
-    if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
-      await endOfRoundCleaning(ePlayer);
+
+    console.log('newPlayer, newPlayer.action', player, ', ', player.action);
+
+    const card = getNewCardForTable();
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+
+    if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
+      endOfRoundCleaning(newPlayer, newOtherPlayer);
     } else {
       setGameState(GameState.STARTED);
-      const newPlayer = {
-        ...player,
-        isTurn: true,
-        playedCardThisTurn: false,
-      };
-      setPlayer(newPlayer);
-      addCardToTable(newPlayer);
+      setOtherPlayer(newOtherPlayer);
+      // sendUpdateToWebSocket(
+      //   newPlayer,
+      //   newOtherPlayer,
+      //   GameState.STARTED,
+      //   sessionID
+      // );
     }
   }
 
-  function getRoundWinner(otherPlayer: Player) {
+  // function getRoundWinner(otherPlayer: Player) {
+  //   console.log(
+  //     'Player Score: ',
+  //     player.tally,
+  //     'Other Player Score: ',
+  //     otherPlayer.tally
+  //   );
+  //   const playerBust = player.tally > 20;
+  //   const otherPlayerBust = otherPlayer.tally > 20;
+  //   const otherPlayerWon = otherPlayer.tally <= 20;
+  //   const playerWon = player.tally <= 20;
+  //   const tie = player.tally == otherPlayer.tally;
+  //   const playerLessThanOther = player.tally < otherPlayer.tally;
+  //   const otherPlayerLessThanPlayer = player.tally > otherPlayer.tally;
+  //   const playerReturn = 1;
+  //   const otherPlayerPlayerReturn = 0;
+  //   const tieOrBustReturn = -1;
+
+  //   if (playerBust && otherPlayerBust) {
+  //     console.log('you both went bust');
+  //     return tieOrBustReturn;
+  //   }
+  //   if (playerBust && otherPlayerWon) {
+  //     console.log('opponent won');
+  //     return otherPlayerPlayerReturn;
+  //   }
+  //   if (otherPlayerBust && playerWon) {
+  //     console.log('you won');
+  //     return playerReturn;
+  //   }
+  //   if (tie) {
+  //     console.log('you tied');
+  //     return tieOrBustReturn;
+  //   }
+  //   if (playerLessThanOther) {
+  //     console.log('opponent won');
+  //     return otherPlayerPlayerReturn;
+  //   }
+  //   if (otherPlayerLessThanPlayer) {
+  //     console.log('you won');
+  //     return playerReturn;
+  //   }
+  //   console.log('the round is over', player.tally, otherPlayer.tally);
+  // }
+
+  //new
+  function getRoundWinner(player: Player, otherPlayer: Player) {
     console.log(
       'Player Score: ',
       player.tally,
@@ -243,34 +331,106 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     console.log('the round is over', player.tally, otherPlayer.tally);
   }
 
-  async function handleStandButtonClick() {
-    // setGameState(GameState.STAND);
+  // async function handleStandButtonClick() {
+  //   // setGameState(GameState.STAND);
+  //   const newPlayer = {
+  //     ...player,
+  //     isTurn: false,
+  //     action: PlayerState.STAND,
+  //   };
+  //   setPlayer(newPlayer);
+  //   const newOtherPlayer = addCardToTable(newPlayer);
+  //   await delay(3000); // wait for 3 seconds while the AI "decides...";
+  //   await endOfRoundCleaning(newOtherPlayer);
+  // }
+
+  // new
+  async function handlePlayerStandButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
       action: PlayerState.STAND,
     };
     setPlayer(newPlayer);
-    const newOtherPlayer = addCardToTable(newPlayer);
-    await delay(3000); // wait for 3 seconds while the AI "decides...";
-    await endOfRoundCleaning(newOtherPlayer);
+
+    const card = getNewCardForTable();
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+    setOtherPlayer(newOtherPlayer);
+
+    endOfRoundCleaning(newPlayer, newOtherPlayer);
   }
 
+  // async function handleStartButtonClick() {
+  //   const newPlayer = {
+  //     ...player,
+  //     isTurn: true,
+  //     playedCardThisTurn: false,
+  //   };
+  //   setPlayer(newPlayer);
+  //   addCardToTable(newPlayer);
+  //   setGameState(GameState.STARTED);
+  // }
+
+  // new
   async function handleStartButtonClick() {
+    const card = getNewCardForTable();
     const newPlayer = {
       ...player,
       isTurn: true,
       playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+
     setGameState(GameState.STARTED);
+    // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
   }
 
-  async function endOfRoundCleaning(newOtherPlayer: Player | null) {
-    const winner = getRoundWinner(
-      newOtherPlayer ? newOtherPlayer : otherPlayer
-    );
+  // async function endOfRoundCleaning(newOtherPlayer: Player | null) {
+  //   const winner = getRoundWinner(
+  //     newOtherPlayer ? newOtherPlayer : otherPlayer
+  //   );
+  //   if (winner === 1) {
+  //     showEndRoundWinner('YOU WIN THE ROUND!');
+  //   } else if (winner === 0) {
+  //     showEndRoundWinner('OPPONENT WINS THE ROUND');
+  //   } else {
+  //     showEndRoundWinner('THIS ROUND IS TIED');
+  //   }
+  //   setPlayer({
+  //     ...player,
+  //     hand: player.hand,
+  //     table: [],
+  //     tally: 0,
+  //     action: PlayerState.PLAY,
+  //     gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
+  //     playedCardThisTurn: false,
+  //   });
+  //   setOtherPlayer({
+  //     ...otherPlayer,
+  //     hand: otherPlayer.hand,
+  //     table: [],
+  //     tally: 0,
+  //     action: PlayerState.PLAY,
+  //     gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
+  //     playedCardThisTurn: false,
+  //   });
+
+  //   setGameState(GameState.INITIAL);
+  // }
+
+  // new
+  function endOfRoundCleaning(player: Player, otherPlayer: Player) {
+    const winner = getRoundWinner(player, otherPlayer);
     if (winner === 1) {
       showEndRoundWinner('YOU WIN THE ROUND!');
     } else if (winner === 0) {
@@ -278,7 +438,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     } else {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    setPlayer({
+    const newPlayer = {
       ...player,
       hand: player.hand,
       table: [],
@@ -286,8 +446,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
-    });
-    setOtherPlayer({
+    };
+    setPlayer(newPlayer);
+    const newOtherPlayer = {
       ...otherPlayer,
       hand: otherPlayer.hand,
       table: [],
@@ -295,25 +456,82 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       action: PlayerState.PLAY,
       gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
       playedCardThisTurn: false,
-    });
+    };
+    setOtherPlayer(newOtherPlayer);
 
     setGameState(GameState.INITIAL);
+    // sendUpdateToWebSocket(
+    //   newPlayer,
+    //   newOtherPlayer,
+    //   GameState.INITIAL,
+    //   sessionID
+    // );
   }
+
+  // function moveCard(card: JSX.Element, index: number) {
+  //   // if no cards have been played yet this turn, play a card
+
+  //   if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+  //     const audio = new Audio(cardflip);
+  //     audio.play();
+  //     player.hand.splice(index, 1);
+  //     setPlayer({
+  //       ...player,
+  //       hand: player.hand,
+  //       table: [...player.table, card],
+  //       tally: player.tally + card.props.value,
+  //       playedCardThisTurn: true,
+  //     });
+  //   }
+  // }
+
+  // new
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
 
-    if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+    if (
+      gameState === GameState.STARTED &&
+      !player.playedCardThisTurn &&
+      player.isTurn
+    ) {
       const audio = new Audio(cardflip);
       audio.play();
       player.hand.splice(index, 1);
-      setPlayer({
+      const newPlayer = {
         ...player,
         hand: player.hand,
-        table: [...player.table, card],
+        table: [
+          ...player.table,
+          { value: card.props.value, color: card.props.color },
+        ],
         tally: player.tally + card.props.value,
         playedCardThisTurn: true,
-      });
+      };
+      setPlayer(newPlayer);
+      // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
+    }
+
+    if (
+      gameState === GameState.STARTED &&
+      !otherPlayer.playedCardThisTurn &&
+      otherPlayer.isTurn
+    ) {
+      const audio = new Audio(cardflip);
+      audio.play();
+      otherPlayer.hand.splice(index, 1);
+      const newOtherPlayer = {
+        ...otherPlayer,
+        hand: otherPlayer.hand,
+        table: [
+          ...otherPlayer.table,
+          { value: card.props.value, color: card.props.color },
+        ],
+        tally: otherPlayer.tally + card.props.value,
+        playedCardThisTurn: true,
+      };
+      setOtherPlayer(newOtherPlayer);
+      // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
 
@@ -324,6 +542,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
     // stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
     stompClient.subscribe('/game/playerName', onPlayerNameReceived);
+    stompClient.subscribe('./game/hand', onHandReceived);
     sendInitialConnectingData();
   }
 
@@ -364,6 +583,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(userData.username)
     );
+    stompClient.send(
+      '/app/updateHand',
+      {
+        id: 'hand',
+      },
+      JSON.stringify(player.hand)
+    );
   };
 
   interface Payload {
@@ -377,6 +603,22 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
     console.log('payloadData: ', payloadData);
   };
+
+  const onHandReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
+    if (payloadData != player.hand) {
+      setOtherPlayer({ ...otherPlayer, hand: payloadData });
+    }
+    console.log('payloadData: ', payloadData);
+  };
+
+  // new
+  const listOfCards = (cards: CardProps[]): JSX.Element[] =>
+    cards.map((card) => {
+      return (
+        <Card value={card.value} color={card.color} cardType="normal_card" />
+      );
+    });
 
   return (
     <>
@@ -402,17 +644,22 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       <div className="playerBoard">
         <div className="player1">
           <div className="table">
-            <Hand hand={player.table} />
+            {/* <Hand hand={player.table} /> */}
+            <Hand hand={listOfCards(player.table)} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={player.hand} moveCard={moveCard} />
+            {/* <Hand hand={player.hand} moveCard={moveCard} /> */}
+            <Hand hand={listOfCards(player.hand)} moveCard={moveCard} />
           </div>
           <div className="turnOptions">
             <GameButtons
               gameState={gameState}
-              onStand={handleStandButtonClick}
-              onEndTurn={handleEndTurnButtonClick}
+              // onStand={handleStandButtonClick}
+              // onEndTurn={handleEndTurnButtonClick}
+              // new
+              onStand={handlePlayerStandButtonClick}
+              onEndTurn={handlePlayerEndTurnButtonClick}
               onStartGame={handleStartButtonClick}
               isPlayerTurn={player.isTurn}
             />
@@ -421,11 +668,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         </div>
         <div className="player2">
           <div className="table">
-            <Hand hand={otherPlayer.table} />
+            {/* <Hand hand={otherPlayer.table} /> */}
+            <Hand hand={listOfCards(otherPlayer.table)} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={otherPlayer.hand} />
+            {/* <Hand hand={otherPlayer.hand} /> */}
+            <Hand hand={listOfCards(otherPlayer.hand)} />
           </div>
         </div>
         <div className="center-message">
