@@ -7,7 +7,7 @@ import PVPGame from '../components/PVPGame';
 const PVP = () => {
   const BASE_URL = 'http://192.168.0.5';
   const port = 8080;
-  const [, setStompClient] = useState<Stomp.Client>(
+  const [stompClient, setStompClient] = useState<Stomp.Client>(
     Stomp.over(new SockJS(`${BASE_URL}:${port}/ws`))
   );
   const [serverConnected, setServerConnected] = useState(false);
@@ -44,7 +44,7 @@ const PVP = () => {
         </div>
       )}
       <PVPGame />
-      <Chat />
+      <Chat stompClient={stompClient} />
     </>
   );
 };

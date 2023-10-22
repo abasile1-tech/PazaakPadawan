@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { over, Client, Frame } from 'stompjs';
 import SockJS from 'sockjs-client';
 
-let stompClient: Client | null = null;
+// let stompClient: Client | null = null;
 
 interface PublicChat {
   senderName: string;
@@ -12,7 +12,11 @@ interface PublicChat {
   status: string;
 }
 
-const Chat = () => {
+interface ChatProps {
+  stompClient: Client;
+}
+
+const Chat = ({ stompClient }: ChatProps) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
   const [userData, setUserData] = useState({
     username: '',
