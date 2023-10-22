@@ -18,15 +18,15 @@ public class ChatController {
 
     private final ArrayList<GameObject> gameObjects = new ArrayList<>();
 
-    @MessageMapping("/message")
-    @SendTo("/chatroom/public")
+    @MessageMapping("/chatMessage")
+    @SendTo("/game/chatroom")
     private Message receivePublicMessage(@Payload Message message){
         System.out.printf("message received: %s\n",message);
         return message;
     }
 
     @MessageMapping("/updateGame")
-    @SendTo("/chatroom/game")
+    @SendTo("/game/gameObject")
     private GameObject receiveGameObject(@Payload GameObject frontEndGameObject){
         System.out.printf("Game object received: %s\n", frontEndGameObject);
         // If the session exists, there should be a player1, so we will set player2

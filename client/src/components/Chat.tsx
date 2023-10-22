@@ -54,7 +54,7 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
     }
-    stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
+    stompClient.subscribe('/game/chatroom', onPublicMessageReceived);
     userJoin();
   };
 
@@ -67,7 +67,7 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
     }
-    stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+    stompClient.send('/app/chatMessage', {}, JSON.stringify(chatMessage));
   };
 
   interface Payload {
@@ -94,7 +94,7 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
         status: 'MESSAGE',
         date: today,
       };
-      stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
+      stompClient.send('/app/chatMessage', {}, JSON.stringify(chatMessage));
       setUserData({ ...userData, message: '' });
     }
   };

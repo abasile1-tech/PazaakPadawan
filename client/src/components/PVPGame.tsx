@@ -322,7 +322,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
     }
-    stompClient.subscribe('/chatroom/game', onGameUpdateReceived);
+    stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
     sendInitialConnectingData();
   }
 
