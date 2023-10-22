@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { over, Client, Frame } from 'stompjs';
-import SockJS from 'sockjs-client';
-
-// let stompClient: Client | null = null;
+import { Client } from 'stompjs';
 
 interface PublicChat {
   senderName: string;
@@ -41,11 +38,6 @@ const Chat = ({ stompClient }: ChatProps) => {
     const { value } = event.target;
     setUserData({ ...userData, message: value });
   };
-  // const registerUser = () => {
-  //   const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
-  //   stompClient = over(Sock);
-  //   stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
-  // };
 
   const registerUser = () => {
     setUserData({ ...userData, connected: true });
@@ -56,16 +48,6 @@ const Chat = ({ stompClient }: ChatProps) => {
     stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
     userJoin();
   };
-
-  // const onConnected = () => {
-  //   setUserData({ ...userData, connected: true });
-  //   if (!stompClient) {
-  //     console.warn('stompClient is undefined. Unable to subcribe to events.');
-  //     return;
-  //   }
-  //   stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
-  //   userJoin();
-  // };
 
   const userJoin = () => {
     const chatMessage = {
@@ -78,10 +60,6 @@ const Chat = ({ stompClient }: ChatProps) => {
     }
     stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
   };
-
-  // const onError = (err: string | Frame) => {
-  //   console.log(err);
-  // };
 
   interface Payload {
     body: string;
