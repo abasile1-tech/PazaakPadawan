@@ -16,6 +16,12 @@ const PVP = () => {
   );
   const [serverConnected, setServerConnected] = useState(false);
   const [attemptReconnect, setAttemptReconnect] = useState(0);
+  const [userData, setUserData] = useState({
+    username: '',
+    receiverName: '',
+    connected: false,
+    message: '',
+  });
 
   useEffect(() => {
     const socket = new SockJS(`${BASE_URL}:${port}/ws`);
@@ -54,7 +60,11 @@ const PVP = () => {
         </div>
       )}
       <PVPGame />
-      <Chat stompClient={stompClient} />
+      <Chat
+        stompClient={stompClient}
+        userData={userData}
+        setUserData={setUserData}
+      />
     </>
   );
 };

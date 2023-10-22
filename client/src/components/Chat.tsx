@@ -9,18 +9,27 @@ interface PublicChat {
   status: string;
 }
 
-interface ChatProps {
-  stompClient: Client;
+interface UserData {
+  username: string;
+  receiverName: string;
+  connected: boolean;
+  message: string;
 }
 
-const Chat = ({ stompClient }: ChatProps) => {
+interface ChatProps {
+  stompClient: Client;
+  userData: UserData;
+  setUserData: React.Dispatch<React.SetStateAction<UserData>>;
+}
+
+const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
-  const [userData, setUserData] = useState({
-    username: '',
-    receiverName: '',
-    connected: false,
-    message: '',
-  });
+  // const [userData, setUserData] = useState({
+  //   username: '',
+  //   receiverName: '',
+  //   connected: false,
+  //   message: '',
+  // });
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
