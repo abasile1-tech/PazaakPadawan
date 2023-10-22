@@ -118,6 +118,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
   const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
   const [otherPlayerHand, setOtherPlayerHand] = useState([]);
+  const [otherPlayerTable, setOtherPlayerTable] = useState([]);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
@@ -140,6 +141,18 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherPlayerHand]);
+
+  useEffect(() => {
+    if (otherPlayerName != 'Player 2') {
+      console.log('setting table');
+      setOtherPlayer({
+        ...otherPlayer,
+        name: otherPlayerName,
+        table: otherPlayerTable,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otherPlayerTable]);
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -240,6 +253,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     console.log('newPlayer, newPlayer.action', player, ', ', player.action);
 
     const card = getNewCardForTable();
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify(player.table)
+    );
     const newOtherPlayer = {
       ...otherPlayer,
       isTurn: true,
@@ -566,6 +586,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     // stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
     stompClient.subscribe('/game/playerName', onPlayerNameReceived);
     stompClient.subscribe('/game/hand', onHandReceived);
+    stompClient.subscribe('/game/table', onTableReceived);
     sendInitialConnectingData();
   }
 
@@ -649,6 +670,21 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       setOtherPlayerHand(payloadData);
     }
     console.log('Hand payloadData: ', payloadData);
+  }
+
+  function onTableReceived(payload: Payload) {
+    const payloadData = JSON.parse(payload.body);
+    if (JSON.stringify(payloadData) != JSON.stringify(player.table)) {
+      console.log(
+        'the hand ',
+        player.table,
+        ' and the hand ',
+        payloadData,
+        ' are not equal.'
+      );
+      setOtherPlayerTable(payloadData);
+    }
+    console.log('Table payloadData: ', payloadData);
   }
 
   // new

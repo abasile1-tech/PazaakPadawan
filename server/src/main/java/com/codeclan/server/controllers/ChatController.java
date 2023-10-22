@@ -83,4 +83,11 @@ public class ChatController {
         System.out.printf("Hand received: %s\n",hand);
         return hand;
     }
+
+    @MessageMapping("/updateTable")
+    @SendTo("/game/table")
+    private ArrayList<Card> receiveTable(@Payload ArrayList<Card> table){
+        System.out.printf("Table received: %s\n",table);
+        return table;
+    }
 }
