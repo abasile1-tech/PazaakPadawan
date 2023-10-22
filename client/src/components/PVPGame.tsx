@@ -63,7 +63,7 @@ interface PVPGameProps {
 function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
-  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
 
@@ -86,7 +86,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return randomHand;
   }
   const initialPlayer: Player = {
-    name: 'Stephen',
+    name: 'Player 1',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
@@ -103,7 +103,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   };
 
   const initialOtherPlayer: Player = {
-    name: 'Barry',
+    name: 'Player 2',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
@@ -116,14 +116,30 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   const [player, setPlayer] = useState(initialPlayer);
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
+  const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
+  const [otherPlayerHand, setOtherPlayerHand] = useState([]);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
   useEffect(() => {
-    if (otherPlayer.name != null) {
-      console.log('name changed: ', otherPlayer.name);
+    if (otherPlayerName != 'Player 2') {
+      console.log('setting name');
+      setOtherPlayer({ ...otherPlayer, name: otherPlayerName });
     }
-  }, [otherPlayer]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otherPlayerName]);
+
+  useEffect(() => {
+    if (otherPlayerName != 'Player 2') {
+      console.log('setting hand');
+      setOtherPlayer({
+        ...otherPlayer,
+        name: otherPlayerName,
+        hand: otherPlayerHand,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otherPlayerHand]);
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -614,25 +630,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         ' are not equal'
       );
       if (payloadData != null) {
-        const newOtherPlayer = {
-          name: payloadData,
-          action: otherPlayer.action,
-          wonGame: otherPlayer.wonGame,
-          isTurn: otherPlayer.isTurn,
-          hand: otherPlayer.hand,
-          tally: otherPlayer.tally,
-          table: otherPlayer.table,
-          gamesWon: otherPlayer.gamesWon,
-          playedCardThisTurn: otherPlayer.playedCardThisTurn,
-        };
-        // setOtherPlayer({ ...otherPlayer, name: payloadData });
-        setOtherPlayer(newOtherPlayer);
+        setOtherPlayerName(payloadData);
       }
     }
-    console.log('Player Name payloadData: ', payloadData);
+    return;
   };
 
-  async function onHandReceived(payload: Payload) {
+  function onHandReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);
     if (JSON.stringify(payloadData) != JSON.stringify(player.hand)) {
       console.log(
@@ -642,11 +646,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         payloadData,
         ' are not equal.'
       );
-      console.log('LOOK AT THIS!! otherPlayer: ', otherPlayer);
-      if (otherPlayer.name == 'Barry') {
-        await delay(3000);
-      }
-      setOtherPlayer({ ...otherPlayer, hand: payloadData });
+      setOtherPlayerHand(payloadData);
     }
     console.log('Hand payloadData: ', payloadData);
   }
