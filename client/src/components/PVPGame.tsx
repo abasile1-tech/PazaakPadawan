@@ -323,7 +323,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return;
     }
     // stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
-    stompClient.subscribe('/game/playerName', onGameUpdateReceived);
+    stompClient.subscribe('/game/playerName', onPlayerNameReceived);
     sendInitialConnectingData();
   }
 
@@ -344,6 +344,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     //   // sessionID: sessionID,
     // };
     // console.log('LOOK HERE', gameObject);
+    setPlayer({ ...player, name: userData.username });
     console.log('LOOK HERE', userData.username);
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to send message.');
@@ -369,15 +370,21 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     body: string;
   }
 
-  const onGameUpdateReceived = (payload: Payload) => {
+  const onPlayerNameReceived = (payload: Payload) => {
     const payloadData = JSON.parse(payload.body);
+    if (payloadData != userData.username) {
+      setOtherPlayer({ ...otherPlayer, name: payloadData });
+    }
     console.log('payloadData: ', payloadData);
   };
 
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <h3>{userData.username}</h3>
+      <h3>
+        userData.username: {userData.username} or player.name: {player?.name}
+      </h3>
+      <h3>otherPlayer.name: {otherPlayer?.name}</h3>
       <div className="scoreBoard">
         <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBar
