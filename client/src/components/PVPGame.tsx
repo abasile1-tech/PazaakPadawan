@@ -601,7 +601,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     if (payloadData != userData.username) {
       setOtherPlayer({ ...otherPlayer, name: payloadData });
     }
-    console.log('payloadData: ', payloadData);
+    console.log('Player Name payloadData: ', payloadData);
   };
 
   const onHandReceived = (payload: Payload) => {
@@ -609,7 +609,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     if (payloadData != player.hand) {
       setOtherPlayer({ ...otherPlayer, hand: payloadData });
     }
-    console.log('payloadData: ', payloadData);
+    console.log('Hand payloadData: ', payloadData);
   };
 
   // new
