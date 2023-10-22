@@ -41,7 +41,19 @@ enum PlayerState {
   ENDTURN = 'endturn',
 }
 
-function SoloGame(): JSX.Element {
+interface UserData {
+  username: string;
+  receiverName: string;
+  connected: boolean;
+  message: string;
+}
+
+interface SoloGameProps {
+  userData: UserData;
+  // setUserData: React.Dispatch<React.SetStateAction<UserData>>;
+}
+
+function SoloGame({ userData }: SoloGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -305,6 +317,7 @@ function SoloGame(): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
+      <h3>{userData.username}</h3>
       <div className="scoreBoard">
         <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBar

@@ -59,7 +59,7 @@ const PVP = () => {
           </button>
         </div>
       )}
-      <PVPGame />
+      <PVPGame userData={userData} />
       <Chat
         stompClient={stompClient}
         userData={userData}
