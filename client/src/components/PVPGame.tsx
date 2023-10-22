@@ -108,7 +108,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: generateRandomHand(),
+    hand: [],
     tally: 0,
     table: [],
     gamesWon: 0,
@@ -381,10 +381,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <h3>
-        userData.username: {userData.username} or player.name: {player?.name}
-      </h3>
-      <h3>otherPlayer.name: {otherPlayer?.name}</h3>
+      <div className="playerNames">
+        <h3>
+          userData.username: {userData.username} or player.name: {player?.name}
+        </h3>
+        <h3>otherPlayer.name: {otherPlayer?.name}</h3>
+      </div>
+
       <div className="scoreBoard">
         <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBar
