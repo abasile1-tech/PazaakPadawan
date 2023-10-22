@@ -41,17 +41,13 @@ const Chat = ({ stompClient }: ChatProps) => {
     const { value } = event.target;
     setUserData({ ...userData, message: value });
   };
-  const registerUser = () => {
-    // const url = import.meta.env.PROD
-    //   ? import.meta.env.VITE_PROD_URL
-    //   : import.meta.env.VITE_DEV_URL;
-    // const Sock = new SockJS(url + 'ws');
-    const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
-    stompClient = over(Sock);
-    stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
-  };
+  // const registerUser = () => {
+  //   const Sock = new SockJS('http://192.168.0.5:8080/' + 'ws');
+  //   stompClient = over(Sock);
+  //   stompClient.connect({ login: '', passcode: '' }, onConnected, onError);
+  // };
 
-  const onConnected = () => {
+  const registerUser = () => {
     setUserData({ ...userData, connected: true });
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
@@ -60,6 +56,16 @@ const Chat = ({ stompClient }: ChatProps) => {
     stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
     userJoin();
   };
+
+  // const onConnected = () => {
+  //   setUserData({ ...userData, connected: true });
+  //   if (!stompClient) {
+  //     console.warn('stompClient is undefined. Unable to subcribe to events.');
+  //     return;
+  //   }
+  //   stompClient.subscribe('/chatroom/public', onPublicMessageReceived);
+  //   userJoin();
+  // };
 
   const userJoin = () => {
     const chatMessage = {
@@ -73,9 +79,9 @@ const Chat = ({ stompClient }: ChatProps) => {
     stompClient.send('/app/message', {}, JSON.stringify(chatMessage));
   };
 
-  const onError = (err: string | Frame) => {
-    console.log(err);
-  };
+  // const onError = (err: string | Frame) => {
+  //   console.log(err);
+  // };
 
   interface Payload {
     body: string;
