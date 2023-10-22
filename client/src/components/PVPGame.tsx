@@ -322,8 +322,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
     }
-    // stompClient.subscribe('/game/updated', onGameUpdateReceived);
-    // sendInitialConnectingData();
+    stompClient.subscribe('/chatroom/game', onGameUpdateReceived);
+    sendInitialConnectingData();
   }
 
   interface GameObject {
@@ -347,13 +347,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
     }
-    // stompClient.send(
-    //   '/app/updateGame',
-    //   {
-    //     id: 'game',
-    //   },
-    //   JSON.stringify(gameObject)
-    // );
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
   };
 
   interface Payload {
