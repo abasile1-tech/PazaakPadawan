@@ -208,6 +208,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
+    console.log('random number: ', randomNumber);
     return { value: randomNumber, color: 'green' };
   }
 
@@ -397,6 +398,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     setPlayer(newPlayer);
 
     const card = getNewCardForTable();
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify(player.table)
+    );
     const newOtherPlayer = {
       ...otherPlayer,
       isTurn: true,
@@ -424,6 +432,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   // new
   async function handleStartButtonClick() {
     const card = getNewCardForTable();
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify(player.table)
+    );
     const newPlayer = {
       ...player,
       isTurn: true,
