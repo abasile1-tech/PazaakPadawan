@@ -67,4 +67,11 @@ public class ChatController {
         // If we get to here, the session exists and has player1 and player2 so just return the passed in value
         return frontEndGameObject;
     }
+
+    @MessageMapping("/updatePlayerName")
+    @SendTo("/game/playerName")
+    private String receivePlayerName(@Payload String playerName){
+        System.out.printf("Player name received: %s\n",playerName);
+        return playerName;
+    }
 }
