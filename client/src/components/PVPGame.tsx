@@ -9,7 +9,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
-import Chat from './Chat';
 
 interface DeckCard {
   value: number;
@@ -170,74 +169,6 @@ function SoloGame(): JSX.Element {
     const newOtherPlayer = addCardToTable(newPlayer);
     const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
     await delay(3000); // wait for 3 seconds while the AI "decides..."
-    // AI Choice starts
-    // if (ePlayer.tally < 20 && ePlayer.action != PlayerState.STAND) {
-    //   if (ePlayer.hand.length > 0) {
-    //     let bestSum = 0;
-    //     let bestCardIndex = -1;
-    //     // Check to see if you have any cards that can get you to 20
-    //     for (let i = 0; i < ePlayer.hand.length; i++) {
-    //       const card = ePlayer.hand[i];
-    //       const sum = ePlayer.tally + card.props.value;
-    //       if (sum >= 15 && sum <= 20 && sum > bestSum) {
-    //         bestSum = sum;
-    //         bestCardIndex = i;
-    //       }
-    //     }
-    //     console.log('bestCardIndex', bestCardIndex);
-    //     if (bestCardIndex !== -1) {
-    //       console.log('trying to play best card', bestCardIndex);
-    //       const [playedCard] = ePlayer.hand.splice(bestCardIndex, 1);
-    //       const newOtherPlayer = {
-    //         ...ePlayer,
-    //         hand: [...ePlayer.hand],
-    //         tally: playedCard.props.value + ePlayer.tally,
-    //         table: [...ePlayer.table, playedCard],
-    //         action: PlayerState.STAND,
-    //       };
-    //       console.log('Other Player Table', newOtherPlayer.table);
-    //       setOtherPlayer(newOtherPlayer);
-    //       await delay(3000); // wait for 3 seconds while the AI "decides..."
-    //       // setGameState(GameState.STAND);
-    //       console.log('I just played a card and now I want to stand');
-    //     }
-    //   } else {
-    //     const newOtherPlayer = {
-    //       ...ePlayer,
-    //       action: PlayerState.STAND,
-    //     };
-    //     setOtherPlayer(newOtherPlayer);
-    //     // setGameState(GameState.STAND);
-    //     console.log('i want to stand #2');
-    //   }
-    // } else if (ePlayer.tally >= 17 && ePlayer.tally <= 20) {
-    //   if (Math.random() < 0.7) {
-    //     const newOtherPlayer = {
-    //       ...ePlayer,
-    //       action: PlayerState.STAND,
-    //     };
-    //     setOtherPlayer(newOtherPlayer);
-    //     // setGameState(GameState.STAND);
-    //     console.log('mostly i want to stand');
-    //   } else {
-    //     // addCardToTable(newPlayer);
-    //     console.log('number between 17 and 20 but i need more cards');
-    //     const newOtherPlayer = {
-    //       ...ePlayer,
-    //       action: PlayerState.PLAY,
-    //     };
-    //     setOtherPlayer(newOtherPlayer);
-    //   }
-    // } else if (ePlayer.tally < 17) {
-    //   // addCardToTable(newPlayer);
-    //   console.log('more card');
-    //   const newOtherPlayer = {
-    //     ...ePlayer,
-    //     action: PlayerState.PLAY,
-    //   };
-    //   setOtherPlayer(newOtherPlayer);
-    // }
-    // AI choice ends
     if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
       await endOfRoundCleaning(ePlayer);
     } else {
@@ -432,7 +363,6 @@ function SoloGame(): JSX.Element {
           )}
         </div>
       </div>
-      <Chat />
     </>
   );
 }
