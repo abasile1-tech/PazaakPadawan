@@ -1,3 +1,4 @@
+import { Client } from 'stompjs';
 import Header from './Header';
 import ScoreLights from './ScoreLights';
 import { useState } from 'react';
@@ -48,17 +49,19 @@ interface UserData {
   message: string;
 }
 
-interface SoloGameProps {
+interface PVPGameProps {
+  stompClient: Client;
   userData: UserData;
   // setUserData: React.Dispatch<React.SetStateAction<UserData>>;
 }
 
-function SoloGame({ userData }: SoloGameProps): JSX.Element {
+function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+
   function generateRandomHand() {
     const randomHand = [];
     for (let i = 0; i < 4; i++) {
@@ -314,6 +317,54 @@ function SoloGame({ userData }: SoloGameProps): JSX.Element {
     }
   }
 
+  function joinRoom() {
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to subcribe to events.');
+      return;
+    }
+    // stompClient.subscribe('/game/updated', onGameUpdateReceived);
+    // sendInitialConnectingData();
+  }
+
+  interface GameObject {
+    player1: Player;
+    player2: Player;
+    gameState: GameState;
+    // sessionID: string;
+  }
+
+  const sendInitialConnectingData = () => {
+    // We will always set the player1 name to the user name on initial connection.
+    // The backend will handle assigning the players.
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState: gameState,
+      // sessionID: sessionID,
+    };
+    console.log('LOOK HERE', gameObject);
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    // stompClient.send(
+    //   '/app/updateGame',
+    //   {
+    //     id: 'game',
+    //   },
+    //   JSON.stringify(gameObject)
+    // );
+  };
+
+  interface Payload {
+    body: string;
+  }
+
+  const onGameUpdateReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
+    console.log('payloadData: ', payloadData);
+  };
+
   return (
     <>
       <Header musicChoice={musicChoice} />
@@ -347,6 +398,7 @@ function SoloGame({ userData }: SoloGameProps): JSX.Element {
               isPlayerTurn={player.isTurn}
             />
           </div>
+          <button onClick={joinRoom}>Join Room</button>
         </div>
         <div className="player2">
           <div className="table">
@@ -379,4 +431,4 @@ function SoloGame({ userData }: SoloGameProps): JSX.Element {
     </>
   );
 }
-export default SoloGame;
+export default PVPGame;
