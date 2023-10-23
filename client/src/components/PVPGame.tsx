@@ -474,7 +474,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify('the game has started')
     );
-    console.log(player.table);
+    console.log(
+      'The start button was clicked. here is the player.table: ',
+      player.table
+    );
+    console.log('here is the card that should be in the table: ', card);
     setPlayerTable([...player.table, card]);
 
     const newPlayer = {
@@ -482,7 +486,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       isTurn: true,
       playedCardThisTurn: false,
       tally: otherPlayer.tally + card.value,
-      table: [...otherPlayer.table, card],
+      table: [...player.table, card],
       action: PlayerState.PLAY,
     };
     setPlayer(newPlayer);
@@ -493,7 +497,24 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify([...player.table, card])
     );
-
+    stompClient.send(
+      '/app/updatePlayerObject',
+      {
+        id: 'playerObject',
+      },
+      JSON.stringify({
+        name: player.name,
+        action: player.action,
+        wonGame: player.wonGame,
+        isTurn: player.isTurn,
+        hand: player.hand,
+        tally: player.tally,
+        table: player.table,
+        gamesWon: player.gamesWon,
+        playedCardThisTurn: player.playedCardThisTurn,
+      })
+    );
+    console.log('player: ', player, ' playerTable: ', playerTable);
     setGameState(GameState.STARTED);
     // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
   }
@@ -648,6 +669,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     stompClient.subscribe('/game/hand', onHandReceived);
     stompClient.subscribe('/game/table', onTableReceived);
     stompClient.subscribe('/game/start', onStartReceived);
+    stompClient.subscribe('/game/playerObject', onPlayerReceived);
     sendInitialConnectingData();
   }
 
@@ -744,6 +766,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         ' are not equal.'
       );
       console.log('playerTable: ', playerTable);
+      console.log('otherPlayerTable: ', otherPlayerTable);
       setOtherPlayerTable(payloadData);
     }
     console.log('Table payloadData: ', payloadData);
@@ -753,6 +776,23 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const payloadData = JSON.parse(payload.body);
     setGameState(GameState.STARTED);
     console.log('Game Started payloadData: ', payloadData);
+  }
+
+  function onPlayerReceived(payload: Payload) {
+    const payloadData = JSON.parse(payload.body);
+    if (JSON.stringify(payloadData.name) != JSON.stringify(player.name)) {
+      console.log(
+        'the name ',
+        player.name,
+        ' and the name ',
+        payloadData.name,
+        ' are not equal.'
+      );
+      console.log('player: ', player);
+      console.log('otherPlayer: ', otherPlayer);
+      setOtherPlayer(payloadData);
+    }
+    console.log('Player payloadData: ', payloadData);
   }
 
   // new

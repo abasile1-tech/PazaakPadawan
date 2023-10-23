@@ -3,6 +3,7 @@ package com.codeclan.server.controllers;
 import com.codeclan.server.models.Card;
 import com.codeclan.server.models.GameObject;
 import com.codeclan.server.models.Message;
+import com.codeclan.server.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -96,5 +97,12 @@ public class ChatController {
     private String receiveStart(@Payload String start){
         System.out.printf("Start received: %s\n",start);
         return start;
+    }
+
+    @MessageMapping("/updatePlayerObject")
+    @SendTo("/game/playerObject")
+    private Player receivePlayerObject(@Payload Player playerObject){
+        System.out.printf("Player object received: %s\n",playerObject);
+        return playerObject;
     }
 }
