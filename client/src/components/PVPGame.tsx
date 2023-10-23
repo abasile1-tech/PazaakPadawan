@@ -439,13 +439,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify('the game has started')
     );
-    stompClient.send(
-      '/app/updateTable',
-      {
-        id: 'table',
-      },
-      JSON.stringify(player.table)
-    );
+
     const newPlayer = {
       ...player,
       isTurn: true,
@@ -455,6 +449,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       action: PlayerState.PLAY,
     };
     setPlayer(newPlayer);
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify([...otherPlayer.table, card])
+    );
 
     setGameState(GameState.STARTED);
     // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
@@ -699,9 +700,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const payloadData = JSON.parse(payload.body);
     if (JSON.stringify(payloadData) != JSON.stringify(player.table)) {
       console.log(
-        'the hand ',
+        'the table ',
         player.table,
-        ' and the hand ',
+        ' and the table ',
         payloadData,
         ' are not equal.'
       );
