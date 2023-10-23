@@ -115,24 +115,47 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   };
 
   const [player, setPlayer] = useState(initialPlayer);
+  const [playerName] = useState('Player 1');
+  const [playerHand] = useState<CardProps[]>([]);
+  const [playerTable, setPlayerTable] = useState<CardProps[]>([]);
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
   const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
-  const [otherPlayerHand, setOtherPlayerHand] = useState([]);
-  const [otherPlayerTable, setOtherPlayerTable] = useState([]);
+  const [otherPlayerHand, setOtherPlayerHand] = useState<CardProps[]>([]);
+  const [otherPlayerTable, setOtherPlayerTable] = useState<CardProps[]>([]);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
   useEffect(() => {
+    if (playerName != 'Player 1') {
+      console.log('setting own name');
+      setPlayer({ ...player, name: playerName });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerName]);
+
+  useEffect(() => {
     if (otherPlayerName != 'Player 2') {
-      console.log('setting name');
+      console.log('setting other name');
       setOtherPlayer({ ...otherPlayer, name: otherPlayerName });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [otherPlayerName]);
 
   useEffect(() => {
+    if (playerName != 'Player 1') {
+      console.log('setting own hand');
+      setPlayer({
+        ...player,
+        name: playerName,
+        hand: playerHand,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerHand]);
+
+  useEffect(() => {
     if (otherPlayerName != 'Player 2') {
-      console.log('setting hand');
+      console.log('setting other hand');
       setOtherPlayer({
         ...otherPlayer,
         name: otherPlayerName,
@@ -143,8 +166,20 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }, [otherPlayerHand]);
 
   useEffect(() => {
+    if (playerName != 'Player 1') {
+      console.log('setting own table');
+      setPlayer({
+        ...player,
+        name: playerName,
+        table: playerTable,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playerTable]);
+
+  useEffect(() => {
     if (otherPlayerName != 'Player 2') {
-      console.log('setting table');
+      console.log('setting other table');
       setOtherPlayer({
         ...otherPlayer,
         name: otherPlayerName,
@@ -439,6 +474,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify('the game has started')
     );
+    console.log(player.table);
+    setPlayerTable([...player.table, card]);
 
     const newPlayer = {
       ...player,
@@ -454,7 +491,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       {
         id: 'table',
       },
-      JSON.stringify([...otherPlayer.table, card])
+      JSON.stringify([...player.table, card])
     );
 
     setGameState(GameState.STARTED);
@@ -706,6 +743,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         payloadData,
         ' are not equal.'
       );
+      console.log('playerTable: ', playerTable);
       setOtherPlayerTable(payloadData);
     }
     console.log('Table payloadData: ', payloadData);
