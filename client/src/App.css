@@ -471,4 +471,10 @@
   font-size: 25px;
 }
 
+/* PVP */
+.playerNames {
+  display:flex;
+  justify-content: space-around;
+}
+
 

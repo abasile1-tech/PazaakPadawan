@@ -1,6 +1,7 @@
+import { Client } from 'stompjs';
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -9,7 +10,6 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
-import Chat from './Chat';
 
 interface DeckCard {
   value: number;
@@ -18,14 +18,19 @@ interface DeckCard {
   imagePath: string;
 }
 
+interface CardProps {
+  value: number;
+  color: string;
+}
+
 interface Player {
   name: string;
   action: PlayerState;
   wonGame: boolean;
   isTurn: boolean;
-  hand: JSX.Element[];
+  hand: CardProps[];
   tally: number;
-  table: JSX.Element[];
+  table: CardProps[];
   gamesWon: number;
   playedCardThisTurn: boolean;
 }
@@ -42,46 +47,54 @@ enum PlayerState {
   ENDTURN = 'endturn',
 }
 
-function SoloGame(): JSX.Element {
+interface UserData {
+  username: string;
+  receiverName: string;
+  connected: boolean;
+  message: string;
+}
+
+interface PVPGameProps {
+  stompClient: Client;
+  userData: UserData;
+  // setUserData: React.Dispatch<React.SetStateAction<UserData>>;
+}
+
+function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
-  const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+
   function generateRandomHand() {
     const randomHand = [];
     for (let i = 0; i < 4; i++) {
       const randomValue = Math.floor(Math.random() * 6) + 1;
       const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
       if (randomColor === 'red') {
-        randomHand.push(
-          <Card
-            value={-randomValue}
-            color={randomColor}
-            cardType="normal_card"
-          />
-        );
+        const cardProps: CardProps = {
+          value: -randomValue,
+          color: randomColor,
+        };
+        randomHand.push(cardProps);
       } else {
-        randomHand.push(
-          <Card
-            value={randomValue}
-            color={randomColor}
-            cardType="normal_card"
-          />
-        );
+        const cardProps: CardProps = { value: randomValue, color: randomColor };
+        randomHand.push(cardProps);
       }
     }
     return randomHand;
   }
   const initialPlayer: Player = {
-    name: '',
+    name: 'Player 1',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
     hand: selectedHand
-      ? selectedHand.map((card: DeckCard) => (
-          <Card value={card.value} color={card.color} cardType="normal_card" />
-        ))
+      ? selectedHand.map((card: DeckCard) => ({
+          value: card.value,
+          color: card.color,
+        }))
       : generateRandomHand(),
     tally: 0,
     table: [],
@@ -90,11 +103,11 @@ function SoloGame(): JSX.Element {
   };
 
   const initialOtherPlayer: Player = {
-    name: '',
+    name: 'Player 2',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: generateRandomHand(),
+    hand: [],
     tally: 0,
     table: [],
     gamesWon: 0,
@@ -103,8 +116,44 @@ function SoloGame(): JSX.Element {
 
   const [player, setPlayer] = useState(initialPlayer);
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
+  const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
+  const [otherPlayerHand, setOtherPlayerHand] = useState([]);
+  const [otherPlayerTable, setOtherPlayerTable] = useState([]);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
+
+  useEffect(() => {
+    if (otherPlayerName != 'Player 2') {
+      console.log('setting name');
+      setOtherPlayer({ ...otherPlayer, name: otherPlayerName });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otherPlayerName]);
+
+  useEffect(() => {
+    if (otherPlayerName != 'Player 2') {
+      console.log('setting hand');
+      setOtherPlayer({
+        ...otherPlayer,
+        name: otherPlayerName,
+        hand: otherPlayerHand,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otherPlayerHand]);
+
+  useEffect(() => {
+    if (otherPlayerName != 'Player 2') {
+      console.log('setting table');
+      setOtherPlayer({
+        ...otherPlayer,
+        name: otherPlayerName,
+        table: otherPlayerTable,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [otherPlayerTable]);
+
   const navigate = useNavigate();
   const handleGameOverClick = () => {
     navigate('/');
@@ -118,141 +167,170 @@ function SoloGame(): JSX.Element {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
   }
-  function addCardToTable(newPlayer: Player): Player | null {
+  // function addCardToTable(newPlayer: Player): Player | null {
+  //   const audio = new Audio(cardflip);
+  //   audio.play();
+  //   const randomNumber = getRandomNumber();
+  //   const newCard = (
+  //     <Card value={randomNumber} color="green" cardType="normal_card" />
+  //   );
+  //   if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
+  //     setPlayer({
+  //       ...newPlayer,
+  //       tally: newPlayer.tally + randomNumber,
+  //       table: [...newPlayer.table, newCard],
+  //       action: PlayerState.PLAY,
+  //     });
+  //     return null;
+  //   }
+  //   if (newPlayer.action == PlayerState.STAND) {
+  //     console.log('player stood');
+  //   }
+
+  //   if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
+  //     console.log('otherPlayer.action before', otherPlayer.action);
+  //     const newOtherPlayer = {
+  //       ...otherPlayer,
+  //       tally: otherPlayer.tally + randomNumber,
+  //       table: [...otherPlayer.table, newCard],
+  //       action: PlayerState.PLAY,
+  //     };
+  //     setOtherPlayer(newOtherPlayer);
+  //     console.log('otherPlayer.action after', otherPlayer.action);
+  //     return newOtherPlayer;
+  //   }
+  //   console.log('both stood');
+  //   return null;
+  // }
+
+  //new
+  function getNewCardForTable(): CardProps {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
-    const newCard = (
-      <Card value={randomNumber} color="green" cardType="normal_card" />
-    );
-    if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
-      setPlayer({
-        ...newPlayer,
-        tally: newPlayer.tally + randomNumber,
-        table: [...newPlayer.table, newCard],
-        action: PlayerState.PLAY,
-      });
-      return null;
-    }
-    if (newPlayer.action == PlayerState.STAND) {
-      console.log('player stood');
-    }
-
-    if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
-      console.log('otherPlayer.action before', otherPlayer.action);
-      const newOtherPlayer = {
-        ...otherPlayer,
-        tally: otherPlayer.tally + randomNumber,
-        table: [...otherPlayer.table, newCard],
-        action: PlayerState.PLAY,
-      };
-      setOtherPlayer(newOtherPlayer);
-      console.log('otherPlayer.action after', otherPlayer.action);
-      return newOtherPlayer;
-    }
-    console.log('both stood');
-    return null;
+    console.log('random number: ', randomNumber);
+    return { value: randomNumber, color: 'green' };
   }
 
-  async function handleEndTurnButtonClick() {
+  // async function handleEndTurnButtonClick() {
+  //   const newPlayer = {
+  //     ...player,
+  //     isTurn: false,
+  //     action: PlayerState.ENDTURN,
+  //   };
+  //   setPlayer(newPlayer);
+  //   console.log(
+  //     'newPlayer, newPlayer.action',
+  //     newPlayer,
+  //     ', ',
+  //     newPlayer.action
+  //   );
+  //   const newOtherPlayer = addCardToTable(newPlayer);
+  //   const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
+  //   await delay(3000); // wait for 3 seconds while the AI "decides..."
+  //   if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
+  //     await endOfRoundCleaning(ePlayer);
+  //   } else {
+  //     setGameState(GameState.STARTED);
+  //     const newPlayer = {
+  //       ...player,
+  //       isTurn: true,
+  //       playedCardThisTurn: false,
+  //     };
+  //     setPlayer(newPlayer);
+  //     addCardToTable(newPlayer);
+  //   }
+  // }
+
+  // new
+  function handlePlayerEndTurnButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
       action: PlayerState.ENDTURN,
     };
     setPlayer(newPlayer);
-    console.log(
-      'newPlayer, newPlayer.action',
-      newPlayer,
-      ', ',
-      newPlayer.action
+
+    console.log('newPlayer, newPlayer.action', player, ', ', player.action);
+
+    const card = getNewCardForTable();
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify(player.table)
     );
-    const newOtherPlayer = addCardToTable(newPlayer);
-    const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
-    await delay(3000); // wait for 3 seconds while the AI "decides..."
-    // AI Choice starts
-    // if (ePlayer.tally < 20 && ePlayer.action != PlayerState.STAND) {
-    //   if (ePlayer.hand.length > 0) {
-    //     let bestSum = 0;
-    //     let bestCardIndex = -1;
-    //     // Check to see if you have any cards that can get you to 20
-    //     for (let i = 0; i < ePlayer.hand.length; i++) {
-    //       const card = ePlayer.hand[i];
-    //       const sum = ePlayer.tally + card.props.value;
-    //       if (sum >= 15 && sum <= 20 && sum > bestSum) {
-    //         bestSum = sum;
-    //         bestCardIndex = i;
-    //       }
-    //     }
-    //     console.log('bestCardIndex', bestCardIndex);
-    //     if (bestCardIndex !== -1) {
-    //       console.log('trying to play best card', bestCardIndex);
-    //       const [playedCard] = ePlayer.hand.splice(bestCardIndex, 1);
-    //       const newOtherPlayer = {
-    //         ...ePlayer,
-    //         hand: [...ePlayer.hand],
-    //         tally: playedCard.props.value + ePlayer.tally,
-    //         table: [...ePlayer.table, playedCard],
-    //         action: PlayerState.STAND,
-    //       };
-    //       console.log('Other Player Table', newOtherPlayer.table);
-    //       setOtherPlayer(newOtherPlayer);
-    //       await delay(3000); // wait for 3 seconds while the AI "decides..."
-    //       // setGameState(GameState.STAND);
-    //       console.log('I just played a card and now I want to stand');
-    //     }
-    //   } else {
-    //     const newOtherPlayer = {
-    //       ...ePlayer,
-    //       action: PlayerState.STAND,
-    //     };
-    //     setOtherPlayer(newOtherPlayer);
-    //     // setGameState(GameState.STAND);
-    //     console.log('i want to stand #2');
-    //   }
-    // } else if (ePlayer.tally >= 17 && ePlayer.tally <= 20) {
-    //   if (Math.random() < 0.7) {
-    //     const newOtherPlayer = {
-    //       ...ePlayer,
-    //       action: PlayerState.STAND,
-    //     };
-    //     setOtherPlayer(newOtherPlayer);
-    //     // setGameState(GameState.STAND);
-    //     console.log('mostly i want to stand');
-    //   } else {
-    //     // addCardToTable(newPlayer);
-    //     console.log('number between 17 and 20 but i need more cards');
-    //     const newOtherPlayer = {
-    //       ...ePlayer,
-    //       action: PlayerState.PLAY,
-    //     };
-    //     setOtherPlayer(newOtherPlayer);
-    //   }
-    // } else if (ePlayer.tally < 17) {
-    //   // addCardToTable(newPlayer);
-    //   console.log('more card');
-    //   const newOtherPlayer = {
-    //     ...ePlayer,
-    //     action: PlayerState.PLAY,
-    //   };
-    //   setOtherPlayer(newOtherPlayer);
-    // }
-    // AI choice ends
-    if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
-      await endOfRoundCleaning(ePlayer);
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+
+    if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
+      endOfRoundCleaning(newPlayer, newOtherPlayer);
     } else {
       setGameState(GameState.STARTED);
-      const newPlayer = {
-        ...player,
-        isTurn: true,
-        playedCardThisTurn: false,
-      };
-      setPlayer(newPlayer);
-      addCardToTable(newPlayer);
+      setOtherPlayer(newOtherPlayer);
+      // sendUpdateToWebSocket(
+      //   newPlayer,
+      //   newOtherPlayer,
+      //   GameState.STARTED,
+      //   sessionID
+      // );
     }
   }
 
-  function getRoundWinner(otherPlayer: Player) {
+  // function getRoundWinner(otherPlayer: Player) {
+  //   console.log(
+  //     'Player Score: ',
+  //     player.tally,
+  //     'Other Player Score: ',
+  //     otherPlayer.tally
+  //   );
+  //   const playerBust = player.tally > 20;
+  //   const otherPlayerBust = otherPlayer.tally > 20;
+  //   const otherPlayerWon = otherPlayer.tally <= 20;
+  //   const playerWon = player.tally <= 20;
+  //   const tie = player.tally == otherPlayer.tally;
+  //   const playerLessThanOther = player.tally < otherPlayer.tally;
+  //   const otherPlayerLessThanPlayer = player.tally > otherPlayer.tally;
+  //   const playerReturn = 1;
+  //   const otherPlayerPlayerReturn = 0;
+  //   const tieOrBustReturn = -1;
+
+  //   if (playerBust && otherPlayerBust) {
+  //     console.log('you both went bust');
+  //     return tieOrBustReturn;
+  //   }
+  //   if (playerBust && otherPlayerWon) {
+  //     console.log('opponent won');
+  //     return otherPlayerPlayerReturn;
+  //   }
+  //   if (otherPlayerBust && playerWon) {
+  //     console.log('you won');
+  //     return playerReturn;
+  //   }
+  //   if (tie) {
+  //     console.log('you tied');
+  //     return tieOrBustReturn;
+  //   }
+  //   if (playerLessThanOther) {
+  //     console.log('opponent won');
+  //     return otherPlayerPlayerReturn;
+  //   }
+  //   if (otherPlayerLessThanPlayer) {
+  //     console.log('you won');
+  //     return playerReturn;
+  //   }
+  //   console.log('the round is over', player.tally, otherPlayer.tally);
+  // }
+
+  //new
+  function getRoundWinner(player: Player, otherPlayer: Player) {
     console.log(
       'Player Score: ',
       player.tally,
@@ -297,34 +375,120 @@ function SoloGame(): JSX.Element {
     console.log('the round is over', player.tally, otherPlayer.tally);
   }
 
-  async function handleStandButtonClick() {
-    // setGameState(GameState.STAND);
+  // async function handleStandButtonClick() {
+  //   // setGameState(GameState.STAND);
+  //   const newPlayer = {
+  //     ...player,
+  //     isTurn: false,
+  //     action: PlayerState.STAND,
+  //   };
+  //   setPlayer(newPlayer);
+  //   const newOtherPlayer = addCardToTable(newPlayer);
+  //   await delay(3000); // wait for 3 seconds while the AI "decides...";
+  //   await endOfRoundCleaning(newOtherPlayer);
+  // }
+
+  // new
+  async function handlePlayerStandButtonClick() {
     const newPlayer = {
       ...player,
       isTurn: false,
       action: PlayerState.STAND,
     };
     setPlayer(newPlayer);
-    const newOtherPlayer = addCardToTable(newPlayer);
-    await delay(3000); // wait for 3 seconds while the AI "decides...";
-    await endOfRoundCleaning(newOtherPlayer);
+
+    const card = getNewCardForTable();
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify(player.table)
+    );
+    const newOtherPlayer = {
+      ...otherPlayer,
+      isTurn: true,
+      playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
+    };
+    setOtherPlayer(newOtherPlayer);
+
+    endOfRoundCleaning(newPlayer, newOtherPlayer);
   }
 
+  // async function handleStartButtonClick() {
+  //   const newPlayer = {
+  //     ...player,
+  //     isTurn: true,
+  //     playedCardThisTurn: false,
+  //   };
+  //   setPlayer(newPlayer);
+  //   addCardToTable(newPlayer);
+  //   setGameState(GameState.STARTED);
+  // }
+
+  // new
   async function handleStartButtonClick() {
+    const card = getNewCardForTable();
+    stompClient.send(
+      '/app/updateTable',
+      {
+        id: 'table',
+      },
+      JSON.stringify(player.table)
+    );
     const newPlayer = {
       ...player,
       isTurn: true,
       playedCardThisTurn: false,
+      tally: otherPlayer.tally + card.value,
+      table: [...otherPlayer.table, card],
+      action: PlayerState.PLAY,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+
     setGameState(GameState.STARTED);
+    // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
   }
 
-  async function endOfRoundCleaning(newOtherPlayer: Player | null) {
-    const winner = getRoundWinner(
-      newOtherPlayer ? newOtherPlayer : otherPlayer
-    );
+  // async function endOfRoundCleaning(newOtherPlayer: Player | null) {
+  //   const winner = getRoundWinner(
+  //     newOtherPlayer ? newOtherPlayer : otherPlayer
+  //   );
+  //   if (winner === 1) {
+  //     showEndRoundWinner('YOU WIN THE ROUND!');
+  //   } else if (winner === 0) {
+  //     showEndRoundWinner('OPPONENT WINS THE ROUND');
+  //   } else {
+  //     showEndRoundWinner('THIS ROUND IS TIED');
+  //   }
+  //   setPlayer({
+  //     ...player,
+  //     hand: player.hand,
+  //     table: [],
+  //     tally: 0,
+  //     action: PlayerState.PLAY,
+  //     gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
+  //     playedCardThisTurn: false,
+  //   });
+  //   setOtherPlayer({
+  //     ...otherPlayer,
+  //     hand: otherPlayer.hand,
+  //     table: [],
+  //     tally: 0,
+  //     action: PlayerState.PLAY,
+  //     gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
+  //     playedCardThisTurn: false,
+  //   });
+
+  //   setGameState(GameState.INITIAL);
+  // }
+
+  // new
+  function endOfRoundCleaning(player: Player, otherPlayer: Player) {
+    const winner = getRoundWinner(player, otherPlayer);
     if (winner === 1) {
       showEndRoundWinner('YOU WIN THE ROUND!');
     } else if (winner === 0) {
@@ -332,7 +496,7 @@ function SoloGame(): JSX.Element {
     } else {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    setPlayer({
+    const newPlayer = {
       ...player,
       hand: player.hand,
       table: [],
@@ -340,8 +504,9 @@ function SoloGame(): JSX.Element {
       action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
-    });
-    setOtherPlayer({
+    };
+    setPlayer(newPlayer);
+    const newOtherPlayer = {
       ...otherPlayer,
       hand: otherPlayer.hand,
       table: [],
@@ -349,31 +514,212 @@ function SoloGame(): JSX.Element {
       action: PlayerState.PLAY,
       gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
       playedCardThisTurn: false,
-    });
+    };
+    setOtherPlayer(newOtherPlayer);
 
     setGameState(GameState.INITIAL);
+    // sendUpdateToWebSocket(
+    //   newPlayer,
+    //   newOtherPlayer,
+    //   GameState.INITIAL,
+    //   sessionID
+    // );
   }
+
+  // function moveCard(card: JSX.Element, index: number) {
+  //   // if no cards have been played yet this turn, play a card
+
+  //   if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+  //     const audio = new Audio(cardflip);
+  //     audio.play();
+  //     player.hand.splice(index, 1);
+  //     setPlayer({
+  //       ...player,
+  //       hand: player.hand,
+  //       table: [...player.table, card],
+  //       tally: player.tally + card.props.value,
+  //       playedCardThisTurn: true,
+  //     });
+  //   }
+  // }
+
+  // new
 
   function moveCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
 
-    if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
+    if (
+      gameState === GameState.STARTED &&
+      !player.playedCardThisTurn &&
+      player.isTurn
+    ) {
       const audio = new Audio(cardflip);
       audio.play();
       player.hand.splice(index, 1);
-      setPlayer({
+      const newPlayer = {
         ...player,
         hand: player.hand,
-        table: [...player.table, card],
+        table: [
+          ...player.table,
+          { value: card.props.value, color: card.props.color },
+        ],
         tally: player.tally + card.props.value,
         playedCardThisTurn: true,
-      });
+      };
+      setPlayer(newPlayer);
+      // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
+    }
+
+    if (
+      gameState === GameState.STARTED &&
+      !otherPlayer.playedCardThisTurn &&
+      otherPlayer.isTurn
+    ) {
+      const audio = new Audio(cardflip);
+      audio.play();
+      otherPlayer.hand.splice(index, 1);
+      const newOtherPlayer = {
+        ...otherPlayer,
+        hand: otherPlayer.hand,
+        table: [
+          ...otherPlayer.table,
+          { value: card.props.value, color: card.props.color },
+        ],
+        tally: otherPlayer.tally + card.props.value,
+        playedCardThisTurn: true,
+      };
+      setOtherPlayer(newOtherPlayer);
+      // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
+
+  function joinRoom() {
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to subcribe to events.');
+      return;
+    }
+    // stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
+    stompClient.subscribe('/game/playerName', onPlayerNameReceived);
+    stompClient.subscribe('/game/hand', onHandReceived);
+    stompClient.subscribe('/game/table', onTableReceived);
+    sendInitialConnectingData();
+  }
+
+  // interface GameObject {
+  //   player1: Player;
+  //   player2: Player;
+  //   gameState: GameState;
+  //   // sessionID: string;
+  // }
+
+  const sendInitialConnectingData = () => {
+    // We will always set the player1 name to the user name on initial connection.
+    // The backend will handle assigning the players.
+    // const gameObject: GameObject = {
+    //   player1: player,
+    //   player2: otherPlayer,
+    //   gameState: gameState,
+    //   // sessionID: sessionID,
+    // };
+    // console.log('LOOK HERE', gameObject);
+    setPlayer({ ...player, name: userData.username });
+    console.log('LOOK HERE', userData.username);
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to send message.');
+      return;
+    }
+    // stompClient.send(
+    //   '/app/updateGame',
+    //   {
+    //     id: 'game',
+    //   },
+    //   JSON.stringify(gameObject)
+    // );
+    stompClient.send(
+      '/app/updatePlayerName',
+      {
+        id: 'name',
+      },
+      JSON.stringify(userData.username)
+    );
+    stompClient.send(
+      '/app/updateHand',
+      {
+        id: 'hand',
+      },
+      JSON.stringify(player.hand)
+    );
+  };
+
+  interface Payload {
+    body: string;
+  }
+
+  const onPlayerNameReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
+    if (payloadData != userData.username) {
+      console.log(
+        'the name: ',
+        userData.username,
+        ' and the name: ',
+        payloadData,
+        ' are not equal'
+      );
+      if (payloadData != null) {
+        setOtherPlayerName(payloadData);
+      }
+    }
+    return;
+  };
+
+  function onHandReceived(payload: Payload) {
+    const payloadData = JSON.parse(payload.body);
+    if (JSON.stringify(payloadData) != JSON.stringify(player.hand)) {
+      console.log(
+        'the hand ',
+        player.hand,
+        ' and the hand ',
+        payloadData,
+        ' are not equal.'
+      );
+      setOtherPlayerHand(payloadData);
+    }
+    console.log('Hand payloadData: ', payloadData);
+  }
+
+  function onTableReceived(payload: Payload) {
+    const payloadData = JSON.parse(payload.body);
+    if (JSON.stringify(payloadData) != JSON.stringify(player.table)) {
+      console.log(
+        'the hand ',
+        player.table,
+        ' and the hand ',
+        payloadData,
+        ' are not equal.'
+      );
+      setOtherPlayerTable(payloadData);
+    }
+    console.log('Table payloadData: ', payloadData);
+  }
+
+  // new
+  const listOfCards = (cards: CardProps[]): JSX.Element[] =>
+    cards.map((card) => {
+      return (
+        <Card value={card.value} color={card.color} cardType="normal_card" />
+      );
+    });
 
   return (
     <>
       <Header musicChoice={musicChoice} />
+      <div className="playerNames">
+        <h3>
+          userData.username: {userData.username} or player.name: {player?.name}
+        </h3>
+        <h3>otherPlayer.name: {otherPlayer?.name}</h3>
+      </div>
+
       <div className="scoreBoard">
         <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBar
@@ -388,29 +734,37 @@ function SoloGame(): JSX.Element {
       <div className="playerBoard">
         <div className="player1">
           <div className="table">
-            <Hand hand={player.table} />
+            {/* <Hand hand={player.table} /> */}
+            <Hand hand={listOfCards(player.table)} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={player.hand} moveCard={moveCard} />
+            {/* <Hand hand={player.hand} moveCard={moveCard} /> */}
+            <Hand hand={listOfCards(player.hand)} moveCard={moveCard} />
           </div>
           <div className="turnOptions">
             <GameButtons
               gameState={gameState}
-              onStand={handleStandButtonClick}
-              onEndTurn={handleEndTurnButtonClick}
+              // onStand={handleStandButtonClick}
+              // onEndTurn={handleEndTurnButtonClick}
+              // new
+              onStand={handlePlayerStandButtonClick}
+              onEndTurn={handlePlayerEndTurnButtonClick}
               onStartGame={handleStartButtonClick}
               isPlayerTurn={player.isTurn}
             />
           </div>
+          <button onClick={joinRoom}>Join Room</button>
         </div>
         <div className="player2">
           <div className="table">
-            <Hand hand={otherPlayer.table} />
+            {/* <Hand hand={otherPlayer.table} /> */}
+            <Hand hand={listOfCards(otherPlayer.table)} />
           </div>
           <hr />
           <div className="hand">
-            <Hand hand={otherPlayer.hand} />
+            {/* <Hand hand={otherPlayer.hand} /> */}
+            <Hand hand={listOfCards(otherPlayer.hand)} />
           </div>
         </div>
         <div className="center-message">
@@ -432,8 +786,7 @@ function SoloGame(): JSX.Element {
           )}
         </div>
       </div>
-      <Chat />
     </>
   );
 }
-export default SoloGame;
+export default PVPGame;
