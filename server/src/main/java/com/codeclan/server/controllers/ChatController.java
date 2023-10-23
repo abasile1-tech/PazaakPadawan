@@ -90,4 +90,11 @@ public class ChatController {
         System.out.printf("Table received: %s\n",table);
         return table;
     }
+
+    @MessageMapping("/updateStart")
+    @SendTo("/game/start")
+    private String receiveStart(@Payload String start){
+        System.out.printf("Start received: %s\n",start);
+        return start;
+    }
 }

@@ -433,6 +433,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   async function handleStartButtonClick() {
     const card = getNewCardForTable();
     stompClient.send(
+      '/app/updateStart',
+      {
+        id: 'start',
+      },
+      JSON.stringify('the game has started')
+    );
+    stompClient.send(
       '/app/updateTable',
       {
         id: 'table',
@@ -602,6 +609,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     stompClient.subscribe('/game/playerName', onPlayerNameReceived);
     stompClient.subscribe('/game/hand', onHandReceived);
     stompClient.subscribe('/game/table', onTableReceived);
+    stompClient.subscribe('/game/start', onStartReceived);
     sendInitialConnectingData();
   }
 
@@ -700,6 +708,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       setOtherPlayerTable(payloadData);
     }
     console.log('Table payloadData: ', payloadData);
+  }
+
+  function onStartReceived(payload: Payload) {
+    const payloadData = JSON.parse(payload.body);
+    setGameState(GameState.STARTED);
+    console.log('Game Started payloadData: ', payloadData);
   }
 
   // new
