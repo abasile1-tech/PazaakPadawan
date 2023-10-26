@@ -15,7 +15,7 @@ function HomePage() {
 
       <div className="main-content">
         <div id="home-page-text">
-          <h1>Pazaak</h1>
+          <h1 data-testid="hero-heading">Pazaak</h1>
           {/* <User /> */}
 
           <h2>
@@ -30,7 +30,9 @@ function HomePage() {
 
       <div className="buttons">
         <Link to="/solo">
-          <button className="solo-button">Solo Game</button>
+          <button className="solo-button" data-testid="solo-game-button">
+            Solo Game
+          </button>
         </Link>
         <Link to="/pvp">
           <button className="pvp-button">PVP Game</button>
