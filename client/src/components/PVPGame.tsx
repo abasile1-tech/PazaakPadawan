@@ -444,8 +444,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       ...player,
       isTurn: true,
       playedCardThisTurn: false,
-      tally: otherPlayer.tally + card.value,
-      table: [...otherPlayer.table, card],
+      tally: player.tally + card.value,
+      table: [...player.table, card],
       action: PlayerState.PLAY,
     };
     setPlayer(newPlayer);
@@ -454,7 +454,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       {
         id: 'table',
       },
-      JSON.stringify([...otherPlayer.table, card])
+      JSON.stringify([...player.table, card])
     );
 
     setGameState(GameState.STARTED);
