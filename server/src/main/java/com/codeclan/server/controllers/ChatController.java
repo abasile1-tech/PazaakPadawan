@@ -3,6 +3,7 @@ package com.codeclan.server.controllers;
 import com.codeclan.server.models.Card;
 import com.codeclan.server.models.GameObject;
 import com.codeclan.server.models.Message;
+import com.codeclan.server.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Controller;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class ChatController {
@@ -19,6 +22,8 @@ public class ChatController {
     private SimpMessagingTemplate simpMessagingTemplate;
 
     private final ArrayList<GameObject> gameObjects = new ArrayList<>();
+
+    private final Map<Integer, String> playerNames = new HashMap<>();
 
     @MessageMapping("/chatMessage")
     @SendTo("/game/chatroom")
@@ -72,9 +77,15 @@ public class ChatController {
 
     @MessageMapping("/updatePlayerName")
     @SendTo("/game/playerName")
-    private String receivePlayerName(@Payload String playerName){
+    private Map<Integer, String> receivePlayerName(@Payload String playerName){
         System.out.printf("Player name received: %s\n",playerName);
-        return playerName;
+        if (playerNames.isEmpty()) {
+            playerNames.put(1, playerName);
+        }
+        else if (!playerNames.containsKey(2)) {
+            playerNames.put(2, playerName);
+        }
+        return playerNames;
     }
 
     @MessageMapping("/updateHand")

@@ -607,7 +607,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return;
     }
     // stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
-    stompClient.subscribe('/game/playerName', onPlayerNameReceived);
+    stompClient.subscribe('/game/playerName', onPlayerNamesReceived);
     stompClient.subscribe('/game/hand', onHandReceived);
     stompClient.subscribe('/game/table', onTableReceived);
     stompClient.subscribe('/game/start', onStartReceived);
@@ -664,21 +664,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     body: string;
   }
 
-  const onPlayerNameReceived = (payload: Payload) => {
+  const onPlayerNamesReceived = (payload: Payload) => {
     const payloadData = JSON.parse(payload.body);
-    if (payloadData != userData.username) {
-      console.log(
-        'the name: ',
-        userData.username,
-        ' and the name: ',
-        payloadData,
-        ' are not equal'
-      );
-      if (payloadData != null) {
-        setOtherPlayerName(payloadData);
-      }
-    }
-    return;
+    console.log('playerNames:', payloadData);
+    console.log('player 1: ', payloadData[1]);
+    console.log('player 2: ', payloadData[2]);
   };
 
   function onHandReceived(payload: Payload) {
