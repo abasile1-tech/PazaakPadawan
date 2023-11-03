@@ -86,7 +86,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return randomHand;
   }
   const initialPlayer: Player = {
-    name: 'Player 1',
+    name: userData.username,
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
