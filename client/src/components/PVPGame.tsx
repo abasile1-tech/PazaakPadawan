@@ -1,7 +1,7 @@
 import { Client } from 'stompjs';
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -116,43 +116,43 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   const [player, setPlayer] = useState(initialPlayer);
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
-  const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
-  const [otherPlayerHand, setOtherPlayerHand] = useState([]);
-  const [otherPlayerTable, setOtherPlayerTable] = useState([]);
+  // const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
+  // const [otherPlayerHand, setOtherPlayerHand] = useState([]);
+  // const [otherPlayerTable, setOtherPlayerTable] = useState([]);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
-  useEffect(() => {
-    if (otherPlayerName != 'Player 2') {
-      console.log('setting name');
-      setOtherPlayer({ ...otherPlayer, name: otherPlayerName });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [otherPlayerName]);
+  // useEffect(() => {
+  //   if (otherPlayerName != 'Player 2') {
+  //     console.log('setting name');
+  //     setOtherPlayer({ ...otherPlayer, name: otherPlayerName });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [otherPlayerName]);
 
-  useEffect(() => {
-    if (otherPlayerName != 'Player 2') {
-      console.log('setting hand');
-      setOtherPlayer({
-        ...otherPlayer,
-        name: otherPlayerName,
-        hand: otherPlayerHand,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [otherPlayerHand]);
+  // useEffect(() => {
+  //   if (otherPlayerName != 'Player 2') {
+  //     console.log('setting hand');
+  //     setOtherPlayer({
+  //       ...otherPlayer,
+  //       name: otherPlayerName,
+  //       hand: otherPlayerHand,
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [otherPlayerHand]);
 
-  useEffect(() => {
-    if (otherPlayerName != 'Player 2') {
-      console.log('setting table');
-      setOtherPlayer({
-        ...otherPlayer,
-        name: otherPlayerName,
-        table: otherPlayerTable,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [otherPlayerTable]);
+  // useEffect(() => {
+  //   if (otherPlayerName != 'Player 2') {
+  //     console.log('setting table');
+  //     setOtherPlayer({
+  //       ...otherPlayer,
+  //       name: otherPlayerName,
+  //       table: otherPlayerTable,
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [otherPlayerTable]);
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -244,12 +244,15 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   // new
   function handlePlayerEndTurnButtonClick() {
-    const newPlayer = {
-      ...player,
-      isTurn: false,
-      action: PlayerState.ENDTURN,
-    };
-    setPlayer(newPlayer);
+    // const newPlayer = {
+    //   ...player,
+    //   isTurn: false,
+    //   action: PlayerState.ENDTURN,
+    // };
+    // setPlayer(newPlayer);
+    initialPlayer.isTurn = false;
+    initialPlayer.action = PlayerState.ENDTURN;
+    setPlayer(initialPlayer);
 
     console.log('newPlayer, newPlayer.action', player, ', ', player.action);
 
@@ -261,20 +264,27 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(player.table)
     );
-    const newOtherPlayer = {
-      ...otherPlayer,
-      isTurn: true,
-      playedCardThisTurn: false,
-      tally: otherPlayer.tally + card.value,
-      table: [...otherPlayer.table, card],
-      action: PlayerState.PLAY,
-    };
+    // const newOtherPlayer = {
+    //   ...otherPlayer,
+    //   isTurn: true,
+    //   playedCardThisTurn: false,
+    //   tally: otherPlayer.tally + card.value,
+    //   table: [...otherPlayer.table, card],
+    //   action: PlayerState.PLAY,
+    // };
+    initialOtherPlayer.isTurn = true;
+    initialOtherPlayer.playedCardThisTurn = false;
+    initialOtherPlayer.tally += card.value;
+    initialOtherPlayer.table.push(card);
+    initialOtherPlayer.action = PlayerState.PLAY;
 
-    if (newPlayer.tally >= 20 || newOtherPlayer.tally >= 20) {
-      endOfRoundCleaning(newPlayer, newOtherPlayer);
+    if (initialPlayer.tally >= 20 || initialOtherPlayer.tally >= 20) {
+      // endOfRoundCleaning(newPlayer, newOtherPlayer);
+      endOfRoundCleaning(initialPlayer, initialOtherPlayer);
     } else {
       setGameState(GameState.STARTED);
-      setOtherPlayer(newOtherPlayer);
+      // setOtherPlayer(newOtherPlayer);
+      setOtherPlayer(initialOtherPlayer);
       // sendUpdateToWebSocket(
       //   newPlayer,
       //   newOtherPlayer,
@@ -390,12 +400,15 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   // new
   async function handlePlayerStandButtonClick() {
-    const newPlayer = {
-      ...player,
-      isTurn: false,
-      action: PlayerState.STAND,
-    };
-    setPlayer(newPlayer);
+    // const newPlayer = {
+    //   ...player,
+    //   isTurn: false,
+    //   action: PlayerState.STAND,
+    // };
+    // setPlayer(newPlayer);
+    initialPlayer.isTurn = false;
+    initialPlayer.action = PlayerState.STAND;
+    setPlayer(initialPlayer);
 
     const card = getNewCardForTable();
     stompClient.send(
@@ -405,17 +418,24 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(player.table)
     );
-    const newOtherPlayer = {
-      ...otherPlayer,
-      isTurn: true,
-      playedCardThisTurn: false,
-      tally: otherPlayer.tally + card.value,
-      table: [...otherPlayer.table, card],
-      action: PlayerState.PLAY,
-    };
-    setOtherPlayer(newOtherPlayer);
+    // const newOtherPlayer = {
+    //   ...otherPlayer,
+    //   isTurn: true,
+    //   playedCardThisTurn: false,
+    //   tally: otherPlayer.tally + card.value,
+    //   table: [...otherPlayer.table, card],
+    //   action: PlayerState.PLAY,
+    // };
+    // setOtherPlayer(newOtherPlayer);
+    initialOtherPlayer.isTurn = true;
+    initialOtherPlayer.playedCardThisTurn = false;
+    initialOtherPlayer.tally += card.value;
+    initialOtherPlayer.table.push(card);
+    initialOtherPlayer.action = PlayerState.PLAY;
+    setOtherPlayer(initialOtherPlayer);
 
-    endOfRoundCleaning(newPlayer, newOtherPlayer);
+    // endOfRoundCleaning(newPlayer, newOtherPlayer);
+    endOfRoundCleaning(initialPlayer, initialOtherPlayer);
   }
 
   // async function handleStartButtonClick() {
@@ -440,15 +460,21 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       JSON.stringify('the game has started')
     );
 
-    const newPlayer = {
-      ...player,
-      isTurn: true,
-      playedCardThisTurn: false,
-      tally: otherPlayer.tally + card.value,
-      table: [...otherPlayer.table, card],
-      action: PlayerState.PLAY,
-    };
-    setPlayer(newPlayer);
+    // const newPlayer = {
+    //   ...player,
+    //   isTurn: true,
+    //   playedCardThisTurn: false,
+    //   tally: otherPlayer.tally + card.value,
+    //   table: [...otherPlayer.table, card],
+    //   action: PlayerState.PLAY,
+    // };
+    // setPlayer(newPlayer);
+    initialPlayer.isTurn = true;
+    initialPlayer.playedCardThisTurn = false;
+    initialPlayer.tally += card.value;
+    initialPlayer.table.push(card);
+    initialPlayer.action = PlayerState.PLAY;
+    setPlayer(initialPlayer);
     stompClient.send(
       '/app/updateTable',
       {
@@ -504,26 +530,40 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     } else {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    const newPlayer = {
-      ...player,
-      hand: player.hand,
-      table: [],
-      tally: 0,
-      action: PlayerState.PLAY,
-      gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
-      playedCardThisTurn: false,
-    };
-    setPlayer(newPlayer);
-    const newOtherPlayer = {
-      ...otherPlayer,
-      hand: otherPlayer.hand,
-      table: [],
-      tally: 0,
-      action: PlayerState.PLAY,
-      gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
-      playedCardThisTurn: false,
-    };
-    setOtherPlayer(newOtherPlayer);
+    // const newPlayer = {
+    //   ...player,
+    //   hand: player.hand,
+    //   table: [],
+    //   tally: 0,
+    //   action: PlayerState.PLAY,
+    //   gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
+    //   playedCardThisTurn: false,
+    // };
+    // setPlayer(newPlayer);
+    initialPlayer.table = [];
+    initialPlayer.tally = 0;
+    initialPlayer.action = PlayerState.PLAY;
+    initialPlayer.gamesWon =
+      winner === 1 ? player.gamesWon + 1 : player.gamesWon;
+    initialPlayer.playedCardThisTurn = false;
+    setPlayer(initialPlayer);
+    // const newOtherPlayer = {
+    //   ...otherPlayer,
+    //   hand: otherPlayer.hand,
+    //   table: [],
+    //   tally: 0,
+    //   action: PlayerState.PLAY,
+    //   gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
+    //   playedCardThisTurn: false,
+    // };
+    // setOtherPlayer(newOtherPlayer);
+    initialOtherPlayer.table = [];
+    initialOtherPlayer.tally = 0;
+    initialOtherPlayer.action = PlayerState.PLAY;
+    initialOtherPlayer.gamesWon =
+      winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon;
+    initialOtherPlayer.playedCardThisTurn = false;
+    setOtherPlayer(initialOtherPlayer);
 
     setGameState(GameState.INITIAL);
     // sendUpdateToWebSocket(
@@ -564,17 +604,24 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       const audio = new Audio(cardflip);
       audio.play();
       player.hand.splice(index, 1);
-      const newPlayer = {
-        ...player,
-        hand: player.hand,
-        table: [
-          ...player.table,
-          { value: card.props.value, color: card.props.color },
-        ],
-        tally: player.tally + card.props.value,
-        playedCardThisTurn: true,
-      };
-      setPlayer(newPlayer);
+      // const newPlayer = {
+      //   ...player,
+      //   hand: player.hand,
+      //   table: [
+      //     ...player.table,
+      //     { value: card.props.value, color: card.props.color },
+      //   ],
+      //   tally: player.tally + card.props.value,
+      //   playedCardThisTurn: true,
+      // };
+      // setPlayer(newPlayer);
+      initialPlayer.table.push({
+        value: card.props.value,
+        color: card.props.color,
+      });
+      initialPlayer.tally += card.props.value;
+      initialPlayer.playedCardThisTurn = true;
+      setPlayer(initialPlayer);
       // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
     }
 
@@ -586,17 +633,24 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       const audio = new Audio(cardflip);
       audio.play();
       otherPlayer.hand.splice(index, 1);
-      const newOtherPlayer = {
-        ...otherPlayer,
-        hand: otherPlayer.hand,
-        table: [
-          ...otherPlayer.table,
-          { value: card.props.value, color: card.props.color },
-        ],
-        tally: otherPlayer.tally + card.props.value,
-        playedCardThisTurn: true,
-      };
-      setOtherPlayer(newOtherPlayer);
+      // const newOtherPlayer = {
+      //   ...otherPlayer,
+      //   hand: otherPlayer.hand,
+      //   table: [
+      //     ...otherPlayer.table,
+      //     { value: card.props.value, color: card.props.color },
+      //   ],
+      //   tally: otherPlayer.tally + card.props.value,
+      //   playedCardThisTurn: true,
+      // };
+      // setOtherPlayer(newOtherPlayer);
+      initialOtherPlayer.table.push({
+        value: card.props.value,
+        color: card.props.color,
+      });
+      initialOtherPlayer.tally += card.props.value;
+      initialOtherPlayer.playedCardThisTurn = true;
+      setOtherPlayer(initialOtherPlayer);
       // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
@@ -675,7 +729,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         ' are not equal'
       );
       if (payloadData != null) {
-        setOtherPlayerName(payloadData);
+        initialOtherPlayer.name = payloadData;
+        setOtherPlayer(initialOtherPlayer);
       }
     }
     return;
@@ -691,7 +746,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         payloadData,
         ' are not equal.'
       );
-      setOtherPlayerHand(payloadData);
+      initialOtherPlayer.hand = payloadData;
+      setOtherPlayer(initialOtherPlayer);
     }
     console.log('Hand payloadData: ', payloadData);
   }
@@ -706,7 +762,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         payloadData,
         ' are not equal.'
       );
-      setOtherPlayerTable(payloadData);
+      initialOtherPlayer.table = payloadData;
+      setOtherPlayer(initialOtherPlayer);
     }
     console.log('Table payloadData: ', payloadData);
   }
