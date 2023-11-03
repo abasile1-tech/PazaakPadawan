@@ -1,7 +1,7 @@
 import { Client } from 'stompjs';
 import Header from './Header';
 import ScoreLights from './ScoreLights';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBar from './PlayBar';
@@ -122,37 +122,29 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
-  // useEffect(() => {
-  //   if (otherPlayerName != 'Player 2') {
-  //     console.log('setting name');
-  //     setOtherPlayer({ ...otherPlayer, name: otherPlayerName });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [otherPlayerName]);
+  useEffect(() => {
+    if (initialOtherPlayer.name != 'Player 2') {
+      console.log('setting name');
+      setOtherPlayer(initialOtherPlayer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialOtherPlayer.name]);
 
-  // useEffect(() => {
-  //   if (otherPlayerName != 'Player 2') {
-  //     console.log('setting hand');
-  //     setOtherPlayer({
-  //       ...otherPlayer,
-  //       name: otherPlayerName,
-  //       hand: otherPlayerHand,
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [otherPlayerHand]);
+  useEffect(() => {
+    if (initialOtherPlayer.name != 'Player 2') {
+      console.log('setting hand');
+      setOtherPlayer(initialOtherPlayer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialOtherPlayer.hand]);
 
-  // useEffect(() => {
-  //   if (otherPlayerName != 'Player 2') {
-  //     console.log('setting table');
-  //     setOtherPlayer({
-  //       ...otherPlayer,
-  //       name: otherPlayerName,
-  //       table: otherPlayerTable,
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [otherPlayerTable]);
+  useEffect(() => {
+    if (initialOtherPlayer.name != 'Player 2') {
+      console.log('setting table');
+      setOtherPlayer(initialOtherPlayer);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialOtherPlayer.table]);
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
