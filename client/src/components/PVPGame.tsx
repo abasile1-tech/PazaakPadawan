@@ -677,7 +677,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     //   // sessionID: sessionID,
     // };
     // console.log('LOOK HERE', gameObject);
-    setPlayer({ ...player, name: userData.username });
+    setPlayer(() => {
+      return { ...player, name: userData.username };
+    });
     console.log('LOOK HERE', userData.username);
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to send message.');
