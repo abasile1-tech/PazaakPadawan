@@ -122,29 +122,35 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
-  useEffect(() => {
-    if (initialOtherPlayer.name != 'Player 2') {
-      console.log('setting name');
-      setOtherPlayer(initialOtherPlayer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialOtherPlayer.name]);
+  // useEffect(() => {
+  //   if (initialOtherPlayer.name != 'Player 2') {
+  //     console.log('setting name');
+  //     setOtherPlayer(() => {
+  //       return initialOtherPlayer;
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [initialOtherPlayer.name]);
 
-  useEffect(() => {
-    if (initialOtherPlayer.name != 'Player 2') {
-      console.log('setting hand');
-      setOtherPlayer(initialOtherPlayer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialOtherPlayer.hand]);
+  // useEffect(() => {
+  //   if (initialOtherPlayer.name != 'Player 2') {
+  //     console.log('setting hand');
+  //     setOtherPlayer(() => {
+  //       return initialOtherPlayer;
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [initialOtherPlayer.hand]);
 
-  useEffect(() => {
-    if (initialOtherPlayer.name != 'Player 2') {
-      console.log('setting table');
-      setOtherPlayer(initialOtherPlayer);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialOtherPlayer.table]);
+  // useEffect(() => {
+  //   if (initialOtherPlayer.name != 'Player 2') {
+  //     console.log('setting table');
+  //     setOtherPlayer(() => {
+  //       return initialOtherPlayer;
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [initialOtherPlayer.table]);
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -244,7 +250,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     // setPlayer(newPlayer);
     initialPlayer.isTurn = false;
     initialPlayer.action = PlayerState.ENDTURN;
-    setPlayer(initialPlayer);
+    setPlayer(() => {
+      return initialPlayer;
+    });
 
     console.log('newPlayer, newPlayer.action', player, ', ', player.action);
 
@@ -276,7 +284,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     } else {
       setGameState(GameState.STARTED);
       // setOtherPlayer(newOtherPlayer);
-      setOtherPlayer(initialOtherPlayer);
+      setOtherPlayer(() => {
+        return initialOtherPlayer;
+      });
       // sendUpdateToWebSocket(
       //   newPlayer,
       //   newOtherPlayer,
@@ -400,7 +410,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     // setPlayer(newPlayer);
     initialPlayer.isTurn = false;
     initialPlayer.action = PlayerState.STAND;
-    setPlayer(initialPlayer);
+    setPlayer(() => {
+      return initialPlayer;
+    });
 
     const card = getNewCardForTable();
     stompClient.send(
@@ -424,7 +436,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     initialOtherPlayer.tally += card.value;
     initialOtherPlayer.table.push(card);
     initialOtherPlayer.action = PlayerState.PLAY;
-    setOtherPlayer(initialOtherPlayer);
+    setOtherPlayer(() => {
+      return initialOtherPlayer;
+    });
 
     // endOfRoundCleaning(newPlayer, newOtherPlayer);
     endOfRoundCleaning(initialPlayer, initialOtherPlayer);
@@ -466,7 +480,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     initialPlayer.tally += card.value;
     initialPlayer.table.push(card);
     initialPlayer.action = PlayerState.PLAY;
-    setPlayer(initialPlayer);
+    setPlayer(() => {
+      return initialPlayer;
+    });
     stompClient.send(
       '/app/updateTable',
       {
@@ -538,7 +554,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     initialPlayer.gamesWon =
       winner === 1 ? player.gamesWon + 1 : player.gamesWon;
     initialPlayer.playedCardThisTurn = false;
-    setPlayer(initialPlayer);
+    setPlayer(() => {
+      return initialPlayer;
+    });
     // const newOtherPlayer = {
     //   ...otherPlayer,
     //   hand: otherPlayer.hand,
@@ -555,7 +573,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     initialOtherPlayer.gamesWon =
       winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon;
     initialOtherPlayer.playedCardThisTurn = false;
-    setOtherPlayer(initialOtherPlayer);
+    setOtherPlayer(() => {
+      return initialOtherPlayer;
+    });
 
     setGameState(GameState.INITIAL);
     // sendUpdateToWebSocket(
@@ -613,7 +633,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       });
       initialPlayer.tally += card.props.value;
       initialPlayer.playedCardThisTurn = true;
-      setPlayer(initialPlayer);
+      setPlayer(() => {
+        return initialPlayer;
+      });
       // sendUpdateToWebSocket(newPlayer, otherPlayer, gameState, sessionID);
     }
 
@@ -642,7 +664,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       });
       initialOtherPlayer.tally += card.props.value;
       initialOtherPlayer.playedCardThisTurn = true;
-      setOtherPlayer(initialOtherPlayer);
+      setOtherPlayer(() => {
+        return initialOtherPlayer;
+      });
       // sendUpdateToWebSocket(player, newOtherPlayer, gameState, sessionID);
     }
   }
@@ -724,7 +748,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       );
       if (payloadData != null) {
         initialOtherPlayer.name = payloadData;
-        setOtherPlayer(initialOtherPlayer);
+        setOtherPlayer(() => {
+          return initialOtherPlayer;
+        });
       }
     }
     return;
@@ -741,7 +767,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         ' are not equal.'
       );
       initialOtherPlayer.hand = payloadData;
-      setOtherPlayer(initialOtherPlayer);
+      setOtherPlayer(() => {
+        return initialOtherPlayer;
+      });
     }
     console.log('Hand payloadData: ', payloadData);
   }
@@ -757,7 +785,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         ' are not equal.'
       );
       initialOtherPlayer.table = payloadData;
-      setOtherPlayer(initialOtherPlayer);
+      setOtherPlayer(() => {
+        return initialOtherPlayer;
+      });
     }
     console.log('Table payloadData: ', payloadData);
   }
