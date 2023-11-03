@@ -88,7 +88,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: [],
+    hand: generateRandomHand(),
     tally: 0,
     table: [],
     gamesWon: 0,
@@ -100,7 +100,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: [],
+    hand: generateRandomHand(),
     tally: 0,
     table: [],
     gamesWon: 0,
@@ -362,9 +362,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     console.log('player 1: ', payloadData[1]);
     console.log('player 2: ', payloadData[2]);
     playerOne.name = payloadData[1];
-    setPlayer1(playerOne);
+    setPlayer1(() => {
+      return playerOne;
+    });
     playerTwo.name = payloadData[2];
-    setPlayer2(playerTwo);
+    setPlayer2(() => {
+      return playerTwo;
+    });
   };
 
   function onHandReceived(payload: Payload) {
