@@ -88,12 +88,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
-    hand: selectedHand
-      ? selectedHand.map((card: DeckCard) => ({
-          value: card.value,
-          color: card.color,
-        }))
-      : generateRandomHand(),
+    hand: [],
     tally: 0,
     table: [],
     gamesWon: 0,
