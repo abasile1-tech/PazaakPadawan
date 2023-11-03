@@ -669,6 +669,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     console.log('playerNames:', payloadData);
     console.log('player 1: ', payloadData[1]);
     console.log('player 2: ', payloadData[2]);
+    initialPlayer.name = payloadData[1];
+    setPlayer(initialPlayer);
+    initialOtherPlayer.name = payloadData[2];
+    setOtherPlayer(initialOtherPlayer);
   };
 
   function onHandReceived(payload: Payload) {
