@@ -396,7 +396,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       <div className="playerNames">
         <h3>
           userData.username: {userData.username} or player1.name:{' '}
-          {player1?.name}
+          {player1?.name} or playerOne.name: {playerOne.name}
         </h3>
         <h3>player2.name: {player2?.name}</h3>
       </div>
