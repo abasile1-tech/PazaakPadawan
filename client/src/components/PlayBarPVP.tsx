@@ -52,7 +52,7 @@ const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
         <div className="user-bar">
           <img src={ewok} alt="ewok" />
           <h3 className="userBarName">{player.name}</h3>
-          <ScoreKeeper cardTally={player.tally} />
+          <h2> {player.tally} </h2>
         </div>
         {/* {selectedCharacter ? (
             <div className="user-bar">
@@ -80,7 +80,7 @@ const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
         <div className="user-bar">
           <img src={yoda} alt="yoda" />
           <h3 className="userBarName">{otherPlayer.name}</h3>
-          <ScoreKeeper cardTally={otherPlayer.tally} />
+          <h2> {otherPlayer.tally} </h2>
         </div>
       </div>
     </>
