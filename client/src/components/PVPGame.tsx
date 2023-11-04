@@ -587,6 +587,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const payloadData = JSON.parse(payload.body);
 
     setEndRoundMessage(() => {
+      if (
+        payloadData.player1.roundsWon === 3 ||
+        payloadData.player2.roundsWon === 3
+      ) {
+        return '';
+      }
       if (payloadData.player1.wonRound === WonRoundState.WON) {
         return `${payloadData.player1.name} WON THE ROUND!`;
       }
