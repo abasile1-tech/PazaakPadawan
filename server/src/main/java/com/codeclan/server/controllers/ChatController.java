@@ -1,17 +1,12 @@
 package com.codeclan.server.controllers;
-
-import com.codeclan.server.models.Card;
 import com.codeclan.server.models.GameObject;
 import com.codeclan.server.models.Message;
-import com.codeclan.server.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Controller
@@ -69,40 +64,5 @@ public class ChatController {
 
         // If we get to here, the session exists and has player1 and player2 so just return the passed in value
         return frontEndGameObject;
-    }
-
-    @MessageMapping("/updatePlayerName")
-    @SendTo("/game/playerName")
-    private String receivePlayerName(@Payload String playerName){
-        System.out.printf("Player name received: %s\n",playerName);
-        return playerName;
-    }
-
-    @MessageMapping("/updateHand")
-    @SendTo("/game/hand")
-    private ArrayList<Card> receiveHand(@Payload ArrayList<Card> hand){
-        System.out.printf("Hand received: %s\n",hand);
-        return hand;
-    }
-
-    @MessageMapping("/updateTable")
-    @SendTo("/game/table")
-    private ArrayList<Card> receiveTable(@Payload ArrayList<Card> table){
-        System.out.printf("Table received: %s\n",table);
-        return table;
-    }
-
-    @MessageMapping("/updateStart")
-    @SendTo("/game/start")
-    private String receiveStart(@Payload String start){
-        System.out.printf("Start received: %s\n",start);
-        return start;
-    }
-
-    @MessageMapping("/updatePlayer")
-    @SendTo("/game/player")
-    private Player receivePlayer(@Payload Player player){
-        System.out.printf("Player received: %s\n",player);
-        return player;
     }
 }

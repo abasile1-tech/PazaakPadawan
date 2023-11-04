@@ -502,11 +502,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return;
     }
     stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
-    // stompClient.subscribe('/game/playerName', onPlayerNameReceived);
-    // stompClient.subscribe('/game/hand', onHandReceived);
-    // stompClient.subscribe('/game/table', onTableReceived);
-    // stompClient.subscribe('/game/start', onStartReceived);
-    // stompClient.subscribe('/game/player', onPlayerReceived);
     sendInitialConnectingData();
   }
 
@@ -524,14 +519,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       player1: { ...player, name: userData.username },
       player2: otherPlayer,
       gameState: gameState,
-      // sessionID: sessionID,
       sessionID: '10',
     };
-    console.log('LOOK HERE', gameObject);
-    // setPlayer(() => {
-    //   return { ...player, name: userData.username };
-    // });
-    console.log('LOOK HERE', userData.username);
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
@@ -543,119 +532,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(gameObject)
     );
-    // stompClient.send(
-    //   '/app/updatePlayerName',
-    //   {
-    //     id: 'name',
-    //   },
-    //   JSON.stringify(userData.username)
-    // );
-    // stompClient.send(
-    //   '/app/updateHand',
-    //   {
-    //     id: 'hand',
-    //   },
-    //   JSON.stringify(player.hand)
-    // );
-    // stompClient.send(
-    //   '/app/updatePlayer',
-    //   {
-    //     id: 'player',
-    //   },
-    //   JSON.stringify(player)
-    // );
   };
 
   interface Payload {
     body: string;
-  }
-
-  const onPlayerNameReceived = (payload: Payload) => {
-    const payloadData = JSON.parse(payload.body);
-    if (payloadData != userData.username) {
-      console.log(
-        'the name: ',
-        userData.username,
-        ' and the name: ',
-        payloadData,
-        ' are not equal'
-      );
-      if (payloadData != null) {
-        initialOtherPlayer.name = payloadData;
-        setOtherPlayer(() => {
-          return initialOtherPlayer;
-        });
-      }
-    }
-    return;
-  };
-
-  const onPlayerReceived = (payload: Payload) => {
-    const payloadData = JSON.parse(payload.body);
-    if (payloadData.name != userData.username) {
-      console.log(
-        'the name: ',
-        userData.username,
-        ' and the name: ',
-        payloadData.name,
-        ' are not equal'
-      );
-      if (payloadData.name != null) {
-        // initialOtherPlayer.name = payloadData;
-        setOtherPlayer((current) => {
-          return {
-            ...current,
-            name: payloadData.name,
-            hand: payloadData.hand,
-            table: payloadData.table,
-          };
-          // return initialOtherPlayer;
-        });
-      }
-    }
-    return;
-  };
-
-  function onHandReceived(payload: Payload) {
-    const payloadData = JSON.parse(payload.body);
-    if (JSON.stringify(payloadData) != JSON.stringify(player.hand)) {
-      console.log(
-        'the hand ',
-        player.hand,
-        ' and the hand ',
-        payloadData,
-        ' are not equal.'
-      );
-      initialOtherPlayer.hand = payloadData;
-      setOtherPlayer(() => {
-        return initialOtherPlayer;
-      });
-    }
-    console.log('Hand payloadData: ', payloadData);
-  }
-
-  function onTableReceived(payload: Payload) {
-    const payloadData = JSON.parse(payload.body);
-    if (JSON.stringify(payloadData) != JSON.stringify(player.table)) {
-      console.log(
-        'the table ',
-        player.table,
-        ' and the table ',
-        payloadData,
-        ' are not equal.'
-      );
-      initialOtherPlayer.table = payloadData;
-      setOtherPlayer(() => {
-        return initialOtherPlayer;
-      });
-    }
-    console.log('Table payloadData: ', payloadData);
-  }
-
-  function onStartReceived(payload: Payload) {
-    const payloadData = JSON.parse(payload.body);
-    setGameState(GameState.STARTED);
-    console.log('Game Started payloadData: ', payloadData);
   }
 
   function onGameUpdateReceived(payload: Payload) {
@@ -673,8 +553,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return payloadData.gameState;
     });
   }
-
-  // new
   const listOfCards = (cards: CardProps[]): JSX.Element[] =>
     cards.map((card) => {
       return (
@@ -697,12 +575,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         <div className="player1">
           <p>Is Turn: {player.isTurn ? 'true' : 'false'}</p>
           <div className="table">
-            {/* <Hand hand={player.table} /> */}
             <Hand hand={listOfCards(player.table)} />
           </div>
           <hr />
           <div className="hand">
-            {/* <Hand hand={player.hand} moveCard={moveCard} /> */}
             <Hand
               hand={listOfCards(player.hand)}
               moveCard={
@@ -730,12 +606,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         <div className="player2">
           <p>Is Turn: {otherPlayer.isTurn ? 'true' : 'false'}</p>
           <div className="table">
-            {/* <Hand hand={otherPlayer.table} /> */}
             <Hand hand={listOfCards(otherPlayer.table)} />
           </div>
           <hr />
           <div className="hand">
-            {/* <Hand hand={otherPlayer.hand} /> */}
             <Hand
               hand={listOfCards(otherPlayer.hand)}
               moveCard={
