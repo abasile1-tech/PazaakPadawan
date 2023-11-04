@@ -24,12 +24,13 @@ const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
 
   return (
     <>
-      <div
-        className="play_bar"
-        style={{ display: 'flex', justifyContent: 'space-between' }}
-      >
+      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <div
-          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
         >
           <ScoreLights numGamesWon={player.gamesWon} />
           <div className="user-bar" style={{ marginLeft: '2em' }}>
@@ -44,7 +45,11 @@ const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
           </div>
         </div>
         <div
-          style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+          }}
         >
           <div className="user-bar" style={{ marginRight: '2em' }}>
             <img src={yoda} alt="yoda" />
