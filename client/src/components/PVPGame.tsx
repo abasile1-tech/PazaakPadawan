@@ -4,47 +4,19 @@ import ScoreLights from './ScoreLights';
 import { useEffect, useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
-import PlayBar from './PlayBar';
+import PlayBarPVP from './PlayBarPVP';
 import cardflip from '../assets/music/flipcardfast.mp3';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
+import { Player, CardProps, GameState, PlayerState } from '../types';
 
 interface DeckCard {
   value: number;
   color: string;
   selected: boolean;
   imagePath: string;
-}
-
-interface CardProps {
-  value: number;
-  color: string;
-}
-
-interface Player {
-  name: string;
-  action: PlayerState;
-  wonGame: boolean;
-  isTurn: boolean;
-  hand: CardProps[];
-  tally: number;
-  table: CardProps[];
-  gamesWon: number;
-  playedCardThisTurn: boolean;
-}
-
-enum GameState {
-  INITIAL = 'initial',
-  STARTED = 'started',
-  ENDED = 'ended',
-}
-
-enum PlayerState {
-  PLAY = 'play',
-  STAND = 'stand',
-  ENDTURN = 'endturn',
 }
 
 interface UserData {
@@ -896,10 +868,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
       <div className="scoreBoard">
         <ScoreLights numGamesWon={player.gamesWon} />
-        <PlayBar
-          playerTally={player.tally}
-          opponentTally={otherPlayer.tally}
-          isPlayerTurn={player.isTurn}
+        <PlayBarPVP
+          player={player}
+          otherPlayer={otherPlayer}
           gameState={gameState}
         />
         <ScoreLights numGamesWon={otherPlayer.gamesWon} />
