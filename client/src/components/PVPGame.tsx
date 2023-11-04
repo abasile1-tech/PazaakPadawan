@@ -681,6 +681,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     stompClient.subscribe('/game/hand', onHandReceived);
     stompClient.subscribe('/game/table', onTableReceived);
     stompClient.subscribe('/game/start', onStartReceived);
+    stompClient.subscribe('/game/player', onPlayerReceived);
     sendInitialConnectingData();
   }
 
@@ -716,19 +717,26 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     //   },
     //   JSON.stringify(gameObject)
     // );
+    // stompClient.send(
+    //   '/app/updatePlayerName',
+    //   {
+    //     id: 'name',
+    //   },
+    //   JSON.stringify(userData.username)
+    // );
+    // stompClient.send(
+    //   '/app/updateHand',
+    //   {
+    //     id: 'hand',
+    //   },
+    //   JSON.stringify(player.hand)
+    // );
     stompClient.send(
-      '/app/updatePlayerName',
+      '/app/updatePlayer',
       {
-        id: 'name',
+        id: 'player',
       },
-      JSON.stringify(userData.username)
-    );
-    stompClient.send(
-      '/app/updateHand',
-      {
-        id: 'hand',
-      },
-      JSON.stringify(player.hand)
+      JSON.stringify(player)
     );
   };
 
@@ -750,6 +758,32 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         initialOtherPlayer.name = payloadData;
         setOtherPlayer(() => {
           return initialOtherPlayer;
+        });
+      }
+    }
+    return;
+  };
+
+  const onPlayerReceived = (payload: Payload) => {
+    const payloadData = JSON.parse(payload.body);
+    if (payloadData.name != userData.username) {
+      console.log(
+        'the name: ',
+        userData.username,
+        ' and the name: ',
+        payloadData.name,
+        ' are not equal'
+      );
+      if (payloadData.name != null) {
+        // initialOtherPlayer.name = payloadData;
+        setOtherPlayer((current) => {
+          return {
+            ...current,
+            name: payloadData.name,
+            hand: payloadData.hand,
+            table: payloadData.table,
+          };
+          // return initialOtherPlayer;
         });
       }
     }
