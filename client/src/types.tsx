@@ -11,7 +11,8 @@ export interface Player {
   hand: CardProps[];
   tally: number;
   table: CardProps[];
-  gamesWon: number;
+  roundsWon: number;
+  wonRound: WonRoundState;
   playedCardThisTurn: boolean;
 }
 
@@ -24,4 +25,11 @@ export enum PlayerState {
   PLAY = 'play',
   STAND = 'stand',
   ENDTURN = 'endturn',
+}
+
+export enum WonRoundState {
+  WON = 'won',
+  LOST = 'lost',
+  TIED = 'tied',
+  UNDECIDED = 'undecided',
 }

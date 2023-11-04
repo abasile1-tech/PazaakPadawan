@@ -11,15 +11,13 @@ interface PlayBarPVPProps {
 
 const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
   const getTurnIndicatorText = () => {
-    if (gameState == GameState.INITIAL) {
-      return 'Press Start to Begin';
-    }
     if (player.isTurn) {
       return `${player.name}'s turn`;
     }
     if (otherPlayer.isTurn) {
       return `${otherPlayer.name}'s turn`;
     }
+    return 'Press Start to Begin';
   };
 
   return (
@@ -32,7 +30,7 @@ const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
             alignItems: 'center',
           }}
         >
-          <ScoreLights numGamesWon={player.gamesWon} />
+          <ScoreLights numGamesWon={player.roundsWon} />
           <div className="user-bar" style={{ marginLeft: '2em' }}>
             <img src={ewok} alt="ewok" />
             <h3 className="userBarName">{player.name}</h3>
@@ -56,7 +54,7 @@ const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
             <h3 className="userBarName">{otherPlayer.name}</h3>
             <h2> {otherPlayer.tally} </h2>
           </div>
-          <ScoreLights numGamesWon={otherPlayer.gamesWon} />
+          <ScoreLights numGamesWon={otherPlayer.roundsWon} />
         </div>
       </div>
     </>

@@ -16,6 +16,7 @@ public class Player {
     private ArrayList<Card> hand;
     private Integer tally;
     private ArrayList<Card> table;
-    private Integer gamesWon;
+    private Integer roundsWon;
+    private String wonRound;
     private Boolean playedCardThisTurn;
 }

@@ -9,7 +9,13 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
-import { Player, CardProps, GameState, PlayerState } from '../types';
+import {
+  Player,
+  CardProps,
+  GameState,
+  PlayerState,
+  WonRoundState,
+} from '../types';
 
 interface DeckCard {
   value: number;
@@ -66,7 +72,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       : generateRandomHand(),
     tally: 0,
     table: [],
-    gamesWon: 0,
+    roundsWon: 0,
+    wonRound: WonRoundState.UNDECIDED,
     playedCardThisTurn: false,
   };
 
@@ -77,7 +84,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     hand: [],
     tally: 0,
     table: [],
-    gamesWon: 0,
+    roundsWon: 0,
+    wonRound: WonRoundState.UNDECIDED,
     playedCardThisTurn: false,
   };
 
@@ -397,6 +405,22 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     );
   }
 
+  function getWonRoundState(winner: 1 | 0 | -1 | undefined) {
+    if (winner === 1) {
+      return [WonRoundState.WON, WonRoundState.LOST];
+    }
+    if (winner === 0) {
+      return [WonRoundState.LOST, WonRoundState.WON];
+    }
+    if (winner === -1) {
+      return [WonRoundState.TIED, WonRoundState.TIED];
+    }
+    console.warn(
+      'Returning undecided for player and other player WonRoundState'
+    );
+    return [WonRoundState.UNDECIDED, WonRoundState.UNDECIDED];
+  }
+
   function endOfRoundCleaning(player: Player, otherPlayer: Player) {
     // if winner is 1: player won, if winner is 0: otherPlayer won, if winner is -1: tie
     const winner = getRoundWinner(player, otherPlayer);
@@ -408,6 +432,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     //   showEndRoundWinner('THIS ROUND IS TIED');
     // }
 
+    const [playerWonRound, otherPlayerWonRound] = getWonRoundState(winner);
+    console.log('PLAYER', playerWonRound, 'OTHER PLAYER', otherPlayerWonRound);
     const gameObject: GameObject = {
       player1: {
         ...player,
@@ -415,7 +441,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         table: [],
         tally: 0,
         action: PlayerState.PLAY,
-        gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
+        roundsWon: winner === 1 ? player.roundsWon + 1 : player.roundsWon,
+        wonRound: playerWonRound,
         playedCardThisTurn: false,
       },
       player2: {
@@ -424,8 +451,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         table: [],
         tally: 0,
         action: PlayerState.PLAY,
-        gamesWon:
-          winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
+        roundsWon:
+          winner === 0 ? otherPlayer.roundsWon + 1 : otherPlayer.roundsWon,
+        wonRound: otherPlayerWonRound,
         playedCardThisTurn: false,
       },
       gameState: GameState.ENDED,
@@ -558,24 +586,18 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   function onGameUpdateReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);
 
-    console.log('Game State', gameState);
-    if (payloadData.gameState === GameState.ENDED) {
-      setEndRoundMessage(() => {
-        if (
-          payloadData.player1.gamesWon === 3 ||
-          payloadData.player2.gamesWon === 3
-        ) {
-          return '';
-        }
-        if (player.gamesWon !== payloadData.player1.gamesWon) {
-          return `${player.name} WON THE ROUND!`;
-        }
-        if (otherPlayer.gamesWon !== payloadData.player2.gamesWon) {
-          return `${otherPlayer.name} WON THE ROUND!`;
-        }
-        return 'THIS ROUND IS TIED';
-      });
-    }
+    setEndRoundMessage(() => {
+      if (payloadData.player1.wonRound === WonRoundState.WON) {
+        return `${payloadData.player1.name} WON THE ROUND!`;
+      }
+      if (payloadData.player2.wonRound === WonRoundState.WON) {
+        return `${payloadData.player2.name} WON THE ROUND!`;
+      }
+      if (payloadData.player1.wonRound === WonRoundState.TIED) {
+        return 'IT WAS A TIE!';
+      }
+      return '';
+    });
 
     setPlayer(() => {
       return { ...payloadData.player1 };
@@ -589,6 +611,22 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     setGameState(() => {
       return payloadData.gameState;
     });
+  }
+
+  function dismissPopup() {
+    const gameObject: GameObject = {
+      player1: { ...player, wonRound: WonRoundState.UNDECIDED },
+      player2: { ...otherPlayer, wonRound: WonRoundState.UNDECIDED },
+      gameState: gameState,
+      sessionID: '10',
+    };
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
   }
 
   const listOfCards = (cards: CardProps[]): JSX.Element[] =>
@@ -611,7 +649,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       <hr />
       <div className="playerBoard">
         <div className="player1">
-          <p>Is Turn: {player.isTurn ? 'true' : 'false'}</p>
+          <h3>
+            {player.name}{' '}
+            {player.action === PlayerState.STAND ? 'STOOD' : 'Still playing...'}
+          </h3>
           <div className="table">
             <Hand hand={listOfCards(player.table)} />
           </div>
@@ -642,7 +683,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           <button onClick={joinRoom}>Join Room</button>
         </div>
         <div className="player2">
-          <p>Is Turn: {otherPlayer.isTurn ? 'true' : 'false'}</p>
+          <h3>
+            {otherPlayer.name}{' '}
+            {otherPlayer.action === PlayerState.STAND
+              ? 'STOOD'
+              : 'Still playing...'}
+          </h3>
           <div className="table">
             <Hand hand={listOfCards(otherPlayer.table)} />
           </div>
@@ -673,8 +719,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         </div>
         <div className="center-message">
           <EndGamePopup
-            numGamesWonPlayer={player.gamesWon}
-            numGamesWonOpponent={otherPlayer.gamesWon}
+            numGamesWonPlayer={player.roundsWon}
+            numGamesWonOpponent={otherPlayer.roundsWon}
             handleGameOverClick={handleGameOverClick}
           />
         </div>
@@ -683,11 +729,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
             <PopUp
               message={endRoundMessage}
               buttonText="OK"
-              onClick={() => {
-                setEndRoundMessage(() => {
-                  return '';
-                });
-              }}
+              onClick={dismissPopup}
             />
           )}
         </div>
