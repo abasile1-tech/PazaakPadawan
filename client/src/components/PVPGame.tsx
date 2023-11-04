@@ -363,95 +363,47 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     );
   }
 
-  // async function endOfRoundCleaning(newOtherPlayer: Player | null) {
-  //   const winner = getRoundWinner(
-  //     newOtherPlayer ? newOtherPlayer : otherPlayer
-  //   );
-  //   if (winner === 1) {
-  //     showEndRoundWinner('YOU WIN THE ROUND!');
-  //   } else if (winner === 0) {
-  //     showEndRoundWinner('OPPONENT WINS THE ROUND');
-  //   } else {
-  //     showEndRoundWinner('THIS ROUND IS TIED');
-  //   }
-  //   setPlayer({
-  //     ...player,
-  //     hand: player.hand,
-  //     table: [],
-  //     tally: 0,
-  //     action: PlayerState.PLAY,
-  //     gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
-  //     playedCardThisTurn: false,
-  //   });
-  //   setOtherPlayer({
-  //     ...otherPlayer,
-  //     hand: otherPlayer.hand,
-  //     table: [],
-  //     tally: 0,
-  //     action: PlayerState.PLAY,
-  //     gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
-  //     playedCardThisTurn: false,
-  //   });
-
-  //   setGameState(GameState.INITIAL);
-  // }
-
-  // new
   function endOfRoundCleaning(player: Player, otherPlayer: Player) {
+    // if winner is 1: player won, if winner is 0: otherPlayer won, if winner is -1: tie
     const winner = getRoundWinner(player, otherPlayer);
     if (winner === 1) {
-      showEndRoundWinner('YOU WIN THE ROUND!');
+      showEndRoundWinner(`${player.name} WON THE ROUND!`);
     } else if (winner === 0) {
-      showEndRoundWinner('OPPONENT WINS THE ROUND');
-    } else {
+      showEndRoundWinner(`${otherPlayer.name} WON THE ROUND!`);
+    } else if (winner === -1) {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    // const newPlayer = {
-    //   ...player,
-    //   hand: player.hand,
-    //   table: [],
-    //   tally: 0,
-    //   action: PlayerState.PLAY,
-    //   gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
-    //   playedCardThisTurn: false,
-    // };
-    // setPlayer(newPlayer);
-    initialPlayer.table = [];
-    initialPlayer.tally = 0;
-    initialPlayer.action = PlayerState.PLAY;
-    initialPlayer.gamesWon =
-      winner === 1 ? player.gamesWon + 1 : player.gamesWon;
-    initialPlayer.playedCardThisTurn = false;
-    setPlayer(() => {
-      return initialPlayer;
-    });
-    // const newOtherPlayer = {
-    //   ...otherPlayer,
-    //   hand: otherPlayer.hand,
-    //   table: [],
-    //   tally: 0,
-    //   action: PlayerState.PLAY,
-    //   gamesWon: winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
-    //   playedCardThisTurn: false,
-    // };
-    // setOtherPlayer(newOtherPlayer);
-    initialOtherPlayer.table = [];
-    initialOtherPlayer.tally = 0;
-    initialOtherPlayer.action = PlayerState.PLAY;
-    initialOtherPlayer.gamesWon =
-      winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon;
-    initialOtherPlayer.playedCardThisTurn = false;
-    setOtherPlayer(() => {
-      return initialOtherPlayer;
-    });
 
-    setGameState(GameState.INITIAL);
-    // sendUpdateToWebSocket(
-    //   newPlayer,
-    //   newOtherPlayer,
-    //   GameState.INITIAL,
-    //   sessionID
-    // );
+    const gameObject: GameObject = {
+      player1: {
+        ...player,
+        hand: player.hand,
+        table: [],
+        tally: 0,
+        action: PlayerState.PLAY,
+        gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
+        playedCardThisTurn: false,
+      },
+      player2: {
+        ...otherPlayer,
+        hand: otherPlayer.hand,
+        table: [],
+        tally: 0,
+        action: PlayerState.PLAY,
+        gamesWon:
+          winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
+        playedCardThisTurn: false,
+      },
+      gameState: GameState.INITIAL,
+      sessionID: '10',
+    };
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
   }
 
   // function moveCard(card: JSX.Element, index: number) {
