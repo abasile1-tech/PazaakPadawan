@@ -174,52 +174,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
   }
 
-  // function getRoundWinner(otherPlayer: Player) {
-  //   console.log(
-  //     'Player Score: ',
-  //     player.tally,
-  //     'Other Player Score: ',
-  //     otherPlayer.tally
-  //   );
-  //   const playerBust = player.tally > 20;
-  //   const otherPlayerBust = otherPlayer.tally > 20;
-  //   const otherPlayerWon = otherPlayer.tally <= 20;
-  //   const playerWon = player.tally <= 20;
-  //   const tie = player.tally == otherPlayer.tally;
-  //   const playerLessThanOther = player.tally < otherPlayer.tally;
-  //   const otherPlayerLessThanPlayer = player.tally > otherPlayer.tally;
-  //   const playerReturn = 1;
-  //   const otherPlayerPlayerReturn = 0;
-  //   const tieOrBustReturn = -1;
-
-  //   if (playerBust && otherPlayerBust) {
-  //     console.log('you both went bust');
-  //     return tieOrBustReturn;
-  //   }
-  //   if (playerBust && otherPlayerWon) {
-  //     console.log('opponent won');
-  //     return otherPlayerPlayerReturn;
-  //   }
-  //   if (otherPlayerBust && playerWon) {
-  //     console.log('you won');
-  //     return playerReturn;
-  //   }
-  //   if (tie) {
-  //     console.log('you tied');
-  //     return tieOrBustReturn;
-  //   }
-  //   if (playerLessThanOther) {
-  //     console.log('opponent won');
-  //     return otherPlayerPlayerReturn;
-  //   }
-  //   if (otherPlayerLessThanPlayer) {
-  //     console.log('you won');
-  //     return playerReturn;
-  //   }
-  //   console.log('the round is over', player.tally, otherPlayer.tally);
-  // }
-
-  //new
   function getRoundWinner(player: Player, otherPlayer: Player) {
     console.log(
       'Player Score: ',
@@ -325,19 +279,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     endOfRoundCleaning(gameObject.player1, gameObject.player2);
   }
 
-  // async function handleStartButtonClick() {
-  //   const newPlayer = {
-  //     ...player,
-  //     isTurn: true,
-  //     playedCardThisTurn: false,
-  //   };
-  //   setPlayer(newPlayer);
-  //   addCardToTable(newPlayer);
-  //   setGameState(GameState.STARTED);
-  // }
-
-  // new
-  async function handleStartButtonClick() {
+  function handleStartButtonClick() {
     const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
@@ -403,25 +345,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       JSON.stringify(gameObject)
     );
   }
-
-  // function moveCard(card: JSX.Element, index: number) {
-  //   // if no cards have been played yet this turn, play a card
-
-  //   if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
-  //     const audio = new Audio(cardflip);
-  //     audio.play();
-  //     player.hand.splice(index, 1);
-  //     setPlayer({
-  //       ...player,
-  //       hand: player.hand,
-  //       table: [...player.table, card],
-  //       tally: player.tally + card.props.value,
-  //       playedCardThisTurn: true,
-  //     });
-  //   }
-  // }
-
-  // new
 
   function movePlayerCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
