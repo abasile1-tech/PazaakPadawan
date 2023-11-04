@@ -68,7 +68,7 @@ public class ChatController {
 
     @MessageMapping("/deleteGame")
     @SendTo("/game/deleteGameObject")
-    private boolean deleteGameObject(@Payload GameObject frontEndGameObject){
-        return gameObjects.remove(frontEndGameObject);
+    private GameObject deleteGameObject(@Payload GameObject frontEndGameObject){
+        return gameObjects.remove(0);
     }
 }

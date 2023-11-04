@@ -577,10 +577,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     });
   }
 
-  function onDeleteSessionReceived(deletedSession: boolean) {
-    if (deletedSession) {
+  function onDeleteSessionReceived(payload: Payload) {
+    console.log('PLAYLOAD', payload.body);
+    if (payload.body) {
       const gameObject: GameObject = {
-        player1: { ...initialPlayer, name: userData.username },
+        player1: initialPlayer,
         player2: initialOtherPlayer,
         gameState: GameState.INITIAL,
         sessionID: '10',
