@@ -1,7 +1,6 @@
 import { Client } from 'stompjs';
 import Header from './Header';
-import ScoreLights from './ScoreLights';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Hand from './Hand';
 import Card from './Card';
 import PlayBarPVP from './PlayBarPVP';
@@ -29,13 +28,11 @@ interface UserData {
 interface PVPGameProps {
   stompClient: Client;
   userData: UserData;
-  // setUserData: React.Dispatch<React.SetStateAction<UserData>>;
 }
 
 function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
-  // const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
 
@@ -88,41 +85,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   const [player, setPlayer] = useState(initialPlayer);
   const [otherPlayer, setOtherPlayer] = useState(initialOtherPlayer);
-  // const [otherPlayerName, setOtherPlayerName] = useState('Player 2');
-  // const [otherPlayerHand, setOtherPlayerHand] = useState([]);
-  // const [otherPlayerTable, setOtherPlayerTable] = useState([]);
   const [musicChoice] = useState('pvpGame');
   const [gameState, setGameState] = useState(GameState.INITIAL);
-
-  // useEffect(() => {
-  //   if (initialOtherPlayer.name != 'Player 2') {
-  //     console.log('setting name');
-  //     setOtherPlayer(() => {
-  //       return initialOtherPlayer;
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [initialOtherPlayer.name]);
-
-  // useEffect(() => {
-  //   if (initialOtherPlayer.name != 'Player 2') {
-  //     console.log('setting hand');
-  //     setOtherPlayer(() => {
-  //       return initialOtherPlayer;
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [initialOtherPlayer.hand]);
-
-  // useEffect(() => {
-  //   if (initialOtherPlayer.name != 'Player 2') {
-  //     console.log('setting table');
-  //     setOtherPlayer(() => {
-  //       return initialOtherPlayer;
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [initialOtherPlayer.table]);
 
   const navigate = useNavigate();
   const handleGameOverClick = () => {
@@ -853,27 +817,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <div className="playerNames">
-        <h3>{userData.username}</h3>
-        <h3>
-          Am I player 1? {player.name == userData.username ? 'true' : 'false'}
-          {/* userData.username: {userData.username} or player.name: {player?.name} */}
-        </h3>
-        <h3>
-          Am I player 2?{' '}
-          {otherPlayer.name == userData.username ? 'true' : 'false'}
-        </h3>
-        {/* <h3>otherPlayer.name: {otherPlayer?.name}</h3> */}
-      </div>
-
       <div className="scoreBoard">
-        <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBarPVP
           player={player}
           otherPlayer={otherPlayer}
           gameState={gameState}
         />
-        <ScoreLights numGamesWon={otherPlayer.gamesWon} />
       </div>
       <hr />
       <div className="playerBoard">
