@@ -86,7 +86,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return randomHand;
   }
   const initialPlayer: Player = {
-    name: userData.username,
+    name: 'Player 1',
     action: PlayerState.PLAY,
     wonGame: false,
     isTurn: false,
@@ -696,16 +696,16 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     // We will always set the player1 name to the user name on initial connection.
     // The backend will handle assigning the players.
     const gameObject: GameObject = {
-      player1: player,
+      player1: { ...player, name: userData.username },
       player2: otherPlayer,
       gameState: gameState,
       // sessionID: sessionID,
       sessionID: '10',
     };
     console.log('LOOK HERE', gameObject);
-    setPlayer(() => {
-      return { ...player, name: userData.username };
-    });
+    // setPlayer(() => {
+    //   return { ...player, name: userData.username };
+    // });
     console.log('LOOK HERE', userData.username);
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to send message.');
@@ -835,15 +835,15 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   function onGameUpdateReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);
-    if (payloadData.player1.name == userData.username) {
-      setPlayer(() => {
-        return { ...payloadData.player1 };
-      });
-    } else {
-      setOtherPlayer(() => {
-        return { ...payloadData.player2 };
-      });
-    }
+
+    setPlayer(() => {
+      return { ...payloadData.player1 };
+    });
+
+    setOtherPlayer(() => {
+      return { ...payloadData.player2 };
+    });
+
     setGameState(() => {
       return payloadData.gameState;
     });
@@ -861,10 +861,16 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     <>
       <Header musicChoice={musicChoice} />
       <div className="playerNames">
+        <h3>{userData.username}</h3>
         <h3>
-          userData.username: {userData.username} or player.name: {player?.name}
+          Am I player 1? {player.name == userData.username ? 'true' : 'false'}
+          {/* userData.username: {userData.username} or player.name: {player?.name} */}
         </h3>
-        <h3>otherPlayer.name: {otherPlayer?.name}</h3>
+        <h3>
+          Am I player 2?{' '}
+          {otherPlayer.name == userData.username ? 'true' : 'false'}
+        </h3>
+        {/* <h3>otherPlayer.name: {otherPlayer?.name}</h3> */}
       </div>
 
       <div className="scoreBoard">

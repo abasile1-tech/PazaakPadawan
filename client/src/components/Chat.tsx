@@ -37,7 +37,9 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
       return;
     }
     const { value } = event.target;
-    setUserData({ ...userData, username: value });
+    setUserData((current) => {
+      return { ...current, username: value };
+    });
   };
   const handleMessage = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
@@ -45,11 +47,15 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
       return;
     }
     const { value } = event.target;
-    setUserData({ ...userData, message: value });
+    setUserData((current) => {
+      return { ...current, message: value };
+    });
   };
 
   const registerUser = () => {
-    setUserData({ ...userData, connected: true });
+    setUserData((current) => {
+      return { ...current, connected: true };
+    });
     if (!stompClient) {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
@@ -95,7 +101,9 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
         date: today,
       };
       stompClient.send('/app/chatMessage', {}, JSON.stringify(chatMessage));
-      setUserData({ ...userData, message: '' });
+      setUserData((current) => {
+        return { ...current, message: '' };
+      });
     }
   };
 
