@@ -425,13 +425,14 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   function movePlayerCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
-    const audio = new Audio(cardflip);
-    audio.play();
+
     if (
       gameState === GameState.STARTED &&
       !player.playedCardThisTurn &&
       player.isTurn
     ) {
+      const audio = new Audio(cardflip);
+      audio.play();
       player.hand.splice(index, 1);
 
       const gameObject: GameObject = {
@@ -461,13 +462,14 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   function moveOtherPlayerCard(card: JSX.Element, index: number) {
     // if no cards have been played yet this turn, play a card
-    const audio = new Audio(cardflip);
-    audio.play();
+
     if (
       gameState === GameState.STARTED &&
       !otherPlayer.playedCardThisTurn &&
       otherPlayer.isTurn
     ) {
+      const audio = new Audio(cardflip);
+      audio.play();
       otherPlayer.hand.splice(index, 1);
       const gameObject: GameObject = {
         player1: player,
@@ -693,7 +695,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       <hr />
       <div className="playerBoard">
         <div className="player1">
-          <p>Games Won: {player.gamesWon}</p>
+          <p>Is Turn: {player.isTurn ? 'true' : 'false'}</p>
           <div className="table">
             {/* <Hand hand={player.table} /> */}
             <Hand hand={listOfCards(player.table)} />
@@ -703,7 +705,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
             {/* <Hand hand={player.hand} moveCard={moveCard} /> */}
             <Hand
               hand={listOfCards(player.hand)}
-              moveCard={player.isTurn ? movePlayerCard : () => {}}
+              moveCard={
+                player.isTurn && player.name == userData.username
+                  ? movePlayerCard
+                  : () => {}
+              }
             />
           </div>
           <div className="turnOptions">
@@ -722,7 +728,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           <button onClick={joinRoom}>Join Room</button>
         </div>
         <div className="player2">
-          <p>Games Won: {otherPlayer.gamesWon}</p>
+          <p>Is Turn: {otherPlayer.isTurn ? 'true' : 'false'}</p>
           <div className="table">
             {/* <Hand hand={otherPlayer.table} /> */}
             <Hand hand={listOfCards(otherPlayer.table)} />
@@ -732,7 +738,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
             {/* <Hand hand={otherPlayer.hand} /> */}
             <Hand
               hand={listOfCards(otherPlayer.hand)}
-              moveCard={otherPlayer.isTurn ? moveOtherPlayerCard : () => {}}
+              moveCard={
+                otherPlayer.isTurn && otherPlayer.name == userData.username
+                  ? moveOtherPlayerCard
+                  : () => {}
+              }
             />
           </div>
           <div className="turnOptions">
