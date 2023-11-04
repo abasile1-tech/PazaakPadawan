@@ -458,13 +458,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   // new
   async function handleStartButtonClick() {
     const card = getNewCardForTable();
-    stompClient.send(
-      '/app/updateStart',
-      {
-        id: 'start',
-      },
-      JSON.stringify('the game has started')
-    );
+    // stompClient.send(
+    //   '/app/updateStart',
+    //   {
+    //     id: 'start',
+    //   },
+    //   JSON.stringify('the game has started')
+    // );
 
     // const newPlayer = {
     //   ...player,
@@ -474,25 +474,46 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     //   table: [...otherPlayer.table, card],
     //   action: PlayerState.PLAY,
     // };
-    // setPlayer(newPlayer);
-    initialPlayer.isTurn = true;
-    initialPlayer.playedCardThisTurn = false;
-    initialPlayer.tally += card.value;
-    initialPlayer.table.push(card);
-    initialPlayer.action = PlayerState.PLAY;
-    setPlayer(() => {
-      return initialPlayer;
-    });
-    stompClient.send(
-      '/app/updateTable',
-      {
-        id: 'table',
+    const gameObject: GameObject = {
+      player1: {
+        ...player,
+        isTurn: true,
+        playedCardThisTurn: false,
+        tally: otherPlayer.tally + card.value,
+        table: [...otherPlayer.table, card],
+        action: PlayerState.PLAY,
       },
-      JSON.stringify([...otherPlayer.table, card])
-    );
+      player2: otherPlayer,
+      gameState: GameState.STARTED,
+      // sessionID: sessionID,
+      sessionID: '10',
+    };
+    // setPlayer(newPlayer);
+    // initialPlayer.isTurn = true;
+    // initialPlayer.playedCardThisTurn = false;
+    // initialPlayer.tally += card.value;
+    // initialPlayer.table.push(card);
+    // initialPlayer.action = PlayerState.PLAY;
+    // setPlayer(() => {
+    //   return initialPlayer;
+    // });
+    // stompClient.send(
+    //   '/app/updateTable',
+    //   {
+    //     id: 'table',
+    //   },
+    //   JSON.stringify([...otherPlayer.table, card])
+    // );
 
-    setGameState(GameState.STARTED);
+    // setGameState(GameState.STARTED);
     // sendUpdateToWebSocket(newPlayer, otherPlayer, GameState.STARTED, sessionID);
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
   }
 
   // async function endOfRoundCleaning(newOtherPlayer: Player | null) {
