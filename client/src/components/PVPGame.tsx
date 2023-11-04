@@ -101,43 +101,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
   }
-  // function addCardToTable(newPlayer: Player): Player | null {
-  //   const audio = new Audio(cardflip);
-  //   audio.play();
-  //   const randomNumber = getRandomNumber();
-  //   const newCard = (
-  //     <Card value={randomNumber} color="green" cardType="normal_card" />
-  //   );
-  //   if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
-  //     setPlayer({
-  //       ...newPlayer,
-  //       tally: newPlayer.tally + randomNumber,
-  //       table: [...newPlayer.table, newCard],
-  //       action: PlayerState.PLAY,
-  //     });
-  //     return null;
-  //   }
-  //   if (newPlayer.action == PlayerState.STAND) {
-  //     console.log('player stood');
-  //   }
 
-  //   if (!newPlayer.isTurn && otherPlayer.action != PlayerState.STAND) {
-  //     console.log('otherPlayer.action before', otherPlayer.action);
-  //     const newOtherPlayer = {
-  //       ...otherPlayer,
-  //       tally: otherPlayer.tally + randomNumber,
-  //       table: [...otherPlayer.table, newCard],
-  //       action: PlayerState.PLAY,
-  //     };
-  //     setOtherPlayer(newOtherPlayer);
-  //     console.log('otherPlayer.action after', otherPlayer.action);
-  //     return newOtherPlayer;
-  //   }
-  //   console.log('both stood');
-  //   return null;
-  // }
-
-  //new
   function getNewCardForTable(): CardProps {
     const audio = new Audio(cardflip);
     audio.play();
@@ -146,143 +110,69 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return { value: randomNumber, color: 'green' };
   }
 
-  // async function handleEndTurnButtonClick() {
-  //   const newPlayer = {
-  //     ...player,
-  //     isTurn: false,
-  //     action: PlayerState.ENDTURN,
-  //   };
-  //   setPlayer(newPlayer);
-  //   console.log(
-  //     'newPlayer, newPlayer.action',
-  //     newPlayer,
-  //     ', ',
-  //     newPlayer.action
-  //   );
-  //   const newOtherPlayer = addCardToTable(newPlayer);
-  //   const ePlayer = newOtherPlayer ? newOtherPlayer : otherPlayer;
-  //   await delay(3000); // wait for 3 seconds while the AI "decides..."
-  //   if (newPlayer.tally >= 20 || ePlayer.tally >= 20) {
-  //     await endOfRoundCleaning(ePlayer);
-  //   } else {
-  //     setGameState(GameState.STARTED);
-  //     const newPlayer = {
-  //       ...player,
-  //       isTurn: true,
-  //       playedCardThisTurn: false,
-  //     };
-  //     setPlayer(newPlayer);
-  //     addCardToTable(newPlayer);
-  //   }
-  // }
-
-  // new
   function handlePlayerEndTurnButtonClick() {
-    // const newPlayer = {
-    //   ...player,
-    //   isTurn: false,
-    //   action: PlayerState.ENDTURN,
-    // };
-    // setPlayer(newPlayer);
-    initialPlayer.isTurn = false;
-    initialPlayer.action = PlayerState.ENDTURN;
-    setPlayer(() => {
-      return initialPlayer;
-    });
-
-    console.log('newPlayer, newPlayer.action', player, ', ', player.action);
-
     const card = getNewCardForTable();
-    stompClient.send(
-      '/app/updateTable',
-      {
-        id: 'table',
-      },
-      JSON.stringify(player.table)
-    );
-    // const newOtherPlayer = {
-    //   ...otherPlayer,
-    //   isTurn: true,
-    //   playedCardThisTurn: false,
-    //   tally: otherPlayer.tally + card.value,
-    //   table: [...otherPlayer.table, card],
-    //   action: PlayerState.PLAY,
-    // };
-    initialOtherPlayer.isTurn = true;
-    initialOtherPlayer.playedCardThisTurn = false;
-    initialOtherPlayer.tally += card.value;
-    initialOtherPlayer.table.push(card);
-    initialOtherPlayer.action = PlayerState.PLAY;
 
-    if (initialPlayer.tally >= 20 || initialOtherPlayer.tally >= 20) {
-      // endOfRoundCleaning(newPlayer, newOtherPlayer);
-      endOfRoundCleaning(initialPlayer, initialOtherPlayer);
-    } else {
-      setGameState(GameState.STARTED);
-      // setOtherPlayer(newOtherPlayer);
-      setOtherPlayer(() => {
-        return initialOtherPlayer;
-      });
-      // sendUpdateToWebSocket(
-      //   newPlayer,
-      //   newOtherPlayer,
-      //   GameState.STARTED,
-      //   sessionID
-      // );
+    const gameObject: GameObject = {
+      player1: {
+        ...player,
+        isTurn: false,
+        action: PlayerState.ENDTURN,
+      },
+      player2: {
+        ...otherPlayer,
+        isTurn: true,
+        playedCardThisTurn: false,
+        tally: otherPlayer.tally + card.value,
+        table: [...otherPlayer.table, card],
+        action: PlayerState.PLAY,
+      },
+      gameState,
+      sessionID: '10',
+    };
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
+
+    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+      endOfRoundCleaning(gameObject.player1, gameObject.player2);
     }
   }
+
   function handleOtherPlayerEndTurnButtonClick() {
-    // const newPlayer = {
-    //   ...player,
-    //   isTurn: false,
-    //   action: PlayerState.ENDTURN,
-    // };
-    // setPlayer(newPlayer);
-    initialPlayer.isTurn = false;
-    initialPlayer.action = PlayerState.ENDTURN;
-    setPlayer(() => {
-      return initialPlayer;
-    });
-
-    console.log('newPlayer, newPlayer.action', player, ', ', player.action);
-
     const card = getNewCardForTable();
-    stompClient.send(
-      '/app/updateTable',
-      {
-        id: 'table',
-      },
-      JSON.stringify(player.table)
-    );
-    // const newOtherPlayer = {
-    //   ...otherPlayer,
-    //   isTurn: true,
-    //   playedCardThisTurn: false,
-    //   tally: otherPlayer.tally + card.value,
-    //   table: [...otherPlayer.table, card],
-    //   action: PlayerState.PLAY,
-    // };
-    initialOtherPlayer.isTurn = true;
-    initialOtherPlayer.playedCardThisTurn = false;
-    initialOtherPlayer.tally += card.value;
-    initialOtherPlayer.table.push(card);
-    initialOtherPlayer.action = PlayerState.PLAY;
 
-    if (initialPlayer.tally >= 20 || initialOtherPlayer.tally >= 20) {
-      // endOfRoundCleaning(newPlayer, newOtherPlayer);
-      endOfRoundCleaning(initialPlayer, initialOtherPlayer);
-    } else {
-      setGameState(GameState.STARTED);
-      // setOtherPlayer(newOtherPlayer);
-      setOtherPlayer(() => {
-        return initialOtherPlayer;
-      });
-      // sendUpdateToWebSocket(
-      //   newPlayer,
-      //   newOtherPlayer,
-      //   GameState.STARTED,
-      //   sessionID
-      // );
+    const gameObject: GameObject = {
+      player1: {
+        ...player,
+        isTurn: true,
+        playedCardThisTurn: false,
+        tally: player.tally + card.value,
+        table: [...player.table, card],
+        action: PlayerState.PLAY,
+      },
+      player2: {
+        ...otherPlayer,
+        isTurn: false,
+        action: PlayerState.ENDTURN,
+      },
+      gameState,
+      sessionID: '10',
+    };
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
+
+    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+      endOfRoundCleaning(gameObject.player1, gameObject.player2);
     }
   }
 
@@ -377,21 +267,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     console.log('the round is over', player.tally, otherPlayer.tally);
   }
 
-  // async function handleStandButtonClick() {
-  //   // setGameState(GameState.STAND);
-  //   const newPlayer = {
-  //     ...player,
-  //     isTurn: false,
-  //     action: PlayerState.STAND,
-  //   };
-  //   setPlayer(newPlayer);
-  //   const newOtherPlayer = addCardToTable(newPlayer);
-  //   await delay(3000); // wait for 3 seconds while the AI "decides...";
-  //   await endOfRoundCleaning(newOtherPlayer);
-  // }
-
-  // new
-  async function handlePlayerStandButtonClick() {
+  function handlePlayerStandButtonClick() {
     const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
@@ -420,21 +296,22 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
     endOfRoundCleaning(gameObject.player1, gameObject.player2);
   }
-  async function handleOtherPlayerStandButtonClick() {
+
+  function handleOtherPlayerStandButtonClick() {
     const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
         ...player,
-        isTurn: false,
-        action: PlayerState.STAND,
+        isTurn: true,
+        playedCardThisTurn: false,
+        tally: player.tally + card.value,
+        table: [...player.table, card],
+        action: PlayerState.PLAY,
       },
       player2: {
         ...otherPlayer,
-        isTurn: true,
-        playedCardThisTurn: false,
-        tally: otherPlayer.tally + card.value,
-        table: [...otherPlayer.table, card],
-        action: PlayerState.PLAY,
+        isTurn: false,
+        action: PlayerState.STAND,
       },
       gameState,
       sessionID: '10',
