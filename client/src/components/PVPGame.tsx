@@ -7,7 +7,7 @@ import PlayBarPVP from './PlayBarPVP';
 import cardflip from '../assets/music/flipcardfast.mp3';
 import { useLocation, useNavigate } from 'react-router-dom';
 import GameButtons from './GameButtons';
-import EndGamePopup from './EndGamePopUp';
+import EndGamePopupPVP from './EndGamePopUpPVP';
 import PopUp from './PopUP/PopUp';
 import {
   Player,
@@ -15,6 +15,7 @@ import {
   GameState,
   PlayerState,
   WonRoundState,
+  UserData,
 } from '../types';
 
 interface DeckCard {
@@ -22,13 +23,6 @@ interface DeckCard {
   color: string;
   selected: boolean;
   imagePath: string;
-}
-
-interface UserData {
-  username: string;
-  receiverName: string;
-  connected: boolean;
-  message: string;
 }
 
 interface PVPGameProps {
@@ -724,9 +718,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           </div>
         </div>
         <div className="center-message">
-          <EndGamePopup
-            numGamesWonPlayer={player.roundsWon}
-            numGamesWonOpponent={otherPlayer.roundsWon}
+          <EndGamePopupPVP
+            player={player}
+            otherPlayer={otherPlayer}
+            userData={userData}
             handleGameOverClick={handleGameOverClick}
           />
         </div>

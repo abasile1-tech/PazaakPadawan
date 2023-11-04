@@ -33,3 +33,10 @@ export enum WonRoundState {
   TIED = 'tied',
   UNDECIDED = 'undecided',
 }
+
+export interface UserData {
+  username: string;
+  receiverName: string;
+  connected: boolean;
+  message: string;
+}
