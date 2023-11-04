@@ -837,16 +837,17 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
             <Hand hand={listOfCards(player.hand)} moveCard={moveCard} />
           </div>
           <div className="turnOptions">
-            <GameButtons
-              gameState={gameState}
-              // onStand={handleStandButtonClick}
-              // onEndTurn={handleEndTurnButtonClick}
-              // new
-              onStand={handlePlayerStandButtonClick}
-              onEndTurn={handlePlayerEndTurnButtonClick}
-              onStartGame={handleStartButtonClick}
-              isPlayerTurn={player.isTurn}
-            />
+            {player.name == userData.username ? (
+              <GameButtons
+                gameState={gameState}
+                onStand={handlePlayerStandButtonClick}
+                onEndTurn={handlePlayerEndTurnButtonClick}
+                onStartGame={handleStartButtonClick}
+                isPlayerTurn={player.isTurn}
+              />
+            ) : (
+              <div></div>
+            )}
           </div>
           <button onClick={joinRoom}>Join Room</button>
         </div>
@@ -859,6 +860,19 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           <div className="hand">
             {/* <Hand hand={otherPlayer.hand} /> */}
             <Hand hand={listOfCards(otherPlayer.hand)} />
+          </div>
+          <div className="turnOptions">
+            {otherPlayer.name == userData.username ? (
+              <GameButtons
+                gameState={gameState}
+                onStand={handlePlayerStandButtonClick}
+                onEndTurn={handlePlayerEndTurnButtonClick}
+                onStartGame={handleStartButtonClick}
+                isPlayerTurn={player.isTurn}
+              />
+            ) : (
+              <div></div>
+            )}
           </div>
         </div>
         <div className="center-message">
