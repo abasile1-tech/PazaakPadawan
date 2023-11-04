@@ -524,6 +524,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return;
     }
     stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
+    stompClient.subscribe('/game/deleteGameObject', onDeleteSessionReceived);
     sendInitialConnectingData();
   }
 
@@ -575,6 +576,41 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return payloadData.gameState;
     });
   }
+
+  function onDeleteSessionReceived(deletedSession: boolean) {
+    if (deletedSession) {
+      const gameObject: GameObject = {
+        player1: { ...initialPlayer, name: userData.username },
+        player2: initialOtherPlayer,
+        gameState: GameState.INITIAL,
+        sessionID: '10',
+      };
+      stompClient.send(
+        '/app/updateGame',
+        {
+          id: 'game',
+        },
+        JSON.stringify(gameObject)
+      );
+    }
+  }
+
+  function deleteSession() {
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState: gameState,
+      sessionID: '10',
+    };
+    stompClient.send(
+      '/app/deleteGame',
+      {
+        id: 'delete',
+      },
+      JSON.stringify(gameObject)
+    );
+  }
+
   const listOfCards = (cards: CardProps[]): JSX.Element[] =>
     cards.map((card) => {
       return (
@@ -585,6 +621,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
+      <button onClick={deleteSession}>Delete Session</button>
       <div className="scoreBoard">
         <PlayBarPVP
           player={player}

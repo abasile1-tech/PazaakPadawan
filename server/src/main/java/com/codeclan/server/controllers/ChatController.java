@@ -65,4 +65,10 @@ public class ChatController {
         // If we get to here, the session exists and has player1 and player2 so just return the passed in value
         return frontEndGameObject;
     }
+
+    @MessageMapping("/deleteGame")
+    @SendTo("/game/deleteGameObject")
+    private boolean deleteGameObject(@Payload GameObject frontEndGameObject){
+        return gameObjects.remove(frontEndGameObject);
+    }
 }
