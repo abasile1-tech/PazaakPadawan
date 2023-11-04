@@ -109,8 +109,37 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   function handlePlayerEndTurnButtonClick() {
-    const card = getNewCardForTable();
+    if (otherPlayer.action === PlayerState.STAND) {
+      const card = getNewCardForTable();
+      const gameObject: GameObject = {
+        player1: {
+          ...player,
+          isTurn: true,
+          playedCardThisTurn: false,
+          tally: player.tally + card.value,
+          table: [...player.table, card],
+          action: PlayerState.PLAY,
+        },
+        player2: otherPlayer,
+        gameState,
+        sessionID: '10',
+      };
+      stompClient.send(
+        '/app/updateGame',
+        {
+          id: 'game',
+        },
+        JSON.stringify(gameObject)
+      );
 
+      if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+        endOfRoundCleaning(gameObject.player1, gameObject.player2);
+      }
+
+      return;
+    }
+
+    const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
         ...player,
@@ -142,8 +171,37 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   function handleOtherPlayerEndTurnButtonClick() {
-    const card = getNewCardForTable();
+    if (player.action === PlayerState.STAND) {
+      const card = getNewCardForTable();
+      const gameObject: GameObject = {
+        player1: player,
+        player2: {
+          ...otherPlayer,
+          isTurn: true,
+          playedCardThisTurn: false,
+          tally: otherPlayer.tally + card.value,
+          table: [...otherPlayer.table, card],
+          action: PlayerState.PLAY,
+        },
+        gameState,
+        sessionID: '10',
+      };
+      stompClient.send(
+        '/app/updateGame',
+        {
+          id: 'game',
+        },
+        JSON.stringify(gameObject)
+      );
 
+      if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+        endOfRoundCleaning(gameObject.player1, gameObject.player2);
+      }
+
+      return;
+    }
+
+    const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
         ...player,
@@ -220,6 +278,29 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   function handlePlayerStandButtonClick() {
+    if (otherPlayer.action === PlayerState.STAND) {
+      const gameObject: GameObject = {
+        player1: {
+          ...player,
+          isTurn: false,
+          action: PlayerState.STAND,
+        },
+        player2: otherPlayer,
+        gameState,
+        sessionID: '10',
+      };
+      stompClient.send(
+        '/app/updateGame',
+        {
+          id: 'game',
+        },
+        JSON.stringify(gameObject)
+      );
+
+      endOfRoundCleaning(gameObject.player1, gameObject.player2);
+      return;
+    }
+
     const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
@@ -245,11 +326,31 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(gameObject)
     );
-
-    endOfRoundCleaning(gameObject.player1, gameObject.player2);
   }
 
   function handleOtherPlayerStandButtonClick() {
+    if (player.action === PlayerState.STAND) {
+      const gameObject: GameObject = {
+        player1: player,
+        player2: {
+          ...otherPlayer,
+          isTurn: false,
+          action: PlayerState.STAND,
+        },
+        gameState,
+        sessionID: '10',
+      };
+      stompClient.send(
+        '/app/updateGame',
+        {
+          id: 'game',
+        },
+        JSON.stringify(gameObject)
+      );
+
+      endOfRoundCleaning(gameObject.player1, gameObject.player2);
+      return;
+    }
     const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
@@ -275,8 +376,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(gameObject)
     );
-
-    endOfRoundCleaning(gameObject.player1, gameObject.player2);
   }
 
   function handleStartButtonClick() {
