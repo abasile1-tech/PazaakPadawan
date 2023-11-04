@@ -676,32 +676,33 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to subcribe to events.');
       return;
     }
-    // stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
-    stompClient.subscribe('/game/playerName', onPlayerNameReceived);
-    stompClient.subscribe('/game/hand', onHandReceived);
-    stompClient.subscribe('/game/table', onTableReceived);
-    stompClient.subscribe('/game/start', onStartReceived);
-    stompClient.subscribe('/game/player', onPlayerReceived);
+    stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
+    // stompClient.subscribe('/game/playerName', onPlayerNameReceived);
+    // stompClient.subscribe('/game/hand', onHandReceived);
+    // stompClient.subscribe('/game/table', onTableReceived);
+    // stompClient.subscribe('/game/start', onStartReceived);
+    // stompClient.subscribe('/game/player', onPlayerReceived);
     sendInitialConnectingData();
   }
 
-  // interface GameObject {
-  //   player1: Player;
-  //   player2: Player;
-  //   gameState: GameState;
-  //   // sessionID: string;
-  // }
+  interface GameObject {
+    player1: Player;
+    player2: Player;
+    gameState: GameState;
+    sessionID: string;
+  }
 
   const sendInitialConnectingData = () => {
     // We will always set the player1 name to the user name on initial connection.
     // The backend will handle assigning the players.
-    // const gameObject: GameObject = {
-    //   player1: player,
-    //   player2: otherPlayer,
-    //   gameState: gameState,
-    //   // sessionID: sessionID,
-    // };
-    // console.log('LOOK HERE', gameObject);
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState: gameState,
+      // sessionID: sessionID,
+      sessionID: '10',
+    };
+    console.log('LOOK HERE', gameObject);
     setPlayer(() => {
       return { ...player, name: userData.username };
     });
@@ -710,13 +711,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
     }
-    // stompClient.send(
-    //   '/app/updateGame',
-    //   {
-    //     id: 'game',
-    //   },
-    //   JSON.stringify(gameObject)
-    // );
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
     // stompClient.send(
     //   '/app/updatePlayerName',
     //   {
@@ -731,13 +732,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     //   },
     //   JSON.stringify(player.hand)
     // );
-    stompClient.send(
-      '/app/updatePlayer',
-      {
-        id: 'player',
-      },
-      JSON.stringify(player)
-    );
+    // stompClient.send(
+    //   '/app/updatePlayer',
+    //   {
+    //     id: 'player',
+    //   },
+    //   JSON.stringify(player)
+    // );
   };
 
   interface Payload {
@@ -830,6 +831,22 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const payloadData = JSON.parse(payload.body);
     setGameState(GameState.STARTED);
     console.log('Game Started payloadData: ', payloadData);
+  }
+
+  function onGameUpdateReceived(payload: Payload) {
+    const payloadData = JSON.parse(payload.body);
+    if (payloadData.player1.name == userData.username) {
+      setPlayer(() => {
+        return { ...payloadData.player1 };
+      });
+    } else {
+      setOtherPlayer(() => {
+        return { ...payloadData.player2 };
+      });
+    }
+    setGameState(() => {
+      return payloadData.gameState;
+    });
   }
 
   // new
