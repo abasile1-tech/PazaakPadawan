@@ -30,6 +30,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
           gameState === GameState.INITIAL ||
           gameState === GameState.STAND ||
           gameState === GameState.WAIT ||
+          gameState === GameState.ENDED ||
           !isTurn
         }
       >
@@ -42,6 +43,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
           gameState === GameState.INITIAL ||
           gameState === GameState.STAND ||
           gameState === GameState.WAIT ||
+          gameState === GameState.ENDED ||
           !isTurn
         }
       >

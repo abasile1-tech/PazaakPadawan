@@ -34,7 +34,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
   const selectedHand = location?.state?.selectedHand;
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
-  const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
 
   function generateRandomHand() {
     const randomHand = [];
@@ -54,6 +53,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
     return randomHand;
   }
+
   const initialPlayer: Player = {
     name: 'Player 1',
     action: PlayerState.PLAY,
@@ -93,11 +93,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
-  }
-
-  function showEndRoundWinner(winner: string) {
-    setEndRoundMessage(winner);
-    setShowEndRoundPopup(true);
   }
 
   function getNewCardForTable(): CardProps {
@@ -405,13 +400,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   function endOfRoundCleaning(player: Player, otherPlayer: Player) {
     // if winner is 1: player won, if winner is 0: otherPlayer won, if winner is -1: tie
     const winner = getRoundWinner(player, otherPlayer);
-    if (winner === 1) {
-      showEndRoundWinner(`${player.name} WON THE ROUND!`);
-    } else if (winner === 0) {
-      showEndRoundWinner(`${otherPlayer.name} WON THE ROUND!`);
-    } else if (winner === -1) {
-      showEndRoundWinner('THIS ROUND IS TIED');
-    }
+    // if (winner === 1) {
+    //   showEndRoundWinner(`${player.name} WON THE ROUND!`);
+    // } else if (winner === 0) {
+    //   showEndRoundWinner(`${otherPlayer.name} WON THE ROUND!`);
+    // } else if (winner === -1) {
+    //   showEndRoundWinner('THIS ROUND IS TIED');
+    // }
 
     const gameObject: GameObject = {
       player1: {
@@ -433,7 +428,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           winner === 0 ? otherPlayer.gamesWon + 1 : otherPlayer.gamesWon,
         playedCardThisTurn: false,
       },
-      gameState: GameState.INITIAL,
+      gameState: GameState.ENDED,
       sessionID: '10',
     };
     stompClient.send(
@@ -524,7 +519,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return;
     }
     stompClient.subscribe('/game/gameObject', onGameUpdateReceived);
-    stompClient.subscribe('/game/deleteGameObject', onDeleteSessionReceived);
     sendInitialConnectingData();
   }
 
@@ -564,6 +558,25 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   function onGameUpdateReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);
 
+    console.log('Game State', gameState);
+    if (payloadData.gameState === GameState.ENDED) {
+      setEndRoundMessage(() => {
+        if (
+          payloadData.player1.gamesWon === 3 ||
+          payloadData.player2.gamesWon === 3
+        ) {
+          return '';
+        }
+        if (player.gamesWon !== payloadData.player1.gamesWon) {
+          return `${player.name} WON THE ROUND!`;
+        }
+        if (otherPlayer.gamesWon !== payloadData.player2.gamesWon) {
+          return `${otherPlayer.name} WON THE ROUND!`;
+        }
+        return 'THIS ROUND IS TIED';
+      });
+    }
+
     setPlayer(() => {
       return { ...payloadData.player1 };
     });
@@ -572,44 +585,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return { ...payloadData.player2 };
     });
 
+    // This is not updating
     setGameState(() => {
       return payloadData.gameState;
     });
-  }
-
-  function onDeleteSessionReceived(payload: Payload) {
-    console.log('PLAYLOAD', payload.body);
-    if (payload.body) {
-      const gameObject: GameObject = {
-        player1: initialPlayer,
-        player2: initialOtherPlayer,
-        gameState: GameState.INITIAL,
-        sessionID: '10',
-      };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
-    }
-  }
-
-  function deleteSession() {
-    const gameObject: GameObject = {
-      player1: player,
-      player2: otherPlayer,
-      gameState: gameState,
-      sessionID: '10',
-    };
-    stompClient.send(
-      '/app/deleteGame',
-      {
-        id: 'delete',
-      },
-      JSON.stringify(gameObject)
-    );
   }
 
   const listOfCards = (cards: CardProps[]): JSX.Element[] =>
@@ -622,7 +601,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <button onClick={deleteSession}>Delete Session</button>
       <div className="scoreBoard">
         <PlayBarPVP
           player={player}
@@ -701,12 +679,14 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           />
         </div>
         <div className="center-message">
-          {showEndRoundPopup && (
+          {endRoundMessage !== '' && (
             <PopUp
               message={endRoundMessage}
               buttonText="OK"
               onClick={() => {
-                setShowEndRoundPopup(false);
+                setEndRoundMessage(() => {
+                  return '';
+                });
               }}
             />
           )}
