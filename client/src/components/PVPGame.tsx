@@ -57,7 +57,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const initialPlayer: Player = {
     name: 'Player 1',
     action: PlayerState.PLAY,
-    wonGame: false,
     isTurn: false,
     hand: selectedHand
       ? selectedHand.map((card: DeckCard) => ({
@@ -74,7 +73,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const initialOtherPlayer: Player = {
     name: 'Player 2',
     action: PlayerState.PLAY,
-    wonGame: false,
     isTurn: false,
     hand: [],
     tally: 0,
@@ -690,6 +688,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       <hr />
       <div className="playerBoard">
         <div className="player1">
+          <p>Games Won: {player.gamesWon}</p>
           <div className="table">
             {/* <Hand hand={player.table} /> */}
             <Hand hand={listOfCards(player.table)} />
@@ -715,6 +714,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           <button onClick={joinRoom}>Join Room</button>
         </div>
         <div className="player2">
+          <p>Games Won: {otherPlayer.gamesWon}</p>
           <div className="table">
             {/* <Hand hand={otherPlayer.table} /> */}
             <Hand hand={listOfCards(otherPlayer.table)} />

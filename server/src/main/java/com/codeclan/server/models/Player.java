@@ -12,7 +12,6 @@ import lombok.*;
 public class Player {
     private String name;
     private String action;
-    private Boolean wonGame;
     private Boolean isTurn;
     private ArrayList<Card> hand;
     private Integer tally;

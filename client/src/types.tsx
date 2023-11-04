@@ -7,7 +7,6 @@ export enum GameState {
 export interface Player {
   name: string;
   action: PlayerState;
-  wonGame: boolean;
   isTurn: boolean;
   hand: CardProps[];
   tally: number;
