@@ -12,35 +12,21 @@ const GameButtons: React.FC<GameButtonsProps> = ({
       <button
         className="gameButtons"
         onClick={onStand}
-        disabled={
-          gameState === GameState.INITIAL ||
-          gameState === GameState.STAND ||
-          gameState === GameState.WAIT ||
-          !isTurn
-        }
+        disabled={gameState === GameState.INITIAL || !isTurn}
       >
         Stand
       </button>
       <button
         className="gameButtons"
         onClick={onEndTurn}
-        disabled={
-          gameState === GameState.INITIAL ||
-          gameState === GameState.STAND ||
-          gameState === GameState.WAIT ||
-          !isTurn
-        }
+        disabled={gameState === GameState.INITIAL || !isTurn}
       >
         End Turn
       </button>
       <button
         className="gameButtons"
         onClick={onStartGame}
-        disabled={
-          gameState === GameState.STARTED ||
-          gameState === GameState.STAND ||
-          gameState === GameState.WAIT
-        }
+        disabled={gameState === GameState.STARTED}
       >
         Start Game
       </button>

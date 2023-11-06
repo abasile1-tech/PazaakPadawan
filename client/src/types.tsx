@@ -67,8 +67,6 @@ export enum GameState {
   INITIAL = 'initial',
   STARTED = 'started',
   ENDED = 'ended',
-  STAND = 'stand',
-  WAIT = 'wait',
 }
 
 export enum WonRoundState {
@@ -119,6 +117,10 @@ export interface GameButtonsProps {
   onEndTurn: () => void;
   onStartGame: () => void;
   isTurn: boolean;
+}
+
+export interface GameButtonsPVPProps extends GameButtonsProps {
+  playerState: PlayerState;
 }
 
 export interface BarComponentProps {

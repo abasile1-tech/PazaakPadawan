@@ -1,6 +1,7 @@
-import { GameButtonsProps, GameState } from '../types';
+import { GameButtonsPVPProps, GameState, PlayerState } from '../types';
 
-const GameButtonsPVP: React.FC<GameButtonsProps> = ({
+const GameButtonsPVP: React.FC<GameButtonsPVPProps> = ({
+  playerState,
   gameState,
   onStand,
   onEndTurn,
@@ -14,8 +15,7 @@ const GameButtonsPVP: React.FC<GameButtonsProps> = ({
         onClick={onStand}
         disabled={
           gameState === GameState.INITIAL ||
-          gameState === GameState.STAND ||
-          gameState === GameState.WAIT ||
+          playerState === PlayerState.STAND ||
           gameState === GameState.ENDED ||
           !isTurn
         }
@@ -27,8 +27,7 @@ const GameButtonsPVP: React.FC<GameButtonsProps> = ({
         onClick={onEndTurn}
         disabled={
           gameState === GameState.INITIAL ||
-          gameState === GameState.STAND ||
-          gameState === GameState.WAIT ||
+          playerState === PlayerState.STAND ||
           gameState === GameState.ENDED ||
           !isTurn
         }
@@ -39,9 +38,7 @@ const GameButtonsPVP: React.FC<GameButtonsProps> = ({
         className="gameButtons"
         onClick={onStartGame}
         disabled={
-          gameState === GameState.STARTED ||
-          gameState === GameState.STAND ||
-          gameState === GameState.WAIT
+          gameState === GameState.STARTED || playerState === PlayerState.STAND
         }
       >
         Start Game
