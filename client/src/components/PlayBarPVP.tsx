@@ -1,15 +1,14 @@
 import yoda from '../assets/images/penguins/yoda.jpg';
 import ewok from '../assets/images/penguins/ewok.jpg';
-import { Player, GameState } from '../types';
+import { Player } from '../types';
 import ScoreLights from './ScoreLights';
 
 interface PlayBarPVPProps {
   player: Player;
   otherPlayer: Player;
-  gameState: GameState;
 }
 
-const PlayBarPVP = ({ player, otherPlayer, gameState }: PlayBarPVPProps) => {
+const PlayBarPVP = ({ player, otherPlayer }: PlayBarPVPProps) => {
   const getTurnIndicatorText = () => {
     if (player.isTurn) {
       return `${player.name}'s turn`;

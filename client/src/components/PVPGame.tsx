@@ -640,11 +640,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     <>
       <Header musicChoice={musicChoice} />
       <div className="scoreBoard">
-        <PlayBarPVP
-          player={player}
-          otherPlayer={otherPlayer}
-          gameState={gameState}
-        />
+        <PlayBarPVP player={player} otherPlayer={otherPlayer} />
       </div>
       <hr />
       <div className="playerBoard">

@@ -5,14 +5,15 @@ import Chat from '../components/Chat';
 import PVPGame from '../components/PVPGame';
 
 const PVP = () => {
-  // const url = import.meta.env.PROD
-  //   ? import.meta.env.VITE_PROD_URL
-  //   : import.meta.env.VITE_DEV_URL;
-  // const Sock = new SockJS(url + 'ws');
-  const BASE_URL = 'http://192.168.0.5';
-  const port = 8080;
+  const url = import.meta.env.PROD
+    ? import.meta.env.VITE_PROD_URL
+    : import.meta.env.VITE_DEV_URL;
+  const Sock = new SockJS(url + 'ws');
+  // const BASE_URL = 'http://192.168.0.5';
+  // const port = 8080;
   const [stompClient, setStompClient] = useState<Stomp.Client>(
-    Stomp.over(new SockJS(`${BASE_URL}:${port}/ws`))
+    // Stomp.over(new SockJS(`${BASE_URL}:${port}/ws`))
+    Stomp.over(Sock)
   );
   const [serverConnected, setServerConnected] = useState(false);
   const [attemptReconnect, setAttemptReconnect] = useState(0);
@@ -24,8 +25,9 @@ const PVP = () => {
   });
 
   useEffect(() => {
-    const socket = new SockJS(`${BASE_URL}:${port}/ws`);
-    const client = Stomp.over(socket);
+    // const socket = new SockJS(`${BASE_URL}:${port}/ws`);
+    // const client = Stomp.over(socket);
+    const client = Stomp.over(Sock);
     client.connect(
       { login: '', passcode: '' },
       () => {
@@ -44,6 +46,7 @@ const PVP = () => {
         console.warn(err);
       }
     );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [attemptReconnect]);
 
   return (
