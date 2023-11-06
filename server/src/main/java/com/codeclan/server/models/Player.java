@@ -12,11 +12,11 @@ import lombok.*;
 public class Player {
     private String name;
     private String action;
-    private Boolean wonGame;
     private Boolean isTurn;
     private ArrayList<Card> hand;
     private Integer tally;
     private ArrayList<Card> table;
-    private Integer gamesWon;
+    private Integer roundsWon;
+    private String wonRound;
     private Boolean playedCardThisTurn;
 }

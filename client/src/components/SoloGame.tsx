@@ -21,7 +21,6 @@ interface DeckCard {
 interface Player {
   name: string;
   action: PlayerState;
-  wonGame: boolean;
   isTurn: boolean;
   hand: JSX.Element[];
   tally: number;
@@ -76,7 +75,6 @@ function SoloGame(): JSX.Element {
   const initialPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
-    wonGame: false,
     isTurn: false,
     hand: selectedHand
       ? selectedHand.map((card: DeckCard) => (
@@ -92,7 +90,6 @@ function SoloGame(): JSX.Element {
   const initialComputerPlayer: Player = {
     name: '',
     action: PlayerState.PLAY,
-    wonGame: false,
     isTurn: false,
     hand: generateRandomHand(),
     tally: 0,
@@ -402,7 +399,7 @@ function SoloGame(): JSX.Element {
               onStand={handleStandButtonClick}
               onEndTurn={handleEndTurnButtonClick}
               onStartGame={handleStartButtonClick}
-              isPlayerTurn={player.isTurn}
+              isTurn={player.isTurn}
             />
           </div>
         </div>

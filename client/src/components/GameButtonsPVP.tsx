@@ -7,14 +7,14 @@ enum GameState {
   WAIT = 'wait',
 }
 
-interface GameButtonsProps {
+interface GameButtonsPVPProps {
   gameState: GameState;
   onStand: () => void;
   onEndTurn: () => void;
   onStartGame: () => void;
   isTurn: boolean;
 }
-const GameButtons: React.FC<GameButtonsProps> = ({
+const GameButtonsPVP: React.FC<GameButtonsPVPProps> = ({
   gameState,
   onStand,
   onEndTurn,
@@ -30,6 +30,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
           gameState === GameState.INITIAL ||
           gameState === GameState.STAND ||
           gameState === GameState.WAIT ||
+          gameState === GameState.ENDED ||
           !isTurn
         }
       >
@@ -42,6 +43,7 @@ const GameButtons: React.FC<GameButtonsProps> = ({
           gameState === GameState.INITIAL ||
           gameState === GameState.STAND ||
           gameState === GameState.WAIT ||
+          gameState === GameState.ENDED ||
           !isTurn
         }
       >
@@ -62,4 +64,4 @@ const GameButtons: React.FC<GameButtonsProps> = ({
   );
 };
 
-export default GameButtons;
+export default GameButtonsPVP;
