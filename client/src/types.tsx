@@ -1,5 +1,12 @@
 import { Client } from 'stompjs';
 
+export interface GameObject {
+  player1: PlayerPVP;
+  player2: PlayerPVP;
+  gameState: GameState;
+  sessionID: string;
+}
+
 export interface PlayerPVP {
   name: string;
   action: PlayerState;
@@ -126,10 +133,6 @@ export interface Character {
 
 export interface TurnIndicatorProps {
   playerName: string;
-}
-
-export interface ScoreKeeperProps {
-  cardTally: number;
 }
 
 export interface MusicChoiceProps {

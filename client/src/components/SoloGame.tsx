@@ -18,6 +18,7 @@ function SoloGame(): JSX.Element {
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+
   function generateRandomHand() {
     const randomHand = [];
     for (let i = 0; i < 4; i++) {
@@ -43,6 +44,7 @@ function SoloGame(): JSX.Element {
     }
     return randomHand;
   }
+
   const initialPlayer: SoloPlayer = {
     name: '',
     action: PlayerState.PLAY,
@@ -86,6 +88,7 @@ function SoloGame(): JSX.Element {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
   }
+
   function addCardToTable(newPlayer: SoloPlayer): SoloPlayer | null {
     const audio = new Audio(cardflip);
     audio.play();
@@ -103,12 +106,10 @@ function SoloGame(): JSX.Element {
       return null;
     }
     if (newPlayer.action == PlayerState.STAND) {
-      console.log('player stood');
       return null;
     }
 
     if (!newPlayer.isTurn && computerPlayer.action != PlayerState.STAND) {
-      console.log('computerPlayer.action before', computerPlayer.action);
       const newComputerPlayer = {
         ...computerPlayer,
         tally: computerPlayer.tally + randomNumber,
@@ -116,30 +117,13 @@ function SoloGame(): JSX.Element {
         action: PlayerState.PLAY,
       };
       setComputerPlayer(newComputerPlayer);
-      console.log('computerPlayer.action after', computerPlayer.action);
       return newComputerPlayer;
     }
-    console.log('both stood');
     return null;
   }
 
-  async function handleEndTurnButtonClick() {
-    const newPlayer = {
-      ...player,
-      isTurn: false,
-      action: PlayerState.ENDTURN,
-    };
-    setPlayer(newPlayer);
-    console.log(
-      'newPlayer, newPlayer.action',
-      newPlayer,
-      ', ',
-      newPlayer.action
-    );
-    const newComputerPlayer = addCardToTable(newPlayer);
-    const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
+  async function computerPlayerDecision(cPlayer: SoloPlayer) {
     await delay(3000); // wait for 3 seconds while the AI "decides..."
-    // AI Choice starts
     if (cPlayer.tally < 20 && cPlayer.action != PlayerState.STAND) {
       if (cPlayer.hand.length > 0) {
         let bestSum = 0;
@@ -153,9 +137,7 @@ function SoloGame(): JSX.Element {
             bestCardIndex = i;
           }
         }
-        console.log('bestCardIndex', bestCardIndex);
         if (bestCardIndex !== -1) {
-          console.log('trying to play best card', bestCardIndex);
           const [playedCard] = cPlayer.hand.splice(bestCardIndex, 1);
           const newComputerPlayer = {
             ...cPlayer,
@@ -164,11 +146,8 @@ function SoloGame(): JSX.Element {
             table: [...cPlayer.table, playedCard],
             action: PlayerState.STAND,
           };
-          console.log('Computer Player Table', newComputerPlayer.table);
           setComputerPlayer(newComputerPlayer);
           await delay(3000); // wait for 3 seconds while the AI "decides..."
-          // setGameState(GameState.STAND);
-          console.log('I just played a card and now I want to stand');
         }
       } else {
         const newComputerPlayer = {
@@ -176,8 +155,6 @@ function SoloGame(): JSX.Element {
           action: PlayerState.STAND,
         };
         setComputerPlayer(newComputerPlayer);
-        // setGameState(GameState.STAND);
-        console.log('i want to stand #2');
       }
     } else if (cPlayer.tally >= 17 && cPlayer.tally <= 20) {
       if (Math.random() < 0.7) {
@@ -186,11 +163,7 @@ function SoloGame(): JSX.Element {
           action: PlayerState.STAND,
         };
         setComputerPlayer(newComputerPlayer);
-        // setGameState(GameState.STAND);
-        console.log('mostly i want to stand');
       } else {
-        // addCardToTable(newPlayer);
-        console.log('number between 17 and 20 but i need more cards');
         const newComputerPlayer = {
           ...cPlayer,
           action: PlayerState.PLAY,
@@ -198,15 +171,26 @@ function SoloGame(): JSX.Element {
         setComputerPlayer(newComputerPlayer);
       }
     } else if (cPlayer.tally < 17) {
-      // addCardToTable(newPlayer);
-      console.log('more card');
       const newComputerPlayer = {
         ...cPlayer,
         action: PlayerState.PLAY,
       };
       setComputerPlayer(newComputerPlayer);
     }
-    // AI choice ends
+  }
+
+  async function handleEndTurnButtonClick() {
+    const newPlayer = {
+      ...player,
+      isTurn: false,
+      action: PlayerState.ENDTURN,
+    };
+    setPlayer(newPlayer);
+    const newComputerPlayer = addCardToTable(newPlayer);
+    const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
+
+    computerPlayerDecision(cPlayer);
+
     if (newPlayer.tally >= 20 || cPlayer.tally >= 20) {
       await endOfRoundCleaning(cPlayer);
     } else {
@@ -222,12 +206,6 @@ function SoloGame(): JSX.Element {
   }
 
   function getRoundWinner(computerPlayer: SoloPlayer) {
-    console.log(
-      'Player Score: ',
-      player.tally,
-      'Computer Player Score: ',
-      computerPlayer.tally
-    );
     const playerBust = player.tally > 20;
     const computerBust = computerPlayer.tally > 20;
     const computerWon = computerPlayer.tally <= 20;
@@ -240,34 +218,26 @@ function SoloGame(): JSX.Element {
     const tieOrBustReturn = -1;
 
     if (playerBust && computerBust) {
-      console.log('you both went bust');
       return tieOrBustReturn;
     }
     if (playerBust && computerWon) {
-      console.log('opponent won');
       return computerPlayerReturn;
     }
     if (computerBust && playerWon) {
-      console.log('you won');
       return playerReturn;
     }
     if (tie) {
-      console.log('you tied');
       return tieOrBustReturn;
     }
     if (playerLessThanComputer) {
-      console.log('opponent won');
       return computerPlayerReturn;
     }
     if (computerLessThanPlayer) {
-      console.log('you won');
       return playerReturn;
     }
-    console.log('the round is over', player.tally, computerPlayer.tally);
   }
 
   async function handleStandButtonClick() {
-    // setGameState(GameState.STAND);
     const newPlayer = {
       ...player,
       isTurn: false,
@@ -325,8 +295,6 @@ function SoloGame(): JSX.Element {
   }
 
   function moveCard(card: JSX.Element, index: number) {
-    // if no cards have been played yet this turn, play a card
-
     if (gameState === GameState.STARTED && !player.playedCardThisTurn) {
       const audio = new Audio(cardflip);
       audio.play();

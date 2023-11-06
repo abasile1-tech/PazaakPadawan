@@ -15,6 +15,8 @@ import {
   WonRoundState,
   PVPGameProps,
   DeckCard,
+  GameObject,
+  Payload,
 } from '../types';
 import GameButtonsPVP from './GameButtonsPVP';
 
@@ -438,13 +440,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     sendInitialConnectingData();
   }
 
-  interface GameObject {
-    player1: PlayerPVP;
-    player2: PlayerPVP;
-    gameState: GameState;
-    sessionID: string;
-  }
-
   const sendInitialConnectingData = () => {
     const gameObject: GameObject = {
       player1: { ...player, name: userData.username },
@@ -458,10 +453,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
     sendGameData(gameObject);
   };
-
-  interface Payload {
-    body: string;
-  }
 
   function onGameUpdateReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);

@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import ScoreKeeper from './ScoreKeeper';
 import TurnIndicator from './TurnIndicator';
 import penguinmall from '../assets/images/penguins/penguinmaul1.jpeg';
 import { Character, GameState, PlayBarProps } from '../types';
@@ -33,7 +32,7 @@ const PlayBar = ({
             <div className="user-bar">
               <img src={selectedCharacter.image} alt={selectedCharacter.name} />
               <h3 className="userBarName">{selectedCharacter.name}</h3>
-              <ScoreKeeper cardTally={playerTally} />
+              <h3>{playerTally}</h3>
             </div>
           ) : (
             <p>Character is not chosen</p>
@@ -54,7 +53,7 @@ const PlayBar = ({
           <div className="user-bar">
             <img src={penguinmall} alt={opponentName} />
             <h3 className="userBarName">{opponentName}</h3>
-            <ScoreKeeper cardTally={opponentTally} />
+            <h3>{opponentTally}</h3>
           </div>
         </h2>
       </div>
