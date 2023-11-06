@@ -31,7 +31,7 @@ const EndGamePopupPVP: React.FC<EndGamePopupPVPProps> = ({
       <PopUp
         audiofile={victory}
         title="YOU WON"
-        message="Thanks for playing Pazaak Online. Click close to return to the main menu."
+        message="Thanks for playing Pazaak Padawan. Click close to return to the main menu."
         buttonText="CLOSE"
         onClick={handleGameOverClick}
       />
@@ -41,7 +41,7 @@ const EndGamePopupPVP: React.FC<EndGamePopupPVPProps> = ({
       <PopUp
         audiofile={defeat}
         title="YOU LOSE"
-        message="Thanks for playing Pazaak Online. Click close to return to the main menu."
+        message="Thanks for playing Pazaak Padawaan. Click close to return to the main menu."
         buttonText="CLOSE"
         onClick={handleGameOverClick}
       />
