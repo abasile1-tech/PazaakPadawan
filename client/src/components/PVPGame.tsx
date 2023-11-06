@@ -45,6 +45,16 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return randomHand;
   }
 
+  const sendGameData = (gameObject: GameObject) => {
+    stompClient.send(
+      '/app/updateGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
+  };
+
   const initialPlayer: PlayerPVP = {
     name: 'Player 1',
     action: PlayerState.PLAY,
@@ -112,13 +122,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
+      sendGameData(gameObject);
 
       if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
         endOfRoundCleaning(gameObject.player1, gameObject.player2);
@@ -174,13 +178,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
+      sendGameData(gameObject);
 
       if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
         endOfRoundCleaning(gameObject.player1, gameObject.player2);
@@ -207,13 +205,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
 
     if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
@@ -277,13 +269,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
+      sendGameData(gameObject);
 
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
       return;
@@ -307,13 +293,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
   }
 
   function handleOtherPlayerStandButtonClick() {
@@ -328,13 +308,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
+      sendGameData(gameObject);
 
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
       return;
@@ -357,13 +331,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
   }
 
   function handleStartButtonClick() {
@@ -381,13 +349,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState: GameState.STARTED,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
   }
 
   function getWonRoundState(winner: 1 | 0 | -1 | undefined) {
@@ -436,13 +398,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState: GameState.ENDED,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
   }
 
   function movePlayerCard(card: JSX.Element, index: number) {
@@ -470,13 +426,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
+      sendGameData(gameObject);
     }
   }
 
@@ -504,13 +454,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      stompClient.send(
-        '/app/updateGame',
-        {
-          id: 'game',
-        },
-        JSON.stringify(gameObject)
-      );
+      sendGameData(gameObject);
     }
   }
 
@@ -541,13 +485,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
     }
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
   };
 
   interface Payload {
@@ -596,13 +534,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState: gameState,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
+    sendGameData(gameObject);
   }
 
   const listOfCards = (cards: CardPropsPVP[]): JSX.Element[] =>
