@@ -1,17 +1,8 @@
-import React, { Component } from 'react';
+import { Component } from 'react';
 import redcard from '../assets/images/cards/red_card.png';
 import bluecard from '../assets/images/cards/blue_card.png';
 import greencard from '../assets/images/cards/green_card.png';
-
-interface CardProps {
-  key?: number;
-  value: number;
-  color: string;
-  cardType: string;
-  selected?: boolean;
-  image?: string;
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
-}
+import { CardProps } from '../types';
 
 function getImageSource(color: string) {
   switch (color) {

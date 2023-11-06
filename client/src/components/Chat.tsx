@@ -1,26 +1,6 @@
 import { useState } from 'react';
-import { Client } from 'stompjs';
 
-interface PublicChat {
-  senderName: string;
-  receiverName: string;
-  message: string;
-  date: Date;
-  status: string;
-}
-
-interface UserData {
-  username: string;
-  receiverName: string;
-  connected: boolean;
-  message: string;
-}
-
-interface ChatProps {
-  stompClient: Client;
-  userData: UserData;
-  setUserData: React.Dispatch<React.SetStateAction<UserData>>;
-}
+import { PublicChat, ChatProps, Payload } from '../types';
 
 const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
@@ -69,10 +49,6 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
     }
     stompClient.send('/app/chatMessage', {}, JSON.stringify(chatMessage));
   };
-
-  interface Payload {
-    body: string;
-  }
 
   const onPublicMessageReceived = (payload: Payload) => {
     const payloadData = JSON.parse(payload.body);

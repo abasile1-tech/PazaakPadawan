@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BackgroundMusic from './BackgroundMusic';
+import { MusicChoiceProps } from '../types';
 
-interface MusicChoiceProps {
-  musicChoice: string;
-}
 function Header({ musicChoice }: MusicChoiceProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {

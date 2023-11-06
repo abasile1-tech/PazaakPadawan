@@ -1,9 +1,5 @@
+import { HandProps } from '../types';
 import Card from './Card';
-
-interface HandProps {
-  hand: Array<JSX.Element>;
-  moveCard?: (card: JSX.Element, index: number) => void;
-}
 
 const Hand = ({ hand, moveCard }: HandProps): JSX.Element => {
   const listItems = hand.map((card, index) => {

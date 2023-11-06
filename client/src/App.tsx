@@ -1,5 +1,4 @@
 import './App.css';
-import Chat from './components/Chat';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SoloGame from './components/SoloGame';
@@ -16,7 +15,6 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/instructions" element={<Instructions />} />
           <Route path="/character" element={<Character />} />
-          <Route path="/chat" element={<Chat />} />
           <Route path="/solo" element={<SoloGame />} />
           <Route path="/pvp" element={<PVP />} />
           <Route path="/deck" element={<DeckBuilder />} />

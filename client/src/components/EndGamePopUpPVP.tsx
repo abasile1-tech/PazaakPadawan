@@ -1,15 +1,7 @@
-import React from 'react';
 import PopUp from './PopUP/PopUp';
 import victory from '../assets/music/lightsaber.mp3';
 import defeat from '../assets/music/blaster.mp3';
-import { Player, UserData } from '../types';
-
-interface EndGamePopupPVPProps {
-  player: Player;
-  otherPlayer: Player;
-  userData: UserData;
-  handleGameOverClick: () => void;
-}
+import { EndGamePopupPVPProps } from '../types';
 
 const EndGamePopupPVP: React.FC<EndGamePopupPVPProps> = ({
   player,

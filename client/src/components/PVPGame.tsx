@@ -1,4 +1,3 @@
-import { Client } from 'stompjs';
 import Header from './Header';
 import { useState } from 'react';
 import Hand from './Hand';
@@ -9,26 +8,15 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import EndGamePopupPVP from './EndGamePopUpPVP';
 import PopUp from './PopUP/PopUp';
 import {
-  Player,
-  CardProps,
+  PlayerPVP,
+  CardPropsPVP,
   GameState,
   PlayerState,
   WonRoundState,
-  UserData,
+  PVPGameProps,
+  DeckCard,
 } from '../types';
 import GameButtonsPVP from './GameButtonsPVP';
-
-interface DeckCard {
-  value: number;
-  color: string;
-  selected: boolean;
-  imagePath: string;
-}
-
-interface PVPGameProps {
-  stompClient: Client;
-  userData: UserData;
-}
 
 function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const location = useLocation();
@@ -41,20 +29,23 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       const randomValue = Math.floor(Math.random() * 6) + 1;
       const randomColor = Math.random() < 0.5 ? 'blue' : 'red';
       if (randomColor === 'red') {
-        const cardProps: CardProps = {
+        const cardProps: CardPropsPVP = {
           value: -randomValue,
           color: randomColor,
         };
         randomHand.push(cardProps);
       } else {
-        const cardProps: CardProps = { value: randomValue, color: randomColor };
+        const cardProps: CardPropsPVP = {
+          value: randomValue,
+          color: randomColor,
+        };
         randomHand.push(cardProps);
       }
     }
     return randomHand;
   }
 
-  const initialPlayer: Player = {
+  const initialPlayer: PlayerPVP = {
     name: 'Player 1',
     action: PlayerState.PLAY,
     isTurn: false,
@@ -71,7 +62,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     playedCardThisTurn: false,
   };
 
-  const initialOtherPlayer: Player = {
+  const initialOtherPlayer: PlayerPVP = {
     name: 'Player 2',
     action: PlayerState.PLAY,
     isTurn: false,
@@ -97,7 +88,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return Math.floor(Math.random() * 10) + 1;
   }
 
-  function getNewCardForTable(): CardProps {
+  function getNewCardForTable(): CardPropsPVP {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
@@ -229,7 +220,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
   }
 
-  function getRoundWinner(player: Player, otherPlayer: Player) {
+  function getRoundWinner(player: PlayerPVP, otherPlayer: PlayerPVP) {
     console.log(
       'Player Score: ',
       player.tally,
@@ -415,17 +406,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return [WonRoundState.UNDECIDED, WonRoundState.UNDECIDED];
   }
 
-  function endOfRoundCleaning(player: Player, otherPlayer: Player) {
+  function endOfRoundCleaning(player: PlayerPVP, otherPlayer: PlayerPVP) {
     // if winner is 1: player won, if winner is 0: otherPlayer won, if winner is -1: tie
     const winner = getRoundWinner(player, otherPlayer);
-    // if (winner === 1) {
-    //   showEndRoundWinner(`${player.name} WON THE ROUND!`);
-    // } else if (winner === 0) {
-    //   showEndRoundWinner(`${otherPlayer.name} WON THE ROUND!`);
-    // } else if (winner === -1) {
-    //   showEndRoundWinner('THIS ROUND IS TIED');
-    // }
-
     const [playerWonRound, otherPlayerWonRound] = getWonRoundState(winner);
     console.log('PLAYER', playerWonRound, 'OTHER PLAYER', otherPlayerWonRound);
     const gameObject: GameObject = {
@@ -463,8 +446,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   function movePlayerCard(card: JSX.Element, index: number) {
-    // if no cards have been played yet this turn, play a card
-
     if (
       gameState === GameState.STARTED &&
       !player.playedCardThisTurn &&
@@ -500,8 +481,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   function moveOtherPlayerCard(card: JSX.Element, index: number) {
-    // if no cards have been played yet this turn, play a card
-
     if (
       gameState === GameState.STARTED &&
       !otherPlayer.playedCardThisTurn &&
@@ -545,15 +524,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   interface GameObject {
-    player1: Player;
-    player2: Player;
+    player1: PlayerPVP;
+    player2: PlayerPVP;
     gameState: GameState;
     sessionID: string;
   }
 
   const sendInitialConnectingData = () => {
-    // We will always set the player1 name to the user name on initial connection.
-    // The backend will handle assigning the players.
     const gameObject: GameObject = {
       player1: { ...player, name: userData.username },
       player2: otherPlayer,
@@ -607,7 +584,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       return { ...payloadData.player2 };
     });
 
-    // This is not updating
     setGameState(() => {
       return payloadData.gameState;
     });
@@ -629,7 +605,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     );
   }
 
-  const listOfCards = (cards: CardProps[]): JSX.Element[] =>
+  const listOfCards = (cards: CardPropsPVP[]): JSX.Element[] =>
     cards.map((card) => {
       return (
         <Card value={card.value} color={card.color} cardType="normal_card" />
@@ -640,11 +616,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     <>
       <Header musicChoice={musicChoice} />
       <div className="scoreBoard">
-        <PlayBarPVP
-          player={player}
-          otherPlayer={otherPlayer}
-          gameState={gameState}
-        />
+        <PlayBarPVP player={player} otherPlayer={otherPlayer} />
       </div>
       <hr />
       <div className="playerBoard">

@@ -19,6 +19,7 @@ import ewok from '../assets/images/penguins/ewok.jpg';
 import mandalorian from '../assets/images/penguins/mandalorian.jpg';
 import stormtrooper from '../assets/images/penguins/stormTrooper.jpg';
 import jabba from '../assets/images/penguins/PengTheHut.jpeg';
+import { Character } from '../types';
 
 const characters = [
   {
@@ -113,15 +114,9 @@ const characters = [
   },
 ];
 
-interface CharacterData {
-  id: number;
-  name: string;
-  image: string;
-}
-
 function Character() {
   const musicChoice = 'characterPage';
-  const [, setSelectedCharacter] = useState<CharacterData | null>(null);
+  const [, setSelectedCharacter] = useState<Character | null>(null);
   const navigate = useNavigate();
 
   const handleCharacterSelect = (characterId: number) => {

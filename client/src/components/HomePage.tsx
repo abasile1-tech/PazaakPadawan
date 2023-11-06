@@ -16,8 +16,6 @@ function HomePage() {
       <div className="main-content">
         <div id="home-page-text">
           <h1 data-testid="hero-heading">Pazaak</h1>
-          {/* <User /> */}
-
           <h2>
             Pazaak, a game dating back to Old Republic times, was a popular card
             game in which the goal was to come closest to 20 without going over.

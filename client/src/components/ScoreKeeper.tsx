@@ -1,6 +1,4 @@
-interface ScoreKeeperProps {
-  cardTally: number;
-}
+import { ScoreKeeperProps } from '../types';
 
 function ScoreKeeper({ cardTally }: ScoreKeeperProps) {
   return (

@@ -1,14 +1,7 @@
 //popup message on play page
 //welcome message(game turn = 0), tutorial message, result message(game ends)
 import { useEffect } from 'react';
-
-interface PopUpProps {
-  title?: string;
-  message: string;
-  buttonText?: string;
-  onClick: (e: React.MouseEvent<HTMLElement>) => void;
-  audiofile?: string;
-}
+import { PopUpProps } from '../../types';
 
 function PopUp({
   title,

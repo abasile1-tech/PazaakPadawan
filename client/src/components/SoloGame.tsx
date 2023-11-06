@@ -10,36 +10,7 @@ import GameButtons from './GameButtons';
 import EndGamePopup from './EndGamePopUp';
 import PopUp from './PopUP/PopUp';
 import popup from '../assets/music/8bitpopupmessage.mp3';
-
-interface DeckCard {
-  value: number;
-  color: string;
-  selected: boolean;
-  imagePath: string;
-}
-
-interface Player {
-  name: string;
-  action: PlayerState;
-  isTurn: boolean;
-  hand: JSX.Element[];
-  tally: number;
-  table: JSX.Element[];
-  gamesWon: number;
-  playedCardThisTurn: boolean;
-}
-
-enum GameState {
-  INITIAL = 'initial',
-  STARTED = 'started',
-  ENDED = 'ended',
-}
-
-enum PlayerState {
-  PLAY = 'play',
-  STAND = 'stand',
-  ENDTURN = 'endturn',
-}
+import { DeckCard, GameState, PlayerState, SoloPlayer } from '../types';
 
 function SoloGame(): JSX.Element {
   const location = useLocation();
@@ -72,7 +43,7 @@ function SoloGame(): JSX.Element {
     }
     return randomHand;
   }
-  const initialPlayer: Player = {
+  const initialPlayer: SoloPlayer = {
     name: '',
     action: PlayerState.PLAY,
     isTurn: false,
@@ -87,7 +58,7 @@ function SoloGame(): JSX.Element {
     playedCardThisTurn: false,
   };
 
-  const initialComputerPlayer: Player = {
+  const initialComputerPlayer: SoloPlayer = {
     name: '',
     action: PlayerState.PLAY,
     isTurn: false,
@@ -115,7 +86,7 @@ function SoloGame(): JSX.Element {
     setEndRoundMessage(winner);
     setShowEndRoundPopup(true);
   }
-  function addCardToTable(newPlayer: Player): Player | null {
+  function addCardToTable(newPlayer: SoloPlayer): SoloPlayer | null {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
@@ -250,7 +221,7 @@ function SoloGame(): JSX.Element {
     }
   }
 
-  function getRoundWinner(computerPlayer: Player) {
+  function getRoundWinner(computerPlayer: SoloPlayer) {
     console.log(
       'Player Score: ',
       player.tally,
@@ -319,7 +290,7 @@ function SoloGame(): JSX.Element {
     setGameState(GameState.STARTED);
   }
 
-  async function endOfRoundCleaning(newComputerPlayer: Player | null) {
+  async function endOfRoundCleaning(newComputerPlayer: SoloPlayer | null) {
     const winner = getRoundWinner(
       newComputerPlayer ? newComputerPlayer : computerPlayer
     );
