@@ -245,7 +245,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      sendGameData(gameObject);
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
       return;
     }
@@ -283,7 +282,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      sendGameData(gameObject);
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
       return;
     }

@@ -12,7 +12,7 @@ function Header({ musicChoice }: MusicChoiceProps) {
     <>
       <div className="headerdiv">
         <Link to="/">
-          <h1 className="headerh1">Pazaak!</h1>
+          <h1 className="headerh1">Pazaak Padawan!</h1>
         </Link>
 
         <div className="grouping_hamburger_music">
