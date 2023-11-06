@@ -189,7 +189,7 @@ function SoloGame(): JSX.Element {
     const newComputerPlayer = addCardToTable(newPlayer);
     const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
 
-    computerPlayerDecision(cPlayer);
+    await computerPlayerDecision(cPlayer);
 
     if (newPlayer.tally >= 20 || cPlayer.tally >= 20) {
       await endOfRoundCleaning(cPlayer);

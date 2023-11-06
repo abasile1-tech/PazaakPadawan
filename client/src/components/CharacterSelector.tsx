@@ -114,7 +114,7 @@ const characters = [
   },
 ];
 
-function Character() {
+function CharacterSelector() {
   const musicChoice = 'characterPage';
   const [, setSelectedCharacter] = useState<Character | null>(null);
   const navigate = useNavigate();
@@ -163,4 +163,4 @@ function Character() {
   );
 }
 
-export default Character;
+export default CharacterSelector;
