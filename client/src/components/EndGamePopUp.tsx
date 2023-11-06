@@ -1,13 +1,7 @@
-import React from 'react';
 import PopUp from './PopUP/PopUp';
 import victory from '../assets/music/lightsaber.mp3';
 import defeat from '../assets/music/blaster.mp3';
-
-interface EndGamePopupProps {
-  numGamesWonPlayer: number;
-  numGamesWonOpponent: number;
-  handleGameOverClick: () => void;
-}
+import { EndGamePopupProps } from '../types';
 
 const EndGamePopup: React.FC<EndGamePopupProps> = ({
   numGamesWonPlayer,

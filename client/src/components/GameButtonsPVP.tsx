@@ -1,20 +1,6 @@
-import React from 'react';
-enum GameState {
-  INITIAL = 'initial',
-  STARTED = 'started',
-  ENDED = 'ended',
-  STAND = 'stand',
-  WAIT = 'wait',
-}
+import { GameButtonsProps, GameState } from '../types';
 
-interface GameButtonsPVPProps {
-  gameState: GameState;
-  onStand: () => void;
-  onEndTurn: () => void;
-  onStartGame: () => void;
-  isTurn: boolean;
-}
-const GameButtonsPVP: React.FC<GameButtonsPVPProps> = ({
+const GameButtonsPVP: React.FC<GameButtonsProps> = ({
   gameState,
   onStand,
   onEndTurn,

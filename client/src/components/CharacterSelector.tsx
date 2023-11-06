@@ -19,6 +19,7 @@ import ewok from '../assets/images/penguins/ewok.jpg';
 import mandalorian from '../assets/images/penguins/mandalorian.jpg';
 import stormtrooper from '../assets/images/penguins/stormTrooper.jpg';
 import jabba from '../assets/images/penguins/PengTheHut.jpeg';
+import { Character } from '../types';
 
 const characters = [
   {
@@ -113,21 +114,14 @@ const characters = [
   },
 ];
 
-interface CharacterData {
-  id: number;
-  name: string;
-  image: string;
-}
-
-function Character() {
+function CharacterSelector() {
   const musicChoice = 'characterPage';
-  const [, setSelectedCharacter] = useState<CharacterData | null>(null);
+  const [, setSelectedCharacter] = useState<Character | null>(null);
   const navigate = useNavigate();
 
-  const handleCharacterSelect = (characterId: number) => {
-    const selectedCharacterData = characters.find(
-      (character) => character.id === characterId
-    );
+  const checkSelectedCharacter = (
+    selectedCharacterData: Character | undefined
+  ) => {
     if (selectedCharacterData) {
       setSelectedCharacter(selectedCharacterData);
       localStorage.setItem(
@@ -136,6 +130,13 @@ function Character() {
       );
       navigate('/');
     }
+  };
+
+  const handleCharacterSelect = (characterId: number) => {
+    const selectedCharacterData = characters.find(
+      (character) => character.id === characterId
+    );
+    checkSelectedCharacter(selectedCharacterData);
   };
 
   return (
@@ -162,4 +163,4 @@ function Character() {
   );
 }
 
-export default Character;
+export default CharacterSelector;
