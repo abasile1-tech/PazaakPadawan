@@ -24,12 +24,6 @@ interface ChatProps {
 
 const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
-  // const [userData, setUserData] = useState({
-  //   username: '',
-  //   receiverName: '',
-  //   connected: false,
-  //   message: '',
-  // });
 
   const handleUserName = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
