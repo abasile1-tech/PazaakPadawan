@@ -107,30 +107,62 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return { value: randomNumber, color: 'green' };
   }
 
-  const checkOverTwenty = (gameObject: GameObject) => {
-    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+  const checkOverTwenty = (gameObject: GameObject): boolean => {
+    const playerForceBust =
+      gameObject.player1.tally >= 20 && !gameObject.player1.playedCardThisTurn;
+    const otherPlayerForceBust =
+      gameObject.player2.tally >= 20 && !gameObject.player2.playedCardThisTurn;
+
+    const playerNoCardsLeft =
+      gameObject.player1.tally >= 20 && gameObject.player1.hand.length === 0;
+    const otherPlayerNoCardsLeft =
+      gameObject.player2.tally >= 20 && gameObject.player2.hand.length === 0;
+
+    const playerCanPlayCard = gameObject.player1.hand.some(
+      (card) => card.value + gameObject.player1.tally <= 20
+    );
+    const otherPlayerCanPlayCard = gameObject.player2.hand.some(
+      (card) => card.value + gameObject.player2.tally <= 20
+    );
+
+    const playerRoundOver =
+      playerForceBust || playerNoCardsLeft || !playerCanPlayCard;
+    const otherPlayerRoundOver =
+      otherPlayerForceBust || otherPlayerNoCardsLeft || !otherPlayerCanPlayCard;
+
+    if (playerRoundOver && otherPlayerRoundOver) {
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
+      return true;
     }
+
+    return false;
   };
 
   async function handlePlayerEndTurnButtonClick() {
+    // Give a card to player if the otherPlayer stood
     if (otherPlayer.action === PlayerState.STAND) {
-      const card = getNewCardForTable();
       const gameObject: GameObject = {
-        player1: {
-          ...player,
-          isTurn: true,
-          playedCardThisTurn: false,
-          tally: player.tally + card.value,
-          table: [...player.table, card],
-          action: PlayerState.PLAY,
-        },
+        player1: player,
         player2: otherPlayer,
         gameState,
         sessionID: '10',
       };
+
+      if (checkOverTwenty(gameObject)) {
+        return;
+      }
+
+      const card = getNewCardForTable();
+      gameObject.player1 = {
+        ...player,
+        isTurn: true,
+        playedCardThisTurn: false,
+        tally: player.tally + card.value,
+        table: [...player.table, card],
+        action: PlayerState.PLAY,
+      };
+
       await sendGameData(gameObject);
-      checkOverTwenty(gameObject);
 
       return;
     }
@@ -157,23 +189,30 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   async function handleOtherPlayerEndTurnButtonClick() {
+    // Give a card to otherPlayer if the player stood
     if (player.action === PlayerState.STAND) {
-      const card = getNewCardForTable();
       const gameObject: GameObject = {
         player1: player,
-        player2: {
-          ...otherPlayer,
-          isTurn: true,
-          playedCardThisTurn: false,
-          tally: otherPlayer.tally + card.value,
-          table: [...otherPlayer.table, card],
-          action: PlayerState.PLAY,
-        },
+        player2: otherPlayer,
         gameState,
         sessionID: '10',
       };
+
+      if (checkOverTwenty(gameObject)) {
+        return;
+      }
+
+      const card = getNewCardForTable();
+      gameObject.player2 = {
+        ...otherPlayer,
+        isTurn: true,
+        playedCardThisTurn: false,
+        tally: otherPlayer.tally + card.value,
+        table: [...otherPlayer.table, card],
+        action: PlayerState.PLAY,
+      };
+
       await sendGameData(gameObject);
-      checkOverTwenty(gameObject);
 
       return;
     }
@@ -517,7 +556,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         <div className="player1">
           <h3>
             {player.name}{' '}
-            {player.action === PlayerState.STAND ? 'STOOD' : 'Still playing...'}
+            {player.action === PlayerState.STAND ? 'STOOD' : 'is playing...'}
           </h3>
           <div className="table">
             <Hand hand={listOfCards(player.table)} />
@@ -553,7 +592,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
             {otherPlayer.name}{' '}
             {otherPlayer.action === PlayerState.STAND
               ? 'STOOD'
-              : 'Still playing...'}
+              : 'is playing...'}
           </h3>
           <div className="table">
             <Hand hand={listOfCards(otherPlayer.table)} />
