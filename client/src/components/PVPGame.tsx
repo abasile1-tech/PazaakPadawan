@@ -102,7 +102,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const audio = new Audio(cardflip);
     audio.play();
     const randomNumber = getRandomNumber();
-    console.log('random number: ', randomNumber);
     return { value: randomNumber, color: 'green' };
   }
 
@@ -213,12 +212,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   }
 
   function getRoundWinner(player: PlayerPVP, otherPlayer: PlayerPVP) {
-    console.log(
-      'Player Score: ',
-      player.tally,
-      'Other Player Score: ',
-      otherPlayer.tally
-    );
     const playerBust = player.tally > 20;
     const otherPlayerBust = otherPlayer.tally > 20;
     const otherPlayerWon = otherPlayer.tally <= 20;
@@ -231,30 +224,23 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const tieOrBustReturn = -1;
 
     if (playerBust && otherPlayerBust) {
-      console.log('you both went bust');
       return tieOrBustReturn;
     }
     if (playerBust && otherPlayerWon) {
-      console.log('opponent won');
       return otherPlayerPlayerReturn;
     }
     if (otherPlayerBust && playerWon) {
-      console.log('you won');
       return playerReturn;
     }
     if (tie) {
-      console.log('you tied');
       return tieOrBustReturn;
     }
     if (playerLessThanOther) {
-      console.log('opponent won');
       return otherPlayerPlayerReturn;
     }
     if (otherPlayerLessThanPlayer) {
-      console.log('you won');
       return playerReturn;
     }
-    console.log('the round is over', player.tally, otherPlayer.tally);
   }
 
   function handlePlayerStandButtonClick() {
@@ -372,7 +358,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     // if winner is 1: player won, if winner is 0: otherPlayer won, if winner is -1: tie
     const winner = getRoundWinner(player, otherPlayer);
     const [playerWonRound, otherPlayerWonRound] = getWonRoundState(winner);
-    console.log('PLAYER', playerWonRound, 'OTHER PLAYER', otherPlayerWonRound);
     const gameObject: GameObject = {
       player1: {
         ...player,
