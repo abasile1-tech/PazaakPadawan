@@ -154,7 +154,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       sessionID: '10',
     };
     await sendGameData(gameObject);
-    // checkOverTwenty(gameObject);
   }
 
   async function handleOtherPlayerEndTurnButtonClick() {
@@ -198,7 +197,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       sessionID: '10',
     };
     await sendGameData(gameObject);
-    // checkOverTwenty(gameObject);
   }
 
   function getRoundWinner(player: PlayerPVP, otherPlayer: PlayerPVP) {
