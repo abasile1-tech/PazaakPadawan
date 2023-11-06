@@ -156,3 +156,10 @@ export interface PopUpProps {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   audiofile?: string;
 }
+
+export interface PlayBarProps {
+  playerTally: number;
+  opponentTally: number;
+  isPlayerTurn: boolean;
+  gameState: GameState;
+}

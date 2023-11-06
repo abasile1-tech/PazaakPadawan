@@ -1,5 +1,3 @@
-//popup message on play page
-//welcome message(game turn = 0), tutorial message, result message(game ends)
 import { useEffect } from 'react';
 import { PopUpProps } from '../../types';
 

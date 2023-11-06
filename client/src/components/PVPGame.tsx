@@ -105,6 +105,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return { value: randomNumber, color: 'green' };
   }
 
+  const checkOverTwenty = (gameObject: GameObject) => {
+    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+      endOfRoundCleaning(gameObject.player1, gameObject.player2);
+    }
+  };
+
   function handlePlayerEndTurnButtonClick() {
     if (otherPlayer.action === PlayerState.STAND) {
       const card = getNewCardForTable();
@@ -122,10 +128,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         sessionID: '10',
       };
       sendGameData(gameObject);
-
-      if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
-        endOfRoundCleaning(gameObject.player1, gameObject.player2);
-      }
+      checkOverTwenty(gameObject);
 
       return;
     }
@@ -148,17 +151,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    stompClient.send(
-      '/app/updateGame',
-      {
-        id: 'game',
-      },
-      JSON.stringify(gameObject)
-    );
-
-    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
-      endOfRoundCleaning(gameObject.player1, gameObject.player2);
-    }
+    sendGameData(gameObject);
+    checkOverTwenty(gameObject);
   }
 
   function handleOtherPlayerEndTurnButtonClick() {
@@ -178,10 +172,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         sessionID: '10',
       };
       sendGameData(gameObject);
-
-      if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
-        endOfRoundCleaning(gameObject.player1, gameObject.player2);
-      }
+      checkOverTwenty(gameObject);
 
       return;
     }
@@ -205,10 +196,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       sessionID: '10',
     };
     sendGameData(gameObject);
-
-    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
-      endOfRoundCleaning(gameObject.player1, gameObject.player2);
-    }
+    checkOverTwenty(gameObject);
   }
 
   function getRoundWinner(player: PlayerPVP, otherPlayer: PlayerPVP) {
@@ -256,7 +244,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         sessionID: '10',
       };
       sendGameData(gameObject);
-
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
       return;
     }
@@ -295,7 +282,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         sessionID: '10',
       };
       sendGameData(gameObject);
-
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
       return;
     }

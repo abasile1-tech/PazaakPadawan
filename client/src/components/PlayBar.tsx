@@ -2,20 +2,7 @@ import { useEffect, useState } from 'react';
 import ScoreKeeper from './ScoreKeeper';
 import TurnIndicator from './TurnIndicator';
 import penguinmall from '../assets/images/penguins/penguinmaul1.jpeg';
-import { GameState } from '../types';
-
-interface PlayBarProps {
-  playerTally: number;
-  opponentTally: number;
-  isPlayerTurn: boolean;
-  gameState: GameState;
-}
-
-interface Character {
-  id: number;
-  name: string;
-  image: string;
-}
+import { Character, GameState, PlayBarProps } from '../types';
 
 const PlayBar = ({
   playerTally,

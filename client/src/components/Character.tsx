@@ -119,10 +119,9 @@ function Character() {
   const [, setSelectedCharacter] = useState<Character | null>(null);
   const navigate = useNavigate();
 
-  const handleCharacterSelect = (characterId: number) => {
-    const selectedCharacterData = characters.find(
-      (character) => character.id === characterId
-    );
+  const checkSelectedCharacter = (
+    selectedCharacterData: Character | undefined
+  ) => {
     if (selectedCharacterData) {
       setSelectedCharacter(selectedCharacterData);
       localStorage.setItem(
@@ -131,6 +130,13 @@ function Character() {
       );
       navigate('/');
     }
+  };
+
+  const handleCharacterSelect = (characterId: number) => {
+    const selectedCharacterData = characters.find(
+      (character) => character.id === characterId
+    );
+    checkSelectedCharacter(selectedCharacterData);
   };
 
   return (
