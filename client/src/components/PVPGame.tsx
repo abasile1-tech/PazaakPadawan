@@ -347,9 +347,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     const gameObject: GameObject = {
       player1: {
         ...player,
-        hand: player.hand,
-        table: [],
-        tally: 0,
         action: PlayerState.PLAY,
         roundsWon: winner === 1 ? player.roundsWon + 1 : player.roundsWon,
         wonRound: playerWonRound,
@@ -357,9 +354,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       player2: {
         ...otherPlayer,
-        hand: otherPlayer.hand,
-        table: [],
-        tally: 0,
         action: PlayerState.PLAY,
         roundsWon:
           winner === 0 ? otherPlayer.roundsWon + 1 : otherPlayer.roundsWon,
@@ -489,8 +483,18 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   async function dismissPopup() {
     const gameObject: GameObject = {
-      player1: { ...player, wonRound: WonRoundState.UNDECIDED },
-      player2: { ...otherPlayer, wonRound: WonRoundState.UNDECIDED },
+      player1: {
+        ...player,
+        table: [],
+        tally: 0,
+        wonRound: WonRoundState.UNDECIDED,
+      },
+      player2: {
+        ...otherPlayer,
+        table: [],
+        tally: 0,
+        wonRound: WonRoundState.UNDECIDED,
+      },
       gameState: gameState,
       sessionID: '10',
     };
