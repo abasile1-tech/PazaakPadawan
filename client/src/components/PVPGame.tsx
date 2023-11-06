@@ -6,7 +6,6 @@ import Card from './Card';
 import PlayBarPVP from './PlayBarPVP';
 import cardflip from '../assets/music/flipcardfast.mp3';
 import { useLocation, useNavigate } from 'react-router-dom';
-import GameButtons from './GameButtons';
 import EndGamePopupPVP from './EndGamePopUpPVP';
 import PopUp from './PopUP/PopUp';
 import {
@@ -17,6 +16,7 @@ import {
   WonRoundState,
   UserData,
 } from '../types';
+import GameButtonsPVP from './GameButtonsPVP';
 
 interface DeckCard {
   value: number;
@@ -669,7 +669,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           </div>
           <div className="turnOptions">
             {player.name == userData.username ? (
-              <GameButtons
+              <GameButtonsPVP
                 gameState={gameState}
                 onStand={handlePlayerStandButtonClick}
                 onEndTurn={handlePlayerEndTurnButtonClick}
@@ -705,7 +705,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
           </div>
           <div className="turnOptions">
             {otherPlayer.name == userData.username ? (
-              <GameButtons
+              <GameButtonsPVP
                 gameState={gameState}
                 onStand={handleOtherPlayerStandButtonClick}
                 onEndTurn={handleOtherPlayerEndTurnButtonClick}
