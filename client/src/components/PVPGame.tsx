@@ -138,11 +138,33 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return false;
   };
 
-  const standIfTwenty = (playerObject: PlayerPVP) => {
-    if (playerObject.tally === 20) {
-      playerObject.action = PlayerState.STAND;
+  async function standIfTwenty(gameObject: GameObject) {
+    if (gameObject.player1.isTurn) {
+      if (gameObject.player1.tally === 20) {
+        gameObject.player1.action = PlayerState.STAND;
+        gameObject.player1.isTurn = false;
+        if (gameObject.player2.action === PlayerState.STAND) {
+          endOfRoundCleaning(gameObject.player1, gameObject.player2);
+        } else if (gameObject.player2.action === PlayerState.ENDTURN) {
+          gameObject.player2.action = PlayerState.PLAY;
+          gameObject.player2.isTurn = true;
+          await sendGameData(gameObject);
+        }
+      }
+    } else if (gameObject.player2.isTurn) {
+      if (gameObject.player2.tally === 20) {
+        gameObject.player2.action = PlayerState.STAND;
+        gameObject.player2.isTurn = false;
+        if (gameObject.player1.action === PlayerState.STAND) {
+          endOfRoundCleaning(gameObject.player1, gameObject.player2);
+        } else if (gameObject.player1.action === PlayerState.ENDTURN) {
+          gameObject.player1.action = PlayerState.PLAY;
+          gameObject.player1.isTurn = true;
+          await sendGameData(gameObject);
+        }
+      }
     }
-  };
+  }
 
   async function handlePlayerEndTurnButtonClick() {
     // Give a card to player if the otherPlayer stood
@@ -168,9 +190,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         action: PlayerState.PLAY,
       };
 
-      standIfTwenty(gameObject.player1);
-
-      await sendGameData(gameObject);
+      await standIfTwenty(gameObject);
 
       return;
     }
@@ -193,8 +213,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    standIfTwenty(gameObject.player2);
-    await sendGameData(gameObject);
+    await standIfTwenty(gameObject);
   }
 
   async function handleOtherPlayerEndTurnButtonClick() {
@@ -220,8 +239,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         table: [...otherPlayer.table, card],
         action: PlayerState.PLAY,
       };
-      standIfTwenty(gameObject.player2);
-      await sendGameData(gameObject);
+      await standIfTwenty(gameObject);
 
       return;
     }
@@ -244,8 +262,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    standIfTwenty(gameObject.player1);
-    await sendGameData(gameObject);
+    await standIfTwenty(gameObject);
   }
 
   function getRoundWinner(player: PlayerPVP, otherPlayer: PlayerPVP) {
@@ -314,8 +331,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    standIfTwenty(gameObject.player2);
-    await sendGameData(gameObject);
+    await standIfTwenty(gameObject);
   }
 
   async function handleOtherPlayerStandButtonClick() {
@@ -351,8 +367,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    standIfTwenty(gameObject.player1);
-    await sendGameData(gameObject);
+    await standIfTwenty(gameObject);
   }
 
   async function handleStartButtonClick() {
@@ -440,8 +455,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      standIfTwenty(gameObject.player1);
-      await sendGameData(gameObject);
+      await standIfTwenty(gameObject);
     }
   }
 
@@ -469,8 +483,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      standIfTwenty(gameObject.player2);
-      await sendGameData(gameObject);
+      await standIfTwenty(gameObject);
     }
   }
 
