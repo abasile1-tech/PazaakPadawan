@@ -107,98 +107,97 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return { value: randomNumber, color: 'green' };
   }
 
-  const checkOverTwenty = (gameObject: GameObject) => {
-    if (gameObject.player1.tally >= 20 || gameObject.player2.tally >= 20) {
+  const eitherScoreOverTwenty = (gameObject: GameObject) => {
+    if (gameObject.player1.tally > 20 || gameObject.player2.tally > 20) {
       endOfRoundCleaning(gameObject.player1, gameObject.player2);
+      return true;
+    } else {
+      return false;
     }
   };
 
   async function handlePlayerEndTurnButtonClick() {
     if (otherPlayer.action === PlayerState.STAND) {
-      const card = getNewCardForTable();
       const gameObject: GameObject = {
-        player1: {
-          ...player,
-          isTurn: true,
-          playedCardThisTurn: false,
-          tally: player.tally + card.value,
-          table: [...player.table, card],
-          action: PlayerState.PLAY,
-        },
+        player1: player,
         player2: otherPlayer,
         gameState,
         sessionID: '10',
       };
-      await sendGameData(gameObject);
-      checkOverTwenty(gameObject);
+      if (!eitherScoreOverTwenty(gameObject)) {
+        const card = getNewCardForTable();
+        gameObject.player1.tally = player.tally + card.value;
+        gameObject.player1.table.push(card);
+        gameObject.player1.isTurn = true;
+        gameObject.player1.playedCardThisTurn = false;
+        gameObject.player1.action = PlayerState.PLAY;
+
+        await sendGameData(gameObject);
+      }
 
       return;
     }
 
-    const card = getNewCardForTable();
     const gameObject: GameObject = {
-      player1: {
-        ...player,
-        isTurn: false,
-        action: PlayerState.ENDTURN,
-      },
-      player2: {
-        ...otherPlayer,
-        isTurn: true,
-        playedCardThisTurn: false,
-        tally: otherPlayer.tally + card.value,
-        table: [...otherPlayer.table, card],
-        action: PlayerState.PLAY,
-      },
+      player1: player,
+      player2: otherPlayer,
       gameState,
       sessionID: '10',
     };
-    await sendGameData(gameObject);
-    checkOverTwenty(gameObject);
+    if (!eitherScoreOverTwenty(gameObject)) {
+      const card = getNewCardForTable();
+      gameObject.player1.isTurn = false;
+      gameObject.player1.action = PlayerState.ENDTURN;
+      gameObject.player2.isTurn = true;
+      gameObject.player2.playedCardThisTurn = false;
+      gameObject.player2.tally = otherPlayer.tally + card.value;
+      gameObject.player2.table.push(card);
+      gameObject.player2.action = PlayerState.PLAY;
+
+      await sendGameData(gameObject);
+    }
   }
 
   async function handleOtherPlayerEndTurnButtonClick() {
     if (player.action === PlayerState.STAND) {
-      const card = getNewCardForTable();
       const gameObject: GameObject = {
         player1: player,
-        player2: {
-          ...otherPlayer,
-          isTurn: true,
-          playedCardThisTurn: false,
-          tally: otherPlayer.tally + card.value,
-          table: [...otherPlayer.table, card],
-          action: PlayerState.PLAY,
-        },
+        player2: otherPlayer,
         gameState,
         sessionID: '10',
       };
-      await sendGameData(gameObject);
-      checkOverTwenty(gameObject);
+      if (!eitherScoreOverTwenty(gameObject)) {
+        const card = getNewCardForTable();
+        gameObject.player2.tally = otherPlayer.tally + card.value;
+        gameObject.player2.table.push(card);
+        gameObject.player2.isTurn = true;
+        gameObject.player2.playedCardThisTurn = false;
+        gameObject.player2.action = PlayerState.PLAY;
+
+        await sendGameData(gameObject);
+      }
 
       return;
     }
 
-    const card = getNewCardForTable();
     const gameObject: GameObject = {
-      player1: {
-        ...player,
-        isTurn: true,
-        playedCardThisTurn: false,
-        tally: player.tally + card.value,
-        table: [...player.table, card],
-        action: PlayerState.PLAY,
-      },
-      player2: {
-        ...otherPlayer,
-        isTurn: false,
-        action: PlayerState.ENDTURN,
-      },
+      player1: player,
+      player2: otherPlayer,
       gameState,
       sessionID: '10',
     };
-    await sendGameData(gameObject);
-    checkOverTwenty(gameObject);
+    if (!eitherScoreOverTwenty(gameObject)) {
+      const card = getNewCardForTable();
+      gameObject.player2.isTurn = false;
+      gameObject.player2.action = PlayerState.ENDTURN;
+      gameObject.player1.isTurn = true;
+      gameObject.player1.playedCardThisTurn = false;
+      gameObject.player1.tally = player.tally + card.value;
+      gameObject.player1.table.push(card);
+      gameObject.player1.action = PlayerState.PLAY;
+
+      await sendGameData(gameObject);
+    }
   }
 
   function getRoundWinner(player: PlayerPVP, otherPlayer: PlayerPVP) {
