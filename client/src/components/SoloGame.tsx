@@ -91,7 +91,6 @@ function SoloGame(): JSX.Element {
 
   function addCardToTable(newPlayer: SoloPlayer): SoloPlayer | null {
     const audio = new Audio(cardflip);
-    audio.play();
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="green" cardType="normal_card" />
@@ -103,6 +102,7 @@ function SoloGame(): JSX.Element {
         table: [...newPlayer.table, newCard],
         action: PlayerState.PLAY,
       });
+      audio.play();
       return null;
     }
     if (newPlayer.action == PlayerState.STAND) {
@@ -117,6 +117,7 @@ function SoloGame(): JSX.Element {
         action: PlayerState.PLAY,
       };
       setComputerPlayer(newComputerPlayer);
+      audio.play();
       return newComputerPlayer;
     }
     return null;
