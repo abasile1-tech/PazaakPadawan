@@ -1,51 +1,34 @@
 import { useState } from 'react';
-import { Client } from 'stompjs';
 
-interface PublicChat {
-  senderName: string;
-  receiverName: string;
-  message: string;
-  date: Date;
-  status: string;
-}
-
-interface UserData {
-  username: string;
-  receiverName: string;
-  connected: boolean;
-  message: string;
-}
-
-interface ChatProps {
-  stompClient: Client;
-  userData: UserData;
-  setUserData: React.Dispatch<React.SetStateAction<UserData>>;
-}
+import { PublicChat, ChatProps, Payload } from '../types';
 
 const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
   const [publicChats, setPublicChats] = useState<PublicChat[]>([]);
-  // const [userData, setUserData] = useState({
-  //   username: '',
-  //   receiverName: '',
-  //   connected: false,
-  //   message: '',
-  // });
 
-  const handleUserName = (event: { target: HTMLInputElement }) => {
+  const checkEvent = (event: { target: HTMLInputElement }) => {
     if (!event || !event.target) {
       console.warn('event is null');
       return;
     }
+  };
+
+  const checkStompClient = () => {
+    if (!stompClient) {
+      console.warn('stompClient is undefined. Unable to subcribe to events.');
+      return;
+    }
+  };
+
+  const handleUserName = (event: { target: HTMLInputElement }) => {
+    checkEvent(event);
     const { value } = event.target;
     setUserData((current) => {
       return { ...current, username: value };
     });
   };
+
   const handleMessage = (event: { target: HTMLInputElement }) => {
-    if (!event || !event.target) {
-      console.warn('event is null');
-      return;
-    }
+    checkEvent(event);
     const { value } = event.target;
     setUserData((current) => {
       return { ...current, message: value };
@@ -56,10 +39,7 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
     setUserData((current) => {
       return { ...current, connected: true };
     });
-    if (!stompClient) {
-      console.warn('stompClient is undefined. Unable to subcribe to events.');
-      return;
-    }
+    checkStompClient();
     stompClient.subscribe('/game/chatroom', onPublicMessageReceived);
     userJoin();
   };
@@ -69,16 +49,9 @@ const Chat = ({ stompClient, userData, setUserData }: ChatProps) => {
       senderName: userData.username,
       status: 'JOIN',
     };
-    if (!stompClient) {
-      console.warn('stompClient is undefined. Unable to send message.');
-      return;
-    }
+    checkStompClient();
     stompClient.send('/app/chatMessage', {}, JSON.stringify(chatMessage));
   };
-
-  interface Payload {
-    body: string;
-  }
 
   const onPublicMessageReceived = (payload: Payload) => {
     const payloadData = JSON.parse(payload.body);

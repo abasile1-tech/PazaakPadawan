@@ -1,6 +1,4 @@
-interface TurnIndicatorProps {
-  playerName: string;
-}
+import { TurnIndicatorProps } from '../types';
 
 const TurnIndicator = ({ playerName }: TurnIndicatorProps) => {
   return (

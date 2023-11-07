@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import BackgroundMusic from './BackgroundMusic';
+import { MusicChoiceProps } from '../types';
 
-interface MusicChoiceProps {
-  musicChoice: string;
-}
 function Header({ musicChoice }: MusicChoiceProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const toggleMenu = () => {
@@ -14,7 +12,7 @@ function Header({ musicChoice }: MusicChoiceProps) {
     <>
       <div className="headerdiv">
         <Link to="/">
-          <h1 className="headerh1">Pazaak!</h1>
+          <h1 className="headerh1">Pazaak Padawan!</h1>
         </Link>
 
         <div className="grouping_hamburger_music">

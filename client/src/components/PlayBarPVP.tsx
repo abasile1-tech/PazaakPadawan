@@ -1,12 +1,7 @@
 import yoda from '../assets/images/penguins/yoda.jpg';
 import ewok from '../assets/images/penguins/ewok.jpg';
-import { Player } from '../types';
+import { PlayBarPVPProps } from '../types';
 import ScoreLights from './ScoreLights';
-
-interface PlayBarPVPProps {
-  player: Player;
-  otherPlayer: Player;
-}
 
 const PlayBarPVP = ({ player, otherPlayer }: PlayBarPVPProps) => {
   const getTurnIndicatorText = () => {

@@ -1,10 +1,5 @@
 import { useEffect, useState } from 'react';
-
-interface Character {
-  id: number;
-  name: string;
-  image: string;
-}
+import { Character } from '../types';
 
 const UserBarComponent = () => {
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(

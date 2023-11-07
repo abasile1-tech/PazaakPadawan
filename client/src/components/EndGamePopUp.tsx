@@ -1,13 +1,7 @@
-import React from 'react';
 import PopUp from './PopUP/PopUp';
 import victory from '../assets/music/lightsaber.mp3';
 import defeat from '../assets/music/blaster.mp3';
-
-interface EndGamePopupProps {
-  numGamesWonPlayer: number;
-  numGamesWonOpponent: number;
-  handleGameOverClick: () => void;
-}
+import { EndGamePopupProps } from '../types';
 
 const EndGamePopup: React.FC<EndGamePopupProps> = ({
   numGamesWonPlayer,
@@ -19,7 +13,7 @@ const EndGamePopup: React.FC<EndGamePopupProps> = ({
       <PopUp
         audiofile={victory}
         title="YOU WON"
-        message="Thanks for playing Pazaak Online. Click close to return to the main menu."
+        message="Thanks for playing Pazaak Padawan. Click close to return to the main menu."
         buttonText="CLOSE"
         onClick={handleGameOverClick}
       />
@@ -29,7 +23,7 @@ const EndGamePopup: React.FC<EndGamePopupProps> = ({
       <PopUp
         audiofile={defeat}
         title="YOU LOSE"
-        message="Thanks for playing Pazaak Online. Click close to return to the main menu."
+        message="Thanks for playing Pazaak Padawan. Click close to return to the main menu."
         buttonText="CLOSE"
         onClick={handleGameOverClick}
       />

@@ -6,13 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import redcard from '../assets/images/cards/red_card.png';
 import bluecard from '../assets/images/cards/blue_card.png';
-
-interface DeckCard {
-  value: number;
-  color: string;
-  selected: boolean;
-  imagePath: string;
-}
+import { DeckCard } from '../types';
 
 function DeckBuilder() {
   const musicChoice = 'deckBuilder';

@@ -1,15 +1,7 @@
-import React from 'react';
 import PopUp from './PopUP/PopUp';
 import victory from '../assets/music/lightsaber.mp3';
 import defeat from '../assets/music/blaster.mp3';
-import { Player, UserData } from '../types';
-
-interface EndGamePopupPVPProps {
-  player: Player;
-  otherPlayer: Player;
-  userData: UserData;
-  handleGameOverClick: () => void;
-}
+import { EndGamePopupPVPProps } from '../types';
 
 const EndGamePopupPVP: React.FC<EndGamePopupPVPProps> = ({
   player,
@@ -39,7 +31,7 @@ const EndGamePopupPVP: React.FC<EndGamePopupPVPProps> = ({
       <PopUp
         audiofile={victory}
         title="YOU WON"
-        message="Thanks for playing Pazaak Online. Click close to return to the main menu."
+        message="Thanks for playing Pazaak Padawan. Click close to return to the main menu."
         buttonText="CLOSE"
         onClick={handleGameOverClick}
       />
@@ -49,7 +41,7 @@ const EndGamePopupPVP: React.FC<EndGamePopupPVPProps> = ({
       <PopUp
         audiofile={defeat}
         title="YOU LOSE"
-        message="Thanks for playing Pazaak Online. Click close to return to the main menu."
+        message="Thanks for playing Pazaak Padawaan. Click close to return to the main menu."
         buttonText="CLOSE"
         onClick={handleGameOverClick}
       />

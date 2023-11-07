@@ -1,6 +1,4 @@
-interface BarComponentProps {
-  chosenCharacter: string;
-}
+import { BarComponentProps } from '../types';
 
 const BarComponent = ({ chosenCharacter }: BarComponentProps) => {
   return (

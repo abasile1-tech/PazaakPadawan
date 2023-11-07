@@ -5,7 +5,7 @@ import SoloGame from './components/SoloGame';
 import PVP from './containers/PVP';
 import DeckBuilder from './components/DeckBuilder';
 import Instructions from './components/Instructions';
-import Character from './components/Character';
+import CharacterSelector from './components/CharacterSelector';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/instructions" element={<Instructions />} />
-          <Route path="/character" element={<Character />} />
+          <Route path="/character" element={<CharacterSelector />} />
           <Route path="/solo" element={<SoloGame />} />
           <Route path="/pvp" element={<PVP />} />
           <Route path="/deck" element={<DeckBuilder />} />
