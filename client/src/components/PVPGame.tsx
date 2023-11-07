@@ -57,6 +57,16 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     );
   }
 
+  async function sendGameDataForDeletion(gameObject: GameObject) {
+    stompClient.send(
+      '/app/deleteGame',
+      {
+        id: 'game',
+      },
+      JSON.stringify(gameObject)
+    );
+  }
+
   const initialPlayer: PlayerPVP = {
     name: 'Player 1',
     action: PlayerState.PLAY,
@@ -92,9 +102,17 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   const [gameState, setGameState] = useState(GameState.INITIAL);
 
   const navigate = useNavigate();
-  const handleGameOverClick = () => {
+
+  async function handleGameOverClick() {
+    const gameObject: GameObject = {
+      player1: player,
+      player2: otherPlayer,
+      gameState,
+      sessionID: '10',
+    };
+    await sendGameDataForDeletion(gameObject);
     navigate('/');
-  };
+  }
 
   function getRandomNumber(): number {
     return Math.floor(Math.random() * 10) + 1;
@@ -447,12 +465,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
 
   function onGameUpdateReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);
+    const gameOver =
+      payloadData.player1.roundsWon === 3 ||
+      payloadData.player2.roundsWon === 3;
 
     setEndRoundMessage(() => {
-      if (
-        payloadData.player1.roundsWon === 3 ||
-        payloadData.player2.roundsWon === 3
-      ) {
+      if (gameOver) {
         return '';
       }
       if (payloadData.player1.wonRound === WonRoundState.WON) {
@@ -548,6 +566,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
             )}
           </div>
           <button onClick={joinRoom}>Join Room</button>
+          <button onClick={handleGameOverClick}>Delete Room</button>
         </div>
         <div className="player2">
           <h3>
