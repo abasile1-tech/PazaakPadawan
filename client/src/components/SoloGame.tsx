@@ -273,18 +273,12 @@ function SoloGame(): JSX.Element {
     }
     setPlayer({
       ...player,
-      hand: player.hand,
-      table: [],
-      tally: 0,
       action: PlayerState.PLAY,
       gamesWon: winner === 1 ? player.gamesWon + 1 : player.gamesWon,
       playedCardThisTurn: false,
     });
     setComputerPlayer({
       ...computerPlayer,
-      hand: computerPlayer.hand,
-      table: [],
-      tally: 0,
       action: PlayerState.PLAY,
       gamesWon:
         winner === 0 ? computerPlayer.gamesWon + 1 : computerPlayer.gamesWon,
@@ -307,6 +301,22 @@ function SoloGame(): JSX.Element {
         playedCardThisTurn: true,
       });
     }
+  }
+
+  async function dismissPopup() {
+    setPlayer({
+      ...player,
+      hand: player.hand,
+      table: [],
+      tally: 0,
+    });
+    setComputerPlayer({
+      ...computerPlayer,
+      hand: computerPlayer.hand,
+      table: [],
+      tally: 0,
+    });
+    setShowEndRoundPopup(false);
   }
 
   return (
@@ -366,9 +376,7 @@ function SoloGame(): JSX.Element {
                 audiofile={popup}
                 message={endRoundMessage}
                 buttonText="OK"
-                onClick={() => {
-                  setShowEndRoundPopup(false);
-                }}
+                onClick={dismissPopup}
               />
             )}
         </div>
