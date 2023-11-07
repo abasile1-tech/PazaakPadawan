@@ -1,6 +1,8 @@
 package com.codeclan.server.controllers;
+import com.codeclan.server.models.Card;
 import com.codeclan.server.models.GameObject;
 import com.codeclan.server.models.Message;
+import com.codeclan.server.models.Player;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -63,6 +65,28 @@ public class ChatController {
         }
 
         // If we get to here, the session exists and has player1 and player2 so just return the passed in value
+        return frontEndGameObject;
+    }
+
+    @MessageMapping("/deleteGame")
+    @SendTo("/game/gameObject")
+    private GameObject deleteGameObject(@Payload GameObject frontEndGameObject){
+        System.out.printf("Game object to be deleted was received: %s\n", frontEndGameObject);
+        Boolean wasListChanged = gameObjects.remove(frontEndGameObject);
+        System.out.printf("It is %s that the list was changed\n", wasListChanged);
+        if (!wasListChanged) {
+            gameObjects.clear();
+            System.out.printf("Here is the empty gameObjects array %s\n", gameObjects);
+        }
+        ArrayList<Card> player1Hand = new ArrayList<>();
+        ArrayList<Card> player1Table= new ArrayList<>();
+        ArrayList<Card> player2Hand = new ArrayList<>();
+        ArrayList<Card> player2Table = new ArrayList<>();
+        Player player1 = new Player("Player 1", "play", false, player1Hand, 0, player1Table, 0, "undecided", false);
+        Player player2 = new Player("Player 2", "play", false, player2Hand, 0, player2Table, 0, "undecided", false);
+        frontEndGameObject.setPlayer1(player1);
+        frontEndGameObject.setPlayer2(player2);
+        frontEndGameObject.setGameState("initial");
         return frontEndGameObject;
     }
 }
