@@ -10,7 +10,11 @@ Table of Contents:
 - [Installation](#installation)
 - [Usage](#usage)
 
-![Main page screenshot](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/ACkb.gif?raw=true)
+## :movie_camera: Videos:
+
+https://github.com/abasile1-tech/PazaakPadawan/assets/59401762/b89eb7eb-aedb-4fe3-b2da-218d8a1e09f7
+
+https://github.com/abasile1-tech/PazaakPadawan/assets/59401762/13a58051-31da-43c8-a380-849368daf152
 
 # Introduction
 
