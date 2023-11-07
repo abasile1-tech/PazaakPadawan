@@ -47,7 +47,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return randomHand;
   }
 
-  const sendGameData = (gameObject: GameObject) => {
+  async function sendGameData(gameObject: GameObject) {
     stompClient.send(
       '/app/updateGame',
       {
@@ -55,7 +55,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       JSON.stringify(gameObject)
     );
-  };
+  }
 
   const initialPlayer: PlayerPVP = {
     name: 'Player 1',
@@ -113,7 +113,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
   };
 
-  function handlePlayerEndTurnButtonClick() {
+  async function handlePlayerEndTurnButtonClick() {
     if (otherPlayer.action === PlayerState.STAND) {
       const card = getNewCardForTable();
       const gameObject: GameObject = {
@@ -129,7 +129,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      sendGameData(gameObject);
+      await sendGameData(gameObject);
       checkOverTwenty(gameObject);
 
       return;
@@ -153,11 +153,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
     checkOverTwenty(gameObject);
   }
 
-  function handleOtherPlayerEndTurnButtonClick() {
+  async function handleOtherPlayerEndTurnButtonClick() {
     if (player.action === PlayerState.STAND) {
       const card = getNewCardForTable();
       const gameObject: GameObject = {
@@ -173,7 +173,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      sendGameData(gameObject);
+      await sendGameData(gameObject);
       checkOverTwenty(gameObject);
 
       return;
@@ -197,7 +197,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
     checkOverTwenty(gameObject);
   }
 
@@ -233,7 +233,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     }
   }
 
-  function handlePlayerStandButtonClick() {
+  async function handlePlayerStandButtonClick() {
     if (otherPlayer.action === PlayerState.STAND) {
       const gameObject: GameObject = {
         player1: {
@@ -267,10 +267,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
   }
 
-  function handleOtherPlayerStandButtonClick() {
+  async function handleOtherPlayerStandButtonClick() {
     if (player.action === PlayerState.STAND) {
       const gameObject: GameObject = {
         player1: player,
@@ -303,10 +303,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
   }
 
-  function handleStartButtonClick() {
+  async function handleStartButtonClick() {
     const card = getNewCardForTable();
     const gameObject: GameObject = {
       player1: {
@@ -321,7 +321,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState: GameState.STARTED,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
   }
 
   function getWonRoundState(winner: 1 | 0 | -1 | undefined) {
@@ -340,16 +340,13 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     return [WonRoundState.UNDECIDED, WonRoundState.UNDECIDED];
   }
 
-  function endOfRoundCleaning(player: PlayerPVP, otherPlayer: PlayerPVP) {
+  async function endOfRoundCleaning(player: PlayerPVP, otherPlayer: PlayerPVP) {
     // if winner is 1: player won, if winner is 0: otherPlayer won, if winner is -1: tie
     const winner = getRoundWinner(player, otherPlayer);
     const [playerWonRound, otherPlayerWonRound] = getWonRoundState(winner);
     const gameObject: GameObject = {
       player1: {
         ...player,
-        hand: player.hand,
-        table: [],
-        tally: 0,
         action: PlayerState.PLAY,
         roundsWon: winner === 1 ? player.roundsWon + 1 : player.roundsWon,
         wonRound: playerWonRound,
@@ -357,9 +354,6 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       },
       player2: {
         ...otherPlayer,
-        hand: otherPlayer.hand,
-        table: [],
-        tally: 0,
         action: PlayerState.PLAY,
         roundsWon:
           winner === 0 ? otherPlayer.roundsWon + 1 : otherPlayer.roundsWon,
@@ -369,10 +363,10 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       gameState: GameState.ENDED,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
   }
 
-  function movePlayerCard(card: JSX.Element, index: number) {
+  async function movePlayerCard(card: JSX.Element, index: number) {
     if (
       gameState === GameState.STARTED &&
       !player.playedCardThisTurn &&
@@ -397,11 +391,11 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      sendGameData(gameObject);
+      await sendGameData(gameObject);
     }
   }
 
-  function moveOtherPlayerCard(card: JSX.Element, index: number) {
+  async function moveOtherPlayerCard(card: JSX.Element, index: number) {
     if (
       gameState === GameState.STARTED &&
       !otherPlayer.playedCardThisTurn &&
@@ -425,7 +419,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
         gameState,
         sessionID: '10',
       };
-      sendGameData(gameObject);
+      await sendGameData(gameObject);
     }
   }
 
@@ -438,7 +432,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     sendInitialConnectingData();
   }
 
-  const sendInitialConnectingData = () => {
+  async function sendInitialConnectingData() {
     const gameObject: GameObject = {
       player1: { ...player, name: userData.username },
       player2: otherPlayer,
@@ -449,8 +443,8 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
       console.warn('stompClient is undefined. Unable to send message.');
       return;
     }
-    sendGameData(gameObject);
-  };
+    await sendGameData(gameObject);
+  }
 
   function onGameUpdateReceived(payload: Payload) {
     const payloadData = JSON.parse(payload.body);
@@ -487,14 +481,24 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
     });
   }
 
-  function dismissPopup() {
+  async function dismissPopup() {
     const gameObject: GameObject = {
-      player1: { ...player, wonRound: WonRoundState.UNDECIDED },
-      player2: { ...otherPlayer, wonRound: WonRoundState.UNDECIDED },
+      player1: {
+        ...player,
+        table: [],
+        tally: 0,
+        wonRound: WonRoundState.UNDECIDED,
+      },
+      player2: {
+        ...otherPlayer,
+        table: [],
+        tally: 0,
+        wonRound: WonRoundState.UNDECIDED,
+      },
       gameState: gameState,
       sessionID: '10',
     };
-    sendGameData(gameObject);
+    await sendGameData(gameObject);
   }
 
   const listOfCards = (cards: CardPropsPVP[]): JSX.Element[] =>
