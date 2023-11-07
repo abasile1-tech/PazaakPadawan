@@ -18,6 +18,7 @@ function SoloGame(): JSX.Element {
   const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
   const [endRoundMessage, setEndRoundMessage] = useState<string>('');
   const [showEndRoundPopup, setShowEndRoundPopup] = useState(false);
+  const cardNoise = new Audio(cardflip);
 
   function generateRandomHand() {
     const randomHand = [];
@@ -90,7 +91,6 @@ function SoloGame(): JSX.Element {
   }
 
   function addCardToTable(newPlayer: SoloPlayer): SoloPlayer | null {
-    const audio = new Audio(cardflip);
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="green" cardType="normal_card" />
@@ -102,7 +102,7 @@ function SoloGame(): JSX.Element {
         table: [...newPlayer.table, newCard],
         action: PlayerState.PLAY,
       });
-      audio.play();
+      cardNoise.play();
       return null;
     }
     if (newPlayer.action == PlayerState.STAND) {
@@ -117,7 +117,7 @@ function SoloGame(): JSX.Element {
         action: PlayerState.PLAY,
       };
       setComputerPlayer(newComputerPlayer);
-      audio.play();
+      cardNoise.play();
       return newComputerPlayer;
     }
     return null;
@@ -147,6 +147,7 @@ function SoloGame(): JSX.Element {
             table: [...cPlayer.table, playedCard],
             action: PlayerState.STAND,
           };
+          cardNoise.play();
           setComputerPlayer(newComputerPlayer);
           await delay(3000); // wait for 3 seconds while the AI "decides..."
         }
