@@ -105,11 +105,15 @@ function SoloGame(): JSX.Element {
     return null;
   }
 
-  function giveCardToComputer(randomNumber: number, newCard: JSX.Element) {
+  function giveCardToComputer(
+    passedComputerPlayer: SoloPlayer,
+    randomNumber: number,
+    newCard: JSX.Element
+  ) {
     const newComputerPlayer = {
-      ...computerPlayer,
-      tally: computerPlayer.tally + randomNumber,
-      table: [...computerPlayer.table, newCard],
+      ...passedComputerPlayer,
+      tally: passedComputerPlayer.tally + randomNumber,
+      table: [...passedComputerPlayer.table, newCard],
       action: PlayerState.PLAY,
     };
     setComputerPlayer(() => {
@@ -119,7 +123,10 @@ function SoloGame(): JSX.Element {
     return newComputerPlayer;
   }
 
-  function addCardToTable(newPlayer: SoloPlayer): SoloPlayer | null {
+  function addCardToTable(
+    newPlayer: SoloPlayer,
+    passedComputerPlayer: SoloPlayer
+  ): SoloPlayer | null {
     const randomNumber = getRandomNumber();
     const newCard = (
       <Card value={randomNumber} color="green" cardType="normal_card" />
@@ -131,7 +138,7 @@ function SoloGame(): JSX.Element {
       !newPlayer.isTurn &&
       computerPlayer.action != PlayerState.STAND
     ) {
-      return giveCardToComputer(randomNumber, newCard);
+      return giveCardToComputer(passedComputerPlayer, randomNumber, newCard);
     } else {
       return null;
     }
@@ -237,7 +244,7 @@ function SoloGame(): JSX.Element {
       playedCardThisTurn: false,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+    addCardToTable(newPlayer, computerPlayer);
   }
 
   async function computerPlayerDecision(cPlayer: SoloPlayer) {
@@ -298,12 +305,24 @@ function SoloGame(): JSX.Element {
       return;
     }
     if (passedComputerPlayer.action != PlayerState.STAND) {
-      const newComputerPlayer = addCardToTable(newPlayer);
+      console.log(
+        'about to give a new card to the computer, passedComputerPlayer:',
+        passedComputerPlayer
+      );
+      const newComputerPlayer = addCardToTable(newPlayer, passedComputerPlayer);
+      console.log(
+        'should have just received a card from the table, newComputerPlayer:',
+        newComputerPlayer
+      );
       const cPlayer = newComputerPlayer
         ? newComputerPlayer
         : passedComputerPlayer;
       const newCPlayer = await computerPlayerDecision(cPlayer);
       const newerCPlayer = newCPlayer ? newCPlayer : passedComputerPlayer;
+      console.log(
+        'should have received a decision, newerCPlayer:',
+        newerCPlayer
+      );
       someOneEndedOverTwenty = newPlayer.tally > 20 || newerCPlayer.tally > 20;
       bothStood =
         newPlayer.action === PlayerState.STAND &&
@@ -315,13 +334,20 @@ function SoloGame(): JSX.Element {
         playerStarted();
         return;
       } else {
+        console.log('about to enter recursion 1, newerCPlayer', newerCPlayer);
         giveTurnToComputer(newPlayer, newerCPlayer);
+        return;
       }
     } else if (newPlayer.action != PlayerState.STAND) {
       playerStarted();
       return;
     } else {
+      console.log(
+        'about to enter recursion 2, passedComputerPlayer',
+        passedComputerPlayer
+      );
       giveTurnToComputer(newPlayer, passedComputerPlayer);
+      return;
     }
   }
 
@@ -366,7 +392,7 @@ function SoloGame(): JSX.Element {
     const newPlayer = playerStand();
     let newCPlayer;
     if (computerPlayer.action != PlayerState.STAND) {
-      const newComputerPlayer = addCardToTable(newPlayer);
+      const newComputerPlayer = addCardToTable(newPlayer, computerPlayer);
       const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
       newCPlayer = await computerPlayerDecision(cPlayer);
     }
@@ -395,7 +421,7 @@ function SoloGame(): JSX.Element {
       playedCardThisTurn: false,
     };
     setPlayer(newPlayer);
-    addCardToTable(newPlayer);
+    addCardToTable(newPlayer, computerPlayer);
     setGameState(GameState.STARTED);
   }
 
