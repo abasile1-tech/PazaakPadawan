@@ -127,11 +127,10 @@ function SoloGame(): JSX.Element {
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       giveCardToPlayer(newPlayer, randomNumber, newCard);
       return null;
-    }
-    // if (newPlayer.action == PlayerState.STAND) {
-    //   return null;
-    // }
-    else if (!newPlayer.isTurn && computerPlayer.action != PlayerState.STAND) {
+    } else if (
+      !newPlayer.isTurn &&
+      computerPlayer.action != PlayerState.STAND
+    ) {
       return giveCardToComputer(randomNumber, newCard);
     } else {
       return null;
@@ -358,7 +357,6 @@ function SoloGame(): JSX.Element {
       newCPlayer = await computerPlayerDecision(cPlayer);
     }
     const newerCPlayer = newCPlayer ? newCPlayer : computerPlayer;
-    // await delay(3000); // wait for 3 seconds while the AI "decides...";
     if (newPlayer.tally >= 20 || newerCPlayer.tally >= 20) {
       await endOfRoundCleaning(newerCPlayer);
       return;
