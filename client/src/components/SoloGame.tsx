@@ -261,11 +261,15 @@ function SoloGame(): JSX.Element {
         newComputerPlayer.tally >= 18 &&
         newComputerPlayer.tally < 20
       ) {
-        if (Math.random() < 0.9) {
-          const newCPlayer = chooseToStand(newComputerPlayer);
+        if (
+          player.tally >= newComputerPlayer.tally &&
+          player.tally <= 20 &&
+          player.action === PlayerState.STAND
+        ) {
+          const newCPlayer = chooseToPlay(newComputerPlayer);
           return newCPlayer;
         } else {
-          const newCPlayer = chooseToPlay(newComputerPlayer);
+          const newCPlayer = chooseToStand(newComputerPlayer);
           return newCPlayer;
         }
       } else if (newComputerPlayer.tally < 18) {
