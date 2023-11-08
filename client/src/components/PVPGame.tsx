@@ -528,16 +528,12 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <div className="scoreBoard">
+      <div>
         <PlayBarPVP player={player} otherPlayer={otherPlayer} />
       </div>
       <hr />
       <div className="playerBoard">
         <div className="player1">
-          <h3>
-            {player.name}{' '}
-            {player.action === PlayerState.STAND ? 'STOOD' : 'Still playing...'}
-          </h3>
           <div className="table">
             <Hand hand={listOfCards(player.table)} />
           </div>
@@ -562,19 +558,17 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
                 isTurn={player.isTurn}
               />
             ) : (
-              <div></div>
+              <div>
+                <p style={{ marginRight: '2em' }}>
+                  {player.action === PlayerState.STAND ? 'stood' : ''}
+                </p>
+              </div>
             )}
           </div>
           <button onClick={joinRoom}>Join Room</button>
           <button onClick={handleGameOverClick}>Delete Room</button>
         </div>
         <div className="player2">
-          <h3>
-            {otherPlayer.name}{' '}
-            {otherPlayer.action === PlayerState.STAND
-              ? 'STOOD'
-              : 'Still playing...'}
-          </h3>
           <div className="table">
             <Hand hand={listOfCards(otherPlayer.table)} />
           </div>
@@ -599,7 +593,9 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
                 isTurn={otherPlayer.isTurn}
               />
             ) : (
-              <div></div>
+              <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <p>{otherPlayer.action === PlayerState.STAND ? 'stood' : ''}</p>
+              </div>
             )}
           </div>
         </div>
