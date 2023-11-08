@@ -106,7 +106,6 @@ function SoloGame(): JSX.Element {
   }
 
   function giveCardToComputer(randomNumber: number, newCard: JSX.Element) {
-    console.log('giving card to computer, computerPlayer:', computerPlayer);
     const newComputerPlayer = {
       ...computerPlayer,
       tally: computerPlayer.tally + randomNumber,
@@ -116,7 +115,6 @@ function SoloGame(): JSX.Element {
     setComputerPlayer(() => {
       return newComputerPlayer;
     });
-    console.log('after receiving card, newComputerPlayer:', newComputerPlayer);
     cardNoise.play();
     return newComputerPlayer;
   }
@@ -128,23 +126,19 @@ function SoloGame(): JSX.Element {
     );
     if (newPlayer.isTurn && newPlayer.action != PlayerState.STAND) {
       giveCardToPlayer(newPlayer, randomNumber, newCard);
-      console.log('giving card to player and returning null');
       return null;
     }
     // if (newPlayer.action == PlayerState.STAND) {
     //   return null;
     // }
     else if (!newPlayer.isTurn && computerPlayer.action != PlayerState.STAND) {
-      console.log('giving card to computer');
       return giveCardToComputer(randomNumber, newCard);
     } else {
-      console.log('returning null because else');
       return null;
     }
   }
 
   async function computerPlayCard(cPlayer: SoloPlayer, bestCardIndex: number) {
-    console.log('playing a card');
     const [playedCard] = cPlayer.hand.splice(bestCardIndex, 1);
     const newComputerPlayer = {
       ...cPlayer,
@@ -153,7 +147,6 @@ function SoloGame(): JSX.Element {
       table: [...cPlayer.table, playedCard],
     };
     cardNoise.play();
-    console.log('just played a card, newComputerPlayer:', newComputerPlayer);
     setComputerPlayer(() => {
       return newComputerPlayer;
     });
@@ -182,7 +175,6 @@ function SoloGame(): JSX.Element {
   }
 
   function chooseToStand(cPlayer: SoloPlayer) {
-    console.log('choosing to stand');
     const newComputerPlayer = {
       ...cPlayer,
       action: PlayerState.STAND,
@@ -194,7 +186,6 @@ function SoloGame(): JSX.Element {
   }
 
   function chooseToPlay(cPlayer: SoloPlayer) {
-    console.log('choosing to play, cPlayer:', cPlayer);
     const newComputerPlayer = {
       ...cPlayer,
       action: PlayerState.PLAY,
@@ -243,12 +234,6 @@ function SoloGame(): JSX.Element {
       return newCPlayer;
     } else if (cPlayer.hand.length > 0) {
       const newComputerPlayer = await checkCards(cPlayer);
-      console.log(
-        'checking to stand or play, computerPlayer, cPlayer, newComputerPlayer:',
-        computerPlayer,
-        cPlayer,
-        newComputerPlayer
-      );
       if (newComputerPlayer.tally === 20) {
         const newCPlayer = chooseToStand(newComputerPlayer);
         return newCPlayer;
@@ -267,18 +252,11 @@ function SoloGame(): JSX.Element {
         const newCPlayer = chooseToPlay(newComputerPlayer);
         return newCPlayer;
       } else if (newComputerPlayer.tally > 20) {
-        console.log('choosing to play to try to get below 20');
         const newCPlayer = chooseToPlay(newComputerPlayer);
         return newCPlayer;
       }
-      console.log('returning cPlayer:', cPlayer);
       return cPlayer;
     }
-    console.log(
-      'checking to stand or play, computerPlayer, cPlayer:',
-      computerPlayer,
-      cPlayer
-    );
     if (cPlayer.tally >= 18 && cPlayer.tally <= 20) {
       if (Math.random() < 0.9) {
         chooseToStand(cPlayer);
@@ -308,11 +286,9 @@ function SoloGame(): JSX.Element {
     }
     if (passedComputerPlayer.action != PlayerState.STAND) {
       const newComputerPlayer = addCardToTable(newPlayer);
-      console.log('newComputerPlayer:', newComputerPlayer);
       const cPlayer = newComputerPlayer
         ? newComputerPlayer
         : passedComputerPlayer;
-      console.log('Player ended turn: going to decide, cPlayer:', cPlayer);
       const newCPlayer = await computerPlayerDecision(cPlayer);
       const newerCPlayer = newCPlayer ? newCPlayer : passedComputerPlayer;
       someOneEndedOverTwenty = newPlayer.tally > 20 || newerCPlayer.tally > 20;
@@ -326,14 +302,12 @@ function SoloGame(): JSX.Element {
         playerStarted();
         return;
       } else {
-        console.log('recursion 1.0');
         giveTurnToComputer(newPlayer, newerCPlayer);
       }
     } else if (newPlayer.action != PlayerState.STAND) {
       playerStarted();
       return;
     } else {
-      console.log('recursion 2.0');
       giveTurnToComputer(newPlayer, passedComputerPlayer);
     }
   }
@@ -381,7 +355,6 @@ function SoloGame(): JSX.Element {
     if (computerPlayer.action != PlayerState.STAND) {
       const newComputerPlayer = addCardToTable(newPlayer);
       const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
-      console.log('Player stood: going to decide, cPlayer:', cPlayer);
       newCPlayer = await computerPlayerDecision(cPlayer);
     }
     const newerCPlayer = newCPlayer ? newCPlayer : computerPlayer;
@@ -390,8 +363,7 @@ function SoloGame(): JSX.Element {
       await endOfRoundCleaning(newerCPlayer);
       return;
     } else if (newerCPlayer.action != PlayerState.STAND) {
-      console.log('here is some recursive coe to let computer keep playing');
-      giveTurnToComputer(newPlayer);
+      giveTurnToComputer(newPlayer, newerCPlayer);
       return;
     } else {
       await endOfRoundCleaning(newerCPlayer);
@@ -411,7 +383,6 @@ function SoloGame(): JSX.Element {
   }
 
   async function endOfRoundCleaning(newComputerPlayer: SoloPlayer) {
-    console.log('end of round cleaning, newComputerPlayer:', newComputerPlayer);
     const winner = getRoundWinner(
       newComputerPlayer ? newComputerPlayer : computerPlayer
     );
@@ -422,7 +393,6 @@ function SoloGame(): JSX.Element {
     } else {
       showEndRoundWinner('THIS ROUND IS TIED');
     }
-    // console.log('getting ready to set, computerPlayer:', computerPlayer);
     setPlayer({
       ...player,
       action: PlayerState.PLAY,
@@ -458,7 +428,6 @@ function SoloGame(): JSX.Element {
   }
 
   function dismissPopup() {
-    console.log('dismissing popup');
     setPlayer({
       ...player,
       hand: player.hand,
