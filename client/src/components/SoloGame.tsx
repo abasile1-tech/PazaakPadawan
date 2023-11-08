@@ -305,24 +305,12 @@ function SoloGame(): JSX.Element {
       return;
     }
     if (passedComputerPlayer.action != PlayerState.STAND) {
-      console.log(
-        'about to give a new card to the computer, passedComputerPlayer:',
-        passedComputerPlayer
-      );
       const newComputerPlayer = addCardToTable(newPlayer, passedComputerPlayer);
-      console.log(
-        'should have just received a card from the table, newComputerPlayer:',
-        newComputerPlayer
-      );
       const cPlayer = newComputerPlayer
         ? newComputerPlayer
         : passedComputerPlayer;
       const newCPlayer = await computerPlayerDecision(cPlayer);
       const newerCPlayer = newCPlayer ? newCPlayer : passedComputerPlayer;
-      console.log(
-        'should have received a decision, newerCPlayer:',
-        newerCPlayer
-      );
       someOneEndedOverTwenty = newPlayer.tally > 20 || newerCPlayer.tally > 20;
       bothStood =
         newPlayer.action === PlayerState.STAND &&
@@ -334,7 +322,6 @@ function SoloGame(): JSX.Element {
         playerStarted();
         return;
       } else {
-        console.log('about to enter recursion 1, newerCPlayer', newerCPlayer);
         giveTurnToComputer(newPlayer, newerCPlayer);
         return;
       }
@@ -342,10 +329,6 @@ function SoloGame(): JSX.Element {
       playerStarted();
       return;
     } else {
-      console.log(
-        'about to enter recursion 2, passedComputerPlayer',
-        passedComputerPlayer
-      );
       giveTurnToComputer(newPlayer, passedComputerPlayer);
       return;
     }
