@@ -293,24 +293,28 @@ function SoloGame(): JSX.Element {
     }
   }
 
-  async function handleEndTurnButtonClick() {
-    const newPlayer = playerEndTurn();
+  async function giveTurnToComputer(
+    newPlayer: SoloPlayer,
+    passedComputerPlayer: SoloPlayer
+  ) {
     let someOneEndedOverTwenty =
-      newPlayer.tally > 20 || computerPlayer.tally > 20;
+      newPlayer.tally > 20 || passedComputerPlayer.tally > 20;
     let bothStood =
       newPlayer.action === PlayerState.STAND &&
-      computerPlayer.action === PlayerState.STAND;
+      passedComputerPlayer.action === PlayerState.STAND;
     if (someOneEndedOverTwenty || bothStood) {
-      await endOfRoundCleaning(computerPlayer);
+      await endOfRoundCleaning(passedComputerPlayer);
       return;
     }
-    if (computerPlayer.action != PlayerState.STAND) {
+    if (passedComputerPlayer.action != PlayerState.STAND) {
       const newComputerPlayer = addCardToTable(newPlayer);
       console.log('newComputerPlayer:', newComputerPlayer);
-      const cPlayer = newComputerPlayer ? newComputerPlayer : computerPlayer;
+      const cPlayer = newComputerPlayer
+        ? newComputerPlayer
+        : passedComputerPlayer;
       console.log('Player ended turn: going to decide, cPlayer:', cPlayer);
       const newCPlayer = await computerPlayerDecision(cPlayer);
-      const newerCPlayer = newCPlayer ? newCPlayer : computerPlayer;
+      const newerCPlayer = newCPlayer ? newCPlayer : passedComputerPlayer;
       someOneEndedOverTwenty = newPlayer.tally > 20 || newerCPlayer.tally > 20;
       bothStood =
         newPlayer.action === PlayerState.STAND &&
@@ -318,14 +322,25 @@ function SoloGame(): JSX.Element {
       if (someOneEndedOverTwenty || bothStood) {
         await endOfRoundCleaning(newerCPlayer);
         return;
-      } else {
+      } else if (newPlayer.action != PlayerState.STAND) {
         playerStarted();
         return;
+      } else {
+        console.log('recursion 1.0');
+        giveTurnToComputer(newPlayer, newerCPlayer);
       }
-    } else {
+    } else if (newPlayer.action != PlayerState.STAND) {
       playerStarted();
       return;
+    } else {
+      console.log('recursion 2.0');
+      giveTurnToComputer(newPlayer, passedComputerPlayer);
     }
+  }
+
+  async function handleEndTurnButtonClick() {
+    const newPlayer = playerEndTurn();
+    giveTurnToComputer(newPlayer, computerPlayer);
   }
 
   function getRoundWinner(computerPlayer: SoloPlayer) {
@@ -375,7 +390,8 @@ function SoloGame(): JSX.Element {
       await endOfRoundCleaning(newerCPlayer);
       return;
     } else if (newerCPlayer.action != PlayerState.STAND) {
-      console.log('write code to let computer keep playing');
+      console.log('here is some recursive coe to let computer keep playing');
+      giveTurnToComputer(newPlayer);
       return;
     } else {
       await endOfRoundCleaning(newerCPlayer);
