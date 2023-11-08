@@ -261,14 +261,18 @@ function SoloGame(): JSX.Element {
         newComputerPlayer.tally >= 18 &&
         newComputerPlayer.tally < 20
       ) {
-        if (Math.random() < 0.9) {
-          const newCPlayer = chooseToStand(newComputerPlayer);
-          return newCPlayer;
-        } else {
+        if (
+          player.tally >= newComputerPlayer.tally &&
+          player.tally <= 20 &&
+          player.action === PlayerState.STAND
+        ) {
           const newCPlayer = chooseToPlay(newComputerPlayer);
           return newCPlayer;
+        } else {
+          const newCPlayer = chooseToStand(newComputerPlayer);
+          return newCPlayer;
         }
-      } else if (newComputerPlayer.tally < 17) {
+      } else if (newComputerPlayer.tally < 18) {
         const newCPlayer = chooseToPlay(newComputerPlayer);
         return newCPlayer;
       } else if (newComputerPlayer.tally > 20) {
@@ -285,7 +289,7 @@ function SoloGame(): JSX.Element {
         chooseToPlay(cPlayer);
         return;
       }
-    } else if (cPlayer.tally < 17) {
+    } else if (cPlayer.tally < 18) {
       chooseToPlay(cPlayer);
       return;
     }
@@ -322,21 +326,21 @@ function SoloGame(): JSX.Element {
         playerStarted();
         return;
       } else {
-        giveTurnToComputer(newPlayer, newerCPlayer);
+        await giveTurnToComputer(newPlayer, newerCPlayer);
         return;
       }
     } else if (newPlayer.action != PlayerState.STAND) {
       playerStarted();
       return;
     } else {
-      giveTurnToComputer(newPlayer, passedComputerPlayer);
+      await giveTurnToComputer(newPlayer, passedComputerPlayer);
       return;
     }
   }
 
   async function handleEndTurnButtonClick() {
     const newPlayer = playerEndTurn();
-    giveTurnToComputer(newPlayer, computerPlayer);
+    await giveTurnToComputer(newPlayer, computerPlayer);
   }
 
   function getRoundWinner(computerPlayer: SoloPlayer) {
@@ -389,7 +393,7 @@ function SoloGame(): JSX.Element {
       await endOfRoundCleaning(newerCPlayer);
       return;
     } else if (newerCPlayer.action != PlayerState.STAND) {
-      giveTurnToComputer(newPlayer, newerCPlayer);
+      await giveTurnToComputer(newPlayer, newerCPlayer);
       return;
     } else {
       await endOfRoundCleaning(newerCPlayer);
