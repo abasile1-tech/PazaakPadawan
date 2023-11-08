@@ -154,17 +154,31 @@ function SoloGame(): JSX.Element {
   }
 
   async function checkCards(cPlayer: SoloPlayer) {
-    let bestSum = 0;
     let bestCardIndex = -1;
-    // Check to see if you have any cards that can get you between 18 and 20
-    for (let i = 0; i < cPlayer.hand.length; i++) {
-      const card = cPlayer.hand[i];
-      const sum = cPlayer.tally + card.props.value;
-      if (sum >= 18 && sum <= 20 && sum > bestSum) {
-        bestSum = sum;
-        bestCardIndex = i;
+    if (cPlayer.tally < 20) {
+      let bestSum = cPlayer.tally;
+      // Check to see if you have any cards that can get you between 18 and 20
+      for (let i = 0; i < cPlayer.hand.length; i++) {
+        const card = cPlayer.hand[i];
+        const sum = cPlayer.tally + card.props.value;
+        if (sum >= 18 && sum <= 20 && sum > bestSum) {
+          bestSum = sum;
+          bestCardIndex = i;
+        }
+      }
+    } else if (cPlayer.tally > 20) {
+      let bestSum = 0;
+      // Check to see if you have any cards that can get you back to 20 or under 20
+      for (let i = 0; i < cPlayer.hand.length; i++) {
+        const card = cPlayer.hand[i];
+        const sum = cPlayer.tally + card.props.value;
+        if (sum <= 20 && sum > bestSum) {
+          bestSum = sum;
+          bestCardIndex = i;
+        }
       }
     }
+
     if (bestCardIndex !== -1) {
       const newComputerPlayer = await computerPlayCard(cPlayer, bestCardIndex);
       return newComputerPlayer;
@@ -357,7 +371,12 @@ function SoloGame(): JSX.Element {
       newCPlayer = await computerPlayerDecision(cPlayer);
     }
     const newerCPlayer = newCPlayer ? newCPlayer : computerPlayer;
-    if (newPlayer.tally >= 20 || newerCPlayer.tally >= 20) {
+    const someOneEndedOverTwenty =
+      newPlayer.tally > 20 || newerCPlayer.tally > 20;
+    const bothStood =
+      newPlayer.action === PlayerState.STAND &&
+      newerCPlayer.action === PlayerState.STAND;
+    if (someOneEndedOverTwenty || bothStood) {
       await endOfRoundCleaning(newerCPlayer);
       return;
     } else if (newerCPlayer.action != PlayerState.STAND) {
