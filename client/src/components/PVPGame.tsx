@@ -528,7 +528,7 @@ function PVPGame({ stompClient, userData }: PVPGameProps): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <div className="scoreBoard">
+      <div className="scoreBoard_pvp">
         <PlayBarPVP player={player} otherPlayer={otherPlayer} />
       </div>
       <hr />
