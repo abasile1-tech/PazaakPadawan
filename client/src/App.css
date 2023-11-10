@@ -1,9 +1,20 @@
 
 /* score board */
 
-.scoreBoard {
+.scoreBoard_solo {
   display:flex;
-  justify-content: space-around;
+  justify-content: space-between;
+}
+
+.scoreBoard_pvp {
+  /* display:flex; */
+  justify-content: space-between;
+}
+
+.play_bar {
+  width: 75%;
+  display: flex;
+  justify-content: space-between;
 }
 
 /* home page */
@@ -161,33 +172,30 @@
   width:50%;
 }
 
-.turn-indicator {
+.turn_indicator_pvp, .turn_indicator_solo {
   background-color: #213547;
   color: #fff;
   text-align: center;
   border-radius: 40px; 
-  margin: 0 auto;
+  margin: 0.5em;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0 auto; 
-  min-width: 60px; 
-  max-width: 35%; 
+  padding-left: 0.5em;
+  padding-right: 0.5em;
   font-size: 20px;
   font-weight: bold;
 }
 
-.turn_indicator {
-  width: 750px;
+.turn_indicators_container_pvp, .turn_indicators_container_solo {
+  max-width: fit-content;
   align-self: center;
 }
-
 
 .player2 {
   width: 50%;
 }
 .buttons {
-  /* text-align: center; */
   margin-left: 50px;
 }
 .buttons button {
@@ -415,7 +423,7 @@
   cursor: pointer;
   background-color: #213547;
   border-radius: 10px;
-  height: calc(100vh - 350px);
+  height: calc(60vh);
   padding: 20px;
 
 }
