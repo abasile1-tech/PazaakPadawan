@@ -478,7 +478,7 @@ function SoloGame(): JSX.Element {
   return (
     <>
       <Header musicChoice={musicChoice} />
-      <div className="scoreBoard">
+      <div className="scoreBoard_solo">
         <ScoreLights numGamesWon={player.gamesWon} />
         <PlayBar
           playerTally={player.tally}

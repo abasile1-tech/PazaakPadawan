@@ -31,8 +31,8 @@ const PlayBarPVP = ({ player, otherPlayer }: PlayBarPVPProps) => {
             <h2> {player.tally} </h2>
           </div>
         </div>
-        <div className="turn_indicator">
-          <div className="turn-indicator">
+        <div className="turn_indicators_container_pvp">
+          <div className="turn_indicator_pvp">
             <p>{getTurnIndicatorText()}</p>
           </div>
         </div>

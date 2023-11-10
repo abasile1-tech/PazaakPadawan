@@ -23,10 +23,7 @@ const PlayBar = ({
 
   return (
     <>
-      <div
-        className="play_bar"
-        style={{ display: 'flex', justifyContent: 'space-between' }}
-      >
+      <div className="play_bar">
         <h2>
           {selectedCharacter ? (
             <div className="user-bar">
@@ -38,7 +35,7 @@ const PlayBar = ({
             <p>Character is not chosen</p>
           )}
         </h2>
-        <div className="turn_indicator">
+        <div className="turn_indicators_container_solo">
           {isPlayerTurn || gameState === GameState.INITIAL ? (
             selectedCharacter ? (
               <TurnIndicator playerName={selectedCharacter.name} />
