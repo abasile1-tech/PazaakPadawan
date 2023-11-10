@@ -7,8 +7,8 @@
 }
 
 .scoreBoard_pvp {
-  display:flex;
-  justify-content: space-around;
+  /* display:flex; */
+  justify-content: space-between;
 }
 
 .play_bar {
@@ -172,28 +172,7 @@
   width:50%;
 }
 
-.turn_indicator_pvp {
-  background-color: #213547;
-  color: #fff;
-  text-align: center;
-  border-radius: 40px; 
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 auto; 
-  min-width: 60px; 
-  max-width: 35%; 
-  font-size: 20px;
-  font-weight: bold;
-}
-
-.turn_indicators_container_pvp {
-  width: 750px;
-  align-self: center;
-}
-
-.turn_indicator_solo {
+.turn_indicator_pvp, .turn_indicator_solo {
   background-color: #213547;
   color: #fff;
   text-align: center;
@@ -203,24 +182,20 @@
   justify-content: center;
   align-items: center;
   padding-left: 0.5em;
-  padding-right: 0.5em; 
-  /* min-width: 60px; 
-  max-width: 35%;  */
+  padding-right: 0.5em;
   font-size: 20px;
   font-weight: bold;
 }
 
-.turn_indicators_container_solo {
+.turn_indicators_container_pvp, .turn_indicators_container_solo {
   max-width: fit-content;
   align-self: center;
 }
-
 
 .player2 {
   width: 50%;
 }
 .buttons {
-  /* text-align: center; */
   margin-left: 50px;
 }
 .buttons button {
