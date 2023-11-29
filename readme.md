@@ -1,6 +1,6 @@
 ![Main page screenshot](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/MainPage.png?raw=true)
 
-Pazaak Card Game!
+Pazaak Padawan Card Game!
 
 Table of Contents:
 
@@ -23,14 +23,15 @@ The project aims to develop a digital implementation of the popular card game "P
 Project_Objectives:
 
 - Create a Java backend of the Pazaak card game.
-- Develop a TypeScript frontend of the Pazaak card game.
+- Develop a React TypeScript frontend of the Pazaak card game.
 - Implement the core game rules, card values, and scoring.
 - Test the game thoroughly to ensure functionality and correctness.
 - Provide clear documentation on how to play the game and any additional features.
 
 Key Features:
 
-- Two-player turn-based gameplay.
+- Two-player turn-based gameplay with websockets.
+- Single-player gameplay against a computer opponent.
 - Deck of cards with numerical values and special attributes.
 - Player actions for drawing cards, playing cards, and scoring.
 - Random card shuffling and drawing.
@@ -45,10 +46,11 @@ Target Platforms:
 - Java and TypeScript Development: 9th of October 2023 - 13th of October 2023
 - Testing and Debugging: 14th of October 2023 - 17th of October 2023
 - Final Review and Optimization: 18th of October 2023 - 20th of October 2023
+- Presentation at the CodeBase/CodeClan Graduates Project Showcase on 8 November 2023.
 
 Resources Required:
 
-- Development environment (IntelliJ IDEA IDE for the Java version, vs code editor for React TypeScript).
+- Development environment (IntelliJ IDEA IDE for Java, vs code editor for React TypeScript).
 - Graphic design tools.
 - Testing devices and browsers.
 - Web hosting.
@@ -71,6 +73,8 @@ Deliverables:
 - Functional Java backend.
 - Functional TypeScript frontend.
 - Frontend and backend can communicate whilst being different languages.
+- Multiplayer over websocket connection.
+- Single player versus computer opponent.
 - Documentation on how to play.
 - Optional graphical user interfaces for both versions. Stakeholders:
 - Project Team
@@ -99,41 +103,50 @@ Deliverables:
 
 ### Demo
 
-You can check out a live demo of the game at [Demo Link](https://github.com/abasile1-tech/PazaakPadawan.git).
+You can check out a live demo of the game at [Demo Link](https://pazaak-3533536a7b01.herokuapp.com/).
 
 #### Installation
 
 - Java Development Kit (JDK) for the Java version.
 - Modern web browser for the TypeScript version.
 
-Java (Backend)
+- Clone this repository with HTTPS:
+  ![Clone](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Clone.png?raw=true)
 
-1. Clone this repository:
-   ￼
-   ![Clone](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Clone.png?raw=true)
+```
+git clone https://github.com/abasile1-tech/PazaakPadawan.git
+```
 
-- git clone https://github.com/abasile1-tech/PazaakPadawan.git
+- OR clone this repository with SSH
 
-- Navigate to the java directory
-- Copy code cd PazaakPadawan/java
-- Compile and run the Java program
+```
+git clone git@github.com:abasile1-tech/PazaakPadawan.git
+```
+
+- Navigate to the server directory
+
+```
+cd PazaakPadawan/server/
+```
+
+Java (Backend or Server)
+
+- Run the Java backend from IntelliJ IDEA from the ServerApplication.java file
 - Add the Lombok IntelliJ plugin [Lombok Link](https://projectlombok.org/setup/intellij)
-  ￼
+
   ![InstallationJava](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/InstallationJava.png?raw=true)
 
-- React TypeScript (Frontend)
+React TypeScript (Frontend or Client)
 
-1. Clone this repository:
-   ￼
-   ![Clone](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/Clone.png?raw=true)
+- Navigate to the client directory, npm install, and npm run dev
 
-- git clone https://github.com/abasile1-tech/PazaakPadawan.git
+```
+cd PazaakPadawan/client/
+npm install
+npm run dev
+```
 
-- Navigate to the typescript directory
-- Copy code cd PazaakPadawan/typescript
-- Open index.html in your web browser.
-
-￼![InstallationTypeScript](https://github.com/abasile1-tech/PazaakPadawan/blob/main/Images/InstallationTypeScript.png?raw=true)
+- Open localhost:5173 in your web browser.
 
 ##### Usage
 
