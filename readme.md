@@ -103,7 +103,7 @@ Deliverables:
 
 ### Demo
 
-You can check out a live demo of the game at [Demo Link](https://pazaak-3533536a7b01.herokuapp.com/).
+You can check out a live demo of the game at [pazaak-3533536a7b01.herokuapp.com/](https://pazaak-3533536a7b01.herokuapp.com/).
 
 #### Installation
 
